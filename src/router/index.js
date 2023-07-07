@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import ContactVue from "../Contact.vue";
-import AdminVue from "../Admin/Admin.vue";
+import ContactVue from "../pages/Contact/Contact.vue";
+import AdminVue from "../pages/Admin/Admin.vue";
 
 const routes = [
   { path: "/contact", component: ContactVue },
