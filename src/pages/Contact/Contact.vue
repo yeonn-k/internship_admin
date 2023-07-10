@@ -1,101 +1,160 @@
 <template>
   <div class="backgroundColor">
-    <div class="contact">
-      <div class="contactBox">
-        <div class="leftBox">
-          <div class="companyBox">
-            <h1 class="companyName">AmberRoad Contact</h1>
-            <p
-              class="contactPoint"
-              v-for="(contactPoint, i) in contactPoint"
-              :key="i"
-            >
-              {{ contactPoint.title + contactPoint.content }}
-            </p>
-          </div>
-        </div>
-        <div class="rightBox">
-          <div class="contents">
-            <div class="contentsTitle">
-              <p v-for="(contentsTitle, i) in contentsTitle" :key="i">
-                {{ contentsTitle }}
+    <div class="wrapContact">
+      <div class="contact">
+        <div class="contactBox">
+          <!--회사소개-->
+          <div class="leftBox">
+            <div class="companyBox">
+              <h1 class="companyName">AmberRoad Contact</h1>
+              <p
+                class="contactPoint"
+                v-for="(contactPoint, i) in contactPoint"
+                :key="i"
+              >
+                {{ contactPoint.title + " " + contactPoint.content }}
               </p>
             </div>
-            <div class="content">
-              <div class="boxLine">
-                <input type="text" placeholder="이름을 입력해주세요." />
+          </div>
+          <div class="rightBox">
+            <div class="contents">
+              <!--input 이름-->
+              <div class="contentsTitle">
+                <p
+                  v-for="(contentsTitle, i) in contentsTitle"
+                  :key="i"
+                  label
+                  for="validationCustom01"
+                >
+                  {{ contentsTitle }}
+                </p>
               </div>
-              <div class="boxLine">
-                <div class="radioBox">
-                  <span
-                    class="radioContent"
-                    v-for="(contactBy, i) in contactBy"
-                    :key="i"
-                  >
+
+              <!--input-->
+              <!-- <form
+                id="submit"
+                @submit="checkForm"
+                action="/something"
+                method="post"
+                novalidate="true"
+              >
+                <p>
+                  <label for="name">이름</label>
+                  <input type="text" name="name" id="name" v-model="name" />
+                </p> -->
+
+              <form
+                id="submit"
+                @submit="checkForm"
+                action="/something"
+                method="post"
+                class="contentForm"
+                novalidate="true"
+              >
+                <div class="content">
+                  <div class="boxLine">
                     <input
-                      class="radio"
-                      type="radio"
-                      name="contactBy"
-                    /><span>{{ contactBy }}</span>
-                  </span>
+                      name="name"
+                      id="name"
+                      v-model="name"
+                      required=""
+                      class="textInput"
+                      type="text"
+                      placeholder="이름을 입력해주세요."
+                    />
+                  </div>
+                  <div class="boxLine">
+                    <div class="radioBox">
+                      <span
+                        class="radioContent"
+                        v-for="(contactBy, i) in contactBy"
+                        :key="i"
+                      >
+                        <input
+                          name="contactRadio"
+                          id="contactRadio"
+                          v-model="contactRadio"
+                          type="radio"
+                          class="radio"
+                        />
+                        <!-- <input
+                          class="radio"
+                          type="radio"
+                          name="contactBy"
+                        /> -->
+                        <label :for="contactBy">{{ contactBy }}</label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="boxLine">
+                    <div class="radioBox">
+                      <span
+                        class="radioContent"
+                        v-for="(inquire, i) in inquire"
+                        :key="i"
+                      >
+                        <input
+                          name="inquireRadio"
+                          id="inquireRadio"
+                          v-model="inquireRadio"
+                          type="radio"
+                          class="radio"
+                        /><span>{{ inquire }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="boxLine">
+                    <div class="input-group">
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="inputFile"
+                        aria-describedby="inputFile"
+                        aria-label="Upload"
+                      />
+                    </div>
+                  </div>
+                  <div class="textAreaBoxLine">
+                    <textarea
+                      placeholder="(선택) 자세한 문의 내용을 입력해주세요."
+                    />
+                  </div>
                 </div>
-              </div>
-              <div class="boxLine">
-                <div class="radioBox">
-                  <span
-                    class="radioContent"
-                    v-for="(inquire, i) in inquire"
-                    :key="i"
-                  >
-                    <input class="radio" type="radio" name="inquire" /><span>{{
-                      inquire
-                    }}</span>
-                  </span>
-                </div>
-              </div>
-              <div class="boxLine">
-                <div class="input-group">
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="inputGroupFile04"
-                    aria-describedby="inputGroupFileAddon04"
-                    aria-label="Upload"
-                  />
-                  <button
-                    class="btn btn-outline-secondary"
-                    type="button"
-                    id="inputGroupFileAddon04"
-                  >
-                    Button
-                  </button>
-                </div>
-              </div>
-              <div class="textAreaBoxLine">
-                <textarea
-                  placeholder="(선택) 자세한 문의 내용을 입력해주세요."
-                />
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <ContactModal />
-    <!-- <SubmitModal /> -->
+    <button @click="openSubmit" type="button" class="btn btn-primary">
+      제출하기
+    </button>
 
-    <button type="button" class="btn btn-primary">제출하기</button>
+    <!-- <ContactModal /> -->
+    <SubmitModal
+      v-if="isSubmit === true"
+      @closeSubmit="isSubmit = false"
+      :isClicked="isClicked"
+      :isSubmit="isSubmit"
+    />
   </div>
 </template>
 
 <script>
-// import SubmitModal from "./SubmitModal.vue";
-import ContactModal from "./ContactModal.vue";
+import SubmitModal from "./SubmitModal.vue";
+
+// import ContactModal from "./ContactModal.vue";
 
 export default {
   name: "ContactVue",
-  components: { ContactModal: ContactModal },
-  // components: { SubmitModal: SubmitModal },
+  // components: { ContactModal: ContactModal },
+  components: { SubmitModal: SubmitModal },
+  methods: {
+    openSubmit() {
+      this.isClicked = true;
+      this.isSubmit = true;
+    },
+  },
   data() {
     return {
       contactPoint: [
@@ -106,12 +165,15 @@ export default {
       contentsTitle: ["이름", "연락처", "요청 사항", "파일 첨부", "문의 내용"],
       contactBy: ["e-mail", "전화번호"],
       inquire: ["MR 문의", "컨설팅 문의", "일반 문의"],
+      isSubmit: false,
+      isClicked: false,
     };
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "../../assets/scss/variables.scss";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap");
 
 .backgroundColor {
@@ -123,8 +185,12 @@ export default {
   flex-wrap: wrap;
 }
 
+.wrapContact {
+  width: 100%;
+}
+
 .contact {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: $fontFamily;
   font-weight: 400;
   width: 1280px;
   margin: 0 auto;
@@ -170,6 +236,12 @@ export default {
   margin-top: 90px;
 }
 
+.contentForm {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+}
 .contentsTitle {
   width: 20%;
   text-align: end;
@@ -197,9 +269,13 @@ export default {
   margin-bottom: 22px;
 }
 
-.boxLine:focus {
-  border: 1px solid #f39366;
+.textInput {
+  width: 100%;
 }
+
+/* .boxLine:focus {
+  border: 1px solid $primaryColor;
+} */
 
 .textAreaBoxLine {
   width: 90%;
@@ -213,7 +289,7 @@ export default {
 
 .radio {
   margin-right: 8px;
-  accent-color: #f39366;
+  accent-color: $primaryColor;
 }
 
 .radioBox {
@@ -233,6 +309,10 @@ export default {
   justify-content: space-between;
 }
 
+.input-group input {
+  width: 100%;
+}
+
 .form-control {
   height: 34px;
   line-height: 0px;
@@ -241,7 +321,7 @@ export default {
 .btn {
   height: 35px;
   width: 64px;
-  background-color: #f39366;
+  background-color: $primaryColor;
   color: #fff;
   border: none;
   border-radius: 3px;
@@ -262,7 +342,7 @@ input[type="file"]::file-selector-button {
   height: 24px;
   margin-right: 10px;
   background-color: #fff;
-  border: 1px solid #f39366;
+  border: 1px solid $primaryColor;
   border-radius: 3px;
 }
 
@@ -285,7 +365,7 @@ input[type="file"]::file-selector-button:hover {
   border: none;
   border-radius: 3px;
   resize: none;
-  width: 90%;
+  width: 100%;
   height: 196px;
   padding: 10px;
 }
@@ -301,7 +381,7 @@ input[type="file"]::file-selector-button:hover {
   height: 34px;
   border-radius: 10px;
   outline: none;
-  background-color: #f39366;
+  background-color: $primaryColor;
   color: #fff;
   font-size: 14px;
 }

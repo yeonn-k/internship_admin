@@ -9,6 +9,7 @@
           fill="currentColor"
           class="bi bi-x-lg"
           viewBox="0 0 16 16"
+          @click="$emit('closeSubmit')"
         >
           <path
             d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
@@ -19,7 +20,13 @@
       <div class="textBox">
         <span>제출되었습니다.</span>
       </div>
-      <button type="button" class="btn btn-primary">확인</button>
+      <button
+        @click="$emit('closeSubmit')"
+        type="button"
+        class="btn btn-primary"
+      >
+        확인
+      </button>
     </div>
   </div>
 </template>
@@ -27,6 +34,7 @@
 <script>
 export default {
   name: "ModalComponent",
+  props: {},
 };
 </script>
 
@@ -65,6 +73,10 @@ export default {
 .bi-x-lg {
   width: 20px;
   justify-content: flex-end;
+}
+
+.bi-x-lg:hover {
+  cursor: pointer;
 }
 
 .line {
