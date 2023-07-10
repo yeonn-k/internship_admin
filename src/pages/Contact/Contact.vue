@@ -54,14 +54,22 @@
                 </div>
               </div>
               <div class="boxLine">
-                <form
-                  action="/home/uploadfiles"
-                  method="post"
-                  enctype="multipart/form-data"
-                >
-                  <input class="uploadFile" type="file" name="myfile" />
-                  <button type="uploadSubmit">제출하기</button>
-                </form>
+                <div class="input-group">
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="inputGroupFile04"
+                    aria-describedby="inputGroupFileAddon04"
+                    aria-label="Upload"
+                  />
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="inputGroupFileAddon04"
+                  >
+                    Button
+                  </button>
+                </div>
               </div>
               <div class="textAreaBoxLine">
                 <textarea
@@ -73,16 +81,21 @@
         </div>
       </div>
     </div>
-    <!-- <ModalComponent /> -->
+    <ContactModal />
+    <!-- <SubmitModal /> -->
+
+    <button type="button" class="btn btn-primary">제출하기</button>
   </div>
 </template>
 
 <script>
-// import ModalComponent from "./Modal.vue";
+// import SubmitModal from "./SubmitModal.vue";
+import ContactModal from "./ContactModal.vue";
 
 export default {
   name: "ContactVue",
-  // components: { ModalComponent: ModalComponent },
+  components: { ContactModal: ContactModal },
+  // components: { SubmitModal: SubmitModal },
   data() {
     return {
       contactPoint: [
@@ -105,6 +118,9 @@ export default {
   background-color: #fff5ea;
   width: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .contact {
@@ -113,7 +129,7 @@ export default {
   width: 1280px;
   margin: 0 auto;
   padding: 0px 70px;
-  margin-top: 140px;
+  margin-top: 100px;
 }
 
 .contactBox {
@@ -181,6 +197,10 @@ export default {
   margin-bottom: 22px;
 }
 
+.boxLine:focus {
+  border: 1px solid #f39366;
+}
+
 .textAreaBoxLine {
   width: 90%;
   height: 200px;
@@ -189,6 +209,11 @@ export default {
   border-radius: 3px;
   font-size: 14px;
   margin-bottom: 22px;
+}
+
+.radio {
+  margin-right: 8px;
+  accent-color: #f39366;
 }
 
 .radioBox {
@@ -202,9 +227,47 @@ export default {
   line-height: 32px;
 }
 
-input[type="file"]::file-selector-button {
-  background-color: #fff;
+.input-group {
+  height: 36px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control {
+  height: 34px;
+  line-height: 0px;
+}
+
+.btn {
+  height: 35px;
+  width: 64px;
+  background-color: #f39366;
+  color: #fff;
   border: none;
+  border-radius: 3px;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100px;
+  color: #fff;
+  margin-top: 40px;
+  margin-bottom: 70px;
+}
+
+input[type="file"]::file-selector-button {
+  height: 24px;
+  margin-right: 10px;
+  background-color: #fff;
+  border: 1px solid #f39366;
+  border-radius: 3px;
+}
+
+input[type="file"]::file-selector-button:hover {
+  cursor: pointer;
 }
 
 .contents input {
@@ -212,7 +275,7 @@ input[type="file"]::file-selector-button {
   line-height: 34px;
   outline: none;
   border: none;
-  padding: 10px;
+  padding-left: 10px;
   box-shadow: none;
   border-radius: 3px;
 }
