@@ -1,9 +1,13 @@
-<template><div>Admin</div></template>
+<template>
+  <div>Admin</div>
+  <PopUp />
+</template>
 
 <script>
+import PopUp from "./PopUp/PopUp.vue";
 export default {
   name: "AdminVue",
-  components: {},
+  components: { PopUp: PopUp },
 };
 </script>
 
