@@ -40,6 +40,8 @@
       <button type="button" class="btn btn-primary">Primary</button>
     </div>
   </div>
+
+  {{ console.log("data:", detailData) }}
 </template>
 
 <script>
@@ -49,7 +51,30 @@ export default {
     return {
       titleBox: ["이름: ", "연락처: ", "문의유형: ", "진행상황: "],
       lowerBox: ["문의내용: ", "파일첨부: ", "담당자: "],
+      detailData: [],
     };
+  },
+
+  created() {
+    this.getDetails();
+  },
+
+  methods: {
+    getDetails() {
+      fetch("/data/inquireData.js")
+        .then((response) => response.json())
+        .then((result) =>
+          this.detailData.push({
+            name: result.name,
+            contact: result.contact,
+            category: result.category,
+            progress: result.progress,
+            contents: result.contents,
+            file: result.file,
+            manager: result.manager,
+          })
+        );
+    },
   },
 };
 </script>
