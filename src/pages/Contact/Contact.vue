@@ -29,20 +29,6 @@
                   {{ contentsTitle }}
                 </p>
               </div>
-
-              <!--input-->
-              <!-- <form
-                id="submit"
-                @submit="checkForm"
-                action="/something"
-                method="post"
-                novalidate="true"
-              >
-                <p>
-                  <label for="name">이름</label>
-                  <input type="text" name="name" id="name" v-model="name" />
-                </p> -->
-
               <form
                 id="submit"
                 @submit="checkForm"
@@ -62,7 +48,11 @@
                       type="text"
                       placeholder="이름을 입력해주세요."
                     />
+                    <span class="warning" v-if="!name"
+                      >이름은 필수 입력사항입니다.</span
+                    >
                   </div>
+
                   <div class="boxLine">
                     <div class="radioBox">
                       <span
@@ -73,19 +63,33 @@
                         <input
                           name="contactRadio"
                           id="contactRadio"
+                          :value="contactBy"
                           v-model="contactRadio"
                           type="radio"
                           class="radio"
                         />
-                        <!-- <input
-                          class="radio"
-                          type="radio"
-                          name="contactBy"
-                        /> -->
                         <label :for="contactBy">{{ contactBy }}</label>
                       </span>
                     </div>
+                    <span class="warning" v-if="!contactRadio"
+                      >연락처 선택은 필수사항입니다.</span
+                    >
                   </div>
+                  <div class="boxLine">
+                    <input
+                      name="contactTo"
+                      id="contactTo"
+                      v-model="contactTo"
+                      required=""
+                      class="textInput"
+                      type="text"
+                      placeholder="연락처를 입력해주세요."
+                    />
+                    <span class="warning" v-if="!contactTo"
+                      >연락처는 필수 입력사항입니다.</span
+                    >
+                  </div>
+
                   <div class="boxLine">
                     <div class="radioBox">
                       <span
@@ -96,13 +100,19 @@
                         <input
                           name="inquireRadio"
                           id="inquireRadio"
+                          :value="inquire"
                           v-model="inquireRadio"
                           type="radio"
                           class="radio"
-                        /><span>{{ inquire }}</span>
+                        /><label for="inquireRadio">{{ inquire }}</label>
                       </span>
                     </div>
+
+                    <span class="warning" v-if="!inquireRadio"
+                      >요청 사항 선택은 필수 입력사항입니다.</span
+                    >
                   </div>
+
                   <div class="boxLine">
                     <div class="input-group">
                       <input
@@ -116,6 +126,7 @@
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
+                      v-model="inquireContents"
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
                     />
                   </div>
@@ -126,34 +137,33 @@
         </div>
       </div>
     </div>
-    <button @click="openSubmit" type="button" class="btn btn-primary">
-      제출하기
-    </button>
-
+    <input
+      type="submit"
+      value="제출하기"
+      @click="checkForm"
+      class="btn btn-primary"
+    />
+    {{ console.log(name, contactRadio, contactTo, inquireRadio) }}
     <!-- <ContactModal /> -->
     <SubmitModal
       v-if="isSubmit === true"
       @closeSubmit="isSubmit = false"
       :isClicked="isClicked"
       :isSubmit="isSubmit"
+      :errorsLength="errors.length"
     />
   </div>
 </template>
 
 <script>
 import SubmitModal from "./SubmitModal.vue";
-
 // import ContactModal from "./ContactModal.vue";
 
 export default {
   name: "ContactVue",
-  // components: { ContactModal: ContactModal },
-  components: { SubmitModal: SubmitModal },
-  methods: {
-    openSubmit() {
-      this.isClicked = true;
-      this.isSubmit = true;
-    },
+  components: {
+    // ContactModal: ContactModal,
+    SubmitModal: SubmitModal,
   },
   data() {
     return {
@@ -162,12 +172,49 @@ export default {
         { title: "Tel:", content: "054-220-8973" },
         { title: "Mobile:", content: "010-9353-4658" },
       ],
-      contentsTitle: ["이름", "연락처", "요청 사항", "파일 첨부", "문의 내용"],
+      contentsTitle: [
+        "이름",
+        "연락처 선택",
+        "연락처",
+        "요청 사항",
+        "파일 첨부",
+        "문의 내용",
+      ],
       contactBy: ["e-mail", "전화번호"],
       inquire: ["MR 문의", "컨설팅 문의", "일반 문의"],
       isSubmit: false,
       isClicked: false,
+      errors: [],
+      name: null,
+      contactRadio: null,
+      contactTo: null,
+      inquireRadio: null,
+      inquireContents: null,
     };
+  },
+  methods: {
+    openSubmit() {
+      this.isClicked = true;
+      this.isSubmit = true;
+    },
+    checkForm(e) {
+      e.preventDefault();
+
+      this.errors = [];
+      if (!this.name) {
+        this.errors.push("이름은 필수입니다.");
+      }
+      if (!this.contactRadio) {
+        this.errors.push("연락처를 지정해주세요.");
+      }
+      if (!this.contactTo) {
+        this.errors.push("연락처를 작성해주세요.");
+      }
+      if (!this.inquireRadio) {
+        this.errors.push("요청사항을 선택해주세요.");
+      }
+      if (!this.errors.length) return this.openSubmit();
+    },
   },
 };
 </script>
@@ -200,6 +247,11 @@ export default {
 
 .contactBox {
   display: flex;
+}
+
+.warning {
+  color: $primaryColor;
+  line-height: 2;
 }
 
 .leftBox {
@@ -252,7 +304,7 @@ export default {
 
 .contentsTitle p {
   width: 100%;
-  margin-bottom: 41px;
+  margin-bottom: 45px;
 }
 
 .content {
@@ -266,7 +318,7 @@ export default {
   border: 1px solid #dadada;
   border-radius: 3px;
   font-size: 14px;
-  margin-bottom: 22px;
+  margin-bottom: 27px;
 }
 
 .textInput {

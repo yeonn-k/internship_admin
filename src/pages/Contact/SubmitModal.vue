@@ -18,7 +18,7 @@
       </div>
       <div class="line" />
       <div class="textBox">
-        <span>제출되었습니다.</span>
+        <p v-if="errorsLength === 0">제출되었습니다.</p>
       </div>
       <button
         @click="$emit('closeSubmit')"
@@ -34,7 +34,12 @@
 <script>
 export default {
   name: "ModalComponent",
-  props: {},
+  props: {
+    errorsLength: {
+      type: Number,
+      required: true,
+    },
+  },
 };
 </script>
 
