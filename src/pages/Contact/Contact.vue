@@ -68,7 +68,7 @@
                           type="radio"
                           class="radio"
                         />
-                        <label :for="contactBy">{{ contactBy }}</label>
+                        <label for="contactBy">{{ contactBy }}</label>
                       </span>
                     </div>
                     <span class="warning" v-if="!contactRadio"
@@ -104,7 +104,7 @@
                           v-model="inquireRadio"
                           type="radio"
                           class="radio"
-                        /><label for="inquireRadio">{{ inquire }}</label>
+                        /><label for="inquire">{{ inquire }}</label>
                       </span>
                     </div>
 
@@ -143,7 +143,9 @@
       @click="checkForm"
       class="btn btn-primary"
     />
-    {{ console.log(name, contactRadio, contactTo, inquireRadio) }}
+    {{
+      console.log(name, contactRadio, contactTo, inquireRadio, inquireContents)
+    }}
     <!-- <ContactModal /> -->
     <SubmitModal
       v-if="isSubmit === true"
@@ -202,16 +204,16 @@ export default {
 
       this.errors = [];
       if (!this.name) {
-        this.errors.push("이름은 필수입니다.");
+        this.errors.push("name");
       }
       if (!this.contactRadio) {
-        this.errors.push("연락처를 지정해주세요.");
+        this.errors.push("contactRadio");
       }
       if (!this.contactTo) {
-        this.errors.push("연락처를 작성해주세요.");
+        this.errors.push("contactTo");
       }
       if (!this.inquireRadio) {
-        this.errors.push("요청사항을 선택해주세요.");
+        this.errors.push("inquireRadio");
       }
       if (!this.errors.length) return this.openSubmit();
     },
@@ -285,7 +287,7 @@ export default {
   height: 90%;
   display: flex;
   justify-content: center;
-  margin-top: 90px;
+  margin-top: 50px;
 }
 
 .contentForm {
@@ -304,7 +306,7 @@ export default {
 
 .contentsTitle p {
   width: 100%;
-  margin-bottom: 45px;
+  margin-bottom: 46px;
 }
 
 .content {

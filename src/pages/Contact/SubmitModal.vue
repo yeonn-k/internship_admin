@@ -19,6 +19,7 @@
       <div class="line" />
       <div class="textBox">
         <p v-if="errorsLength === 0">제출되었습니다.</p>
+        <p v-else>입력 양식을 지켜주세요.</p>
       </div>
       <button
         @click="$emit('closeSubmit')"
