@@ -20,24 +20,16 @@
         </div>
         <div class="dateBox">등록일자 : {{ detailData[0].createAt }}</div>
         <div class="contentBox">
-          <div class="upperBox" v-for="(titleBox, i) in titleBox" :key="i">
-            <div class="title">
-              {{ titleBox }}
-            </div>
-            <div class="upperContent">{{}}</div>
-          </div>
+          <UpperContentBox
+            type="name"
+            :detailData="detailData"
+            :titleBox="titleBox"
+          />
         </div>
-        <div class="contentBox">
-          <div class="lowerBox" v-for="(lowerBox, i) in lowerBox" :key="i">
-            <div class="greyLine" />
-            <div class="title">
-              {{ lowerBox }}
-            </div>
-            <div class="lowerContent"></div>
-          </div>
-        </div>
+
+        <div class="contentBox"><LowerContentBox /></div>
       </div>
-      <button type="button" class="btn btn-primary">Primary</button>
+      <button type="button" class="btn btn-primary">확인</button>
     </div>
   </div>
 
@@ -46,16 +38,29 @@
 </template>
 
 <script>
+import LowerContentBox from "./LowerContentBox.vue";
+import UpperContentBox from "./UpperContentBox.vue";
+
 export default {
   name: "PopUp",
   data() {
     return {
-      titleBox: ["이름: ", "연락처: ", "문의유형: ", "진행상황: "],
-      lowerBox: ["문의내용: ", "파일첨부: ", "담당자: "],
+      titleBox: {
+        name: "이름: ",
+        contact: "연락처: ",
+        type: "문의유형: ",
+        status: "진행상황: ",
+        contents: "문의내용: ",
+        file: "파일첨부: ",
+        manager: "담당자: ",
+      },
       detailData: null,
     };
   },
-
+  components: {
+    LowerContentBox: LowerContentBox,
+    UpperContentBox: UpperContentBox,
+  },
   created() {
     this.getDetails();
   },
@@ -92,10 +97,9 @@ export default {
   width: 64%;
   min-width: 600px;
   height: 87%;
-  overflow: hidden;
+  overflow: scroll;
   background-color: #fff;
   border-radius: 5px;
-  /* padding: 10px; */
 }
 
 .content {
@@ -163,6 +167,7 @@ export default {
   width: 90%;
   height: 34px;
   line-height: 34px;
+  margin-left: 10px;
 }
 
 .lowerContent {
@@ -187,5 +192,6 @@ export default {
   color: #fff;
   border: none;
   border-radius: 5px;
+  margin-bottom: 50px;
 }
 </style>

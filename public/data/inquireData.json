@@ -6,7 +6,9 @@
     "contact": "010-1234-1234",
     "type": "MR 문의",
     "status": "회신 완료",
-    "contents": ""
+    "contents": "",
+    "manager": "",
+    "file": ""
   },
   {
     "id": "2",
@@ -15,7 +17,9 @@
     "contact": "010-1234-1234",
     "type": "MR 문의",
     "status": "회신 완료",
-    "contents": ""
+    "contents": "",
+    "manager": "",
+    "file": ""
   },
   {
     "id": "3",
@@ -24,7 +28,9 @@
     "contact": "010-1234-1234",
     "type": "MR 문의",
     "status": "회신 완료",
-    "contents": ""
+    "contents": "",
+    "manager": "",
+    "file": ""
   },
   {
     "id": "4",
@@ -33,6 +39,8 @@
     "contact": "010-1234-1234",
     "type": "MR 문의",
     "status": "회신 완료",
-    "contents": ""
+    "contents": "",
+    "manager": "",
+    "file": ""
   }
 ]
