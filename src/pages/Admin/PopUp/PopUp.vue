@@ -1,5 +1,5 @@
 <template>
-  <div class="blackBg">
+  <div class="blackBg" v-if="detailData">
     <div class="whiteBg">
       <div class="content">
         <div class="colorBox">
@@ -18,13 +18,13 @@
             </svg>
           </div>
         </div>
-        <div class="dateBox">등록일자 : 07.07.2023</div>
+        <div class="dateBox">등록일자 : {{ detailData[0].createAt }}</div>
         <div class="contentBox">
           <div class="upperBox" v-for="(titleBox, i) in titleBox" :key="i">
             <div class="title">
               {{ titleBox }}
             </div>
-            <div class="upperContent"></div>
+            <div class="upperContent">{{}}</div>
           </div>
         </div>
         <div class="contentBox">
@@ -42,6 +42,7 @@
   </div>
 
   {{ console.log("data:", detailData) }}
+  <!-- {{ console.log("createAt:", detailData[3].createAt) }} -->
 </template>
 
 <script>
@@ -51,7 +52,7 @@ export default {
     return {
       titleBox: ["이름: ", "연락처: ", "문의유형: ", "진행상황: "],
       lowerBox: ["문의내용: ", "파일첨부: ", "담당자: "],
-      detailData: [],
+      detailData: null,
     };
   },
 
@@ -61,19 +62,9 @@ export default {
 
   methods: {
     getDetails() {
-      fetch("/data/inquireData.js")
+      fetch("/data/inquireData.json")
         .then((response) => response.json())
-        .then((result) =>
-          this.detailData.push({
-            name: result.name,
-            contact: result.contact,
-            category: result.category,
-            progress: result.progress,
-            contents: result.contents,
-            file: result.file,
-            manager: result.manager,
-          })
-        );
+        .then((data) => (this.detailData = data));
     },
   },
 };
