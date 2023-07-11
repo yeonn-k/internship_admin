@@ -79,13 +79,13 @@
                     <input
                       name="contactTo"
                       id="contactTo"
-                      v-model="contactTo"
+                      v-model="contact"
                       required=""
                       class="textInput"
                       type="text"
                       placeholder="연락처를 입력해주세요."
                     />
-                    <span class="warning" v-if="!contactTo"
+                    <span class="warning" v-if="!contact"
                       >연락처는 필수 입력사항입니다.</span
                     >
                   </div>
@@ -101,7 +101,7 @@
                           name="inquireRadio"
                           id="inquireRadio"
                           :value="inquire"
-                          v-model="inquireRadio"
+                          v-model="type"
                           type="radio"
                           class="radio"
                         /><label for="inquire">{{ inquire }}</label>
@@ -126,7 +126,7 @@
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
-                      v-model="inquireContents"
+                      v-model="contents"
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
                     />
                   </div>
@@ -143,10 +143,7 @@
       @click="checkForm"
       class="btn btn-primary"
     />
-    {{
-      console.log(name, contactRadio, contactTo, inquireRadio, inquireContents)
-    }}
-    <!-- <ContactModal /> -->
+
     <SubmitModal
       v-if="isSubmit === true"
       @closeSubmit="isSubmit = false"
@@ -159,12 +156,10 @@
 
 <script>
 import SubmitModal from "./SubmitModal.vue";
-// import ContactModal from "./ContactModal.vue";
 
 export default {
   name: "ContactVue",
   components: {
-    // ContactModal: ContactModal,
     SubmitModal: SubmitModal,
   },
   data() {
@@ -189,9 +184,9 @@ export default {
       errors: [],
       name: null,
       contactRadio: null,
-      contactTo: null,
-      inquireRadio: null,
-      inquireContents: null,
+      contact: null,
+      type: null,
+      contents: null,
     };
   },
   methods: {
@@ -209,11 +204,11 @@ export default {
       if (!this.contactRadio) {
         this.errors.push("contactRadio");
       }
-      if (!this.contactTo) {
-        this.errors.push("contactTo");
+      if (!this.contact) {
+        this.errors.push("contact");
       }
-      if (!this.inquireRadio) {
-        this.errors.push("inquireRadio");
+      if (!this.type) {
+        this.errors.push("type");
       }
       if (!this.errors.length) return this.openSubmit();
     },
