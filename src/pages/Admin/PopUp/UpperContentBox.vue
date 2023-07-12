@@ -3,7 +3,10 @@
     <div class="upperTitle">
       {{ upperTitleBox[dataType] }}
     </div>
-    <div class="upperContent">{{ detailData[0][dataType] }}</div>
+    <div v-if="dataType !== 'status'" class="upperContent">
+      {{ detailData[0][dataType] }}
+    </div>
+    <span v-else class="badge text-bg-primary">Primary</span>
   </div>
 </template>
 
