@@ -114,15 +114,13 @@
                   </div>
 
                   <div class="boxLine">
-                    <div class="input-group">
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="inputFile"
-                        aria-describedby="inputFile"
-                        aria-label="Upload"
-                      />
-                    </div>
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="inputFile"
+                      aria-describedby="inputFile"
+                      aria-label="Upload"
+                    />
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
@@ -320,11 +318,8 @@ export default {
 
 .textInput {
   width: 100%;
+  padding-left: 10px;
 }
-
-/* .boxLine:focus {
-  border: 1px solid $primaryColor;
-} */
 
 .textAreaBoxLine {
   width: 90%;
@@ -352,19 +347,14 @@ export default {
   line-height: 32px;
 }
 
-.input-group {
-  height: 36px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.input-group input {
-  width: 100%;
+.form-control {
+  background: none;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 
 .form-control {
-  height: 34px;
-  line-height: 0px;
+  line-height: 0;
 }
 
 .btn {
@@ -401,10 +391,8 @@ input[type="file"]::file-selector-button:hover {
 
 .contents input {
   height: 34px;
-  line-height: 34px;
   outline: none;
   border: none;
-  padding-left: 10px;
   box-shadow: none;
   border-radius: 3px;
 }
