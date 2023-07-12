@@ -26,7 +26,7 @@ export default {
 }
 
 .lowerTitle {
-  width: 70px;
+  width: 80px;
   line-height: 34px;
 }
 

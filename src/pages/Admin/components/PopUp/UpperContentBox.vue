@@ -29,7 +29,7 @@ export default {
 }
 
 .upperTitle {
-  width: 70px;
+  width: 80px;
   line-height: 34px;
   text-align: end;
 }

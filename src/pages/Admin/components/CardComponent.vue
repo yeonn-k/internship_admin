@@ -1,5 +1,11 @@
 <template>
-  <div :class="['card', cardBorder]">
+  <div
+    :class="['card', cardBorder]"
+    @click="
+      $emit('openPopup');
+      sendId();
+    "
+  >
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title">{{ data.type }}</h5>
@@ -17,6 +23,7 @@
         </div>
       </div>
       <hr />
+
       <div class="inChargeInfo">
         <p class="department">담당부서</p>
         <div
@@ -81,6 +88,10 @@ export default {
       } else {
         return "label-blue";
       }
+    },
+    sendId() {
+      this.$emit("sendId", { dataId: this.data.id });
+      // console.log({ dataId: this.data.id });
     },
   },
   computed: {

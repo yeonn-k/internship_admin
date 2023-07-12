@@ -1,5 +1,5 @@
 <template>
-  <div class="boardContainer">
+  <div class="boardContainer" @openPopup="isOpened = true">
     <SummaryBoard class="summaryBoard" />
     <AdminBoard
       class="board"
@@ -13,11 +13,13 @@
     />
     <AdminBoard class="board" title="Done" :dataArray="filteredDatas('Done')" />
   </div>
+  <PopUp v-if="isOpened === true" />
 </template>
 
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
+import PopUp from "./components/PopUp/PopUp.vue";
 import data from "../../assets/contact.json";
 const contactDatas = data;
 
@@ -26,10 +28,12 @@ export default {
   components: {
     AdminBoard,
     SummaryBoard,
+    PopUp,
   },
   data() {
     return {
       contactDatas,
+      isOpened: false,
     };
   },
   methods: {

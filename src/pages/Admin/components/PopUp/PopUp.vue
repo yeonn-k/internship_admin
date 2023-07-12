@@ -1,10 +1,12 @@
 <template>
   <div class="blackBg" v-if="detailData">
     <div class="whiteBg">
+      {{ console.log(dataId) }}
       <div class="content">
         <div class="colorBox">
           <div class="Xbox">
             <svg
+              @click="$emit('closePopup')"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -42,8 +44,6 @@
       <button type="button" class="btn btn-primary">확인</button>
     </div>
   </div>
-
-  <!-- {{ console.log("createAt:", detailData[3].createAt) }} -->
 </template>
 
 <script>
@@ -52,6 +52,9 @@ import UpperContentBox from "./UpperContentBox.vue";
 
 export default {
   name: "PopUp",
+  props: {
+    dataId: String,
+  },
   data() {
     return {
       upperDataTypes: ["name", "contact", "type", "status"],
@@ -90,6 +93,7 @@ export default {
 
 <style>
 .blackBg {
+  z-index: 10;
   position: fixed;
   top: 0;
   right: 0;
