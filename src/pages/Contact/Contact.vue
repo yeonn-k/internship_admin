@@ -114,15 +114,13 @@
                   </div>
 
                   <div class="boxLine">
-                    <div class="input-group">
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="inputFile"
-                        aria-describedby="inputFile"
-                        aria-label="Upload"
-                      />
-                    </div>
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="inputFile"
+                      aria-describedby="inputFile"
+                      aria-label="Upload"
+                    />
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
@@ -291,17 +289,18 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .contentsTitle {
   width: 20%;
   text-align: end;
-  margin-top: 9px;
+  margin-top: 3px;
   margin-left: 7%;
   margin-right: 10px;
 }
 
 .contentsTitle p {
   width: 100%;
-  margin-bottom: 46px;
+  margin-bottom: 39px;
 }
 
 .content {
@@ -320,11 +319,8 @@ export default {
 
 .textInput {
   width: 100%;
+  padding-left: 10px;
 }
-
-/* .boxLine:focus {
-  border: 1px solid $primaryColor;
-} */
 
 .textAreaBoxLine {
   width: 90%;
@@ -352,19 +348,14 @@ export default {
   line-height: 32px;
 }
 
-.input-group {
-  height: 36px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.input-group input {
-  width: 100%;
+.form-control {
+  background: none;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 
 .form-control {
-  height: 34px;
-  line-height: 0px;
+  line-height: 0;
 }
 
 .btn {
@@ -399,12 +390,15 @@ input[type="file"]::file-selector-button:hover {
   cursor: pointer;
 }
 
+input[type="file"]:active {
+  border: none;
+  background: none;
+}
+
 .contents input {
   height: 34px;
-  line-height: 34px;
   outline: none;
   border: none;
-  padding-left: 10px;
   box-shadow: none;
   border-radius: 3px;
 }
