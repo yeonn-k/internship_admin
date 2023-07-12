@@ -32,7 +32,20 @@
             @click="deleteItem(item)"
           ></button>
         </div>
-        <button @click="showDropdown">...</button>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-caret-down-fill"
+          viewBox="0 0 16 16"
+          @click="showDropdown"
+        >
+          <path
+            d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+          />
+        </svg>
       </div>
       <div class="selectContainer" v-show="isClicked === true">
         <select
@@ -77,7 +90,7 @@ export default {
       if (item == "기술") {
         return "label-green";
       } else if (item == "영업") {
-        return "label-yellow";
+        return "label-blue";
       } else {
         return "label-blue";
       }
@@ -114,7 +127,10 @@ export default {
 .card {
   width: 90%;
   margin: 10px auto;
-  border-width: 3px;
+  border-top-width: 4px;
+  border-bottom-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 0px;
 
   &.border-green {
     border-color: $green;
@@ -131,6 +147,7 @@ export default {
 
 .badge {
   color: black;
+  font-size: 1rem;
 
   &.badge-green {
     background-color: $lightGreen;
@@ -167,14 +184,14 @@ export default {
     text-align: end;
     width: 100%;
     margin: 0;
-    font-size: s 0.9rem;
+    font-size: 0.9rem;
   }
 }
 
 .categoryContainer {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 60px;
   justify-content: space-around;
   text-align: center;
 
@@ -198,12 +215,13 @@ export default {
 
   .department {
     font-weight: 600;
+    margin-bottom: 0px;
   }
 
   .departmentBadge {
     display: flex;
     align-items: center;
-    padding: 5px;
+    padding: 3px 6px;
     border-radius: 3px;
     font-size: 1rem;
     background-color: $lightGrey;
