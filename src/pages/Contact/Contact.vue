@@ -289,6 +289,7 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .contentsTitle {
   width: 20%;
   text-align: end;
@@ -387,6 +388,11 @@ input[type="file"]::file-selector-button {
 
 input[type="file"]::file-selector-button:hover {
   cursor: pointer;
+}
+
+input[type="file"]:active {
+  border: none;
+  background: none;
 }
 
 .contents input {
