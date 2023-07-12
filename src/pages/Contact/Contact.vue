@@ -292,14 +292,14 @@ export default {
 .contentsTitle {
   width: 20%;
   text-align: end;
-  margin-top: 9px;
+  margin-top: 3px;
   margin-left: 7%;
   margin-right: 10px;
 }
 
 .contentsTitle p {
   width: 100%;
-  margin-bottom: 46px;
+  margin-bottom: 39px;
 }
 
 .content {
