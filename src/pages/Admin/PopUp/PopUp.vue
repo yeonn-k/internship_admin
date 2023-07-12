@@ -21,19 +21,28 @@
         <div class="dateBox">등록일자 : {{ detailData[0].createAt }}</div>
         <div class="contentBox">
           <UpperContentBox
-            type="name"
+            v-for="(dataType, i) in upperDataTypes"
+            :key="i"
+            :dataType="dataType"
             :detailData="detailData"
-            :titleBox="titleBox"
+            :upperTitleBox="upperTitleBox"
           />
         </div>
 
-        <div class="contentBox"><LowerContentBox /></div>
+        <div class="contentBox">
+          <LowerContentBox
+            v-for="(dataType, i) in lowerDataTypes"
+            :key="i"
+            :dataType="dataType"
+            :detailData="detailData"
+            :lowerTitleBox="lowerTitleBox"
+          />
+        </div>
       </div>
       <button type="button" class="btn btn-primary">확인</button>
     </div>
   </div>
 
-  {{ console.log("data:", detailData) }}
   <!-- {{ console.log("createAt:", detailData[3].createAt) }} -->
 </template>
 
@@ -45,11 +54,15 @@ export default {
   name: "PopUp",
   data() {
     return {
-      titleBox: {
+      upperDataTypes: ["name", "contact", "type", "status"],
+      lowerDataTypes: ["contents", "file", "manager"],
+      upperTitleBox: {
         name: "이름: ",
         contact: "연락처: ",
         type: "문의유형: ",
         status: "진행상황: ",
+      },
+      lowerTitleBox: {
         contents: "문의내용: ",
         file: "파일첨부: ",
         manager: "담당자: ",
@@ -144,45 +157,6 @@ export default {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.title {
-  width: 70px;
-  line-height: 34px;
-  text-align: end;
-}
-
-.upperBox {
-  width: 90%;
-  font-size: 18px;
-  display: flex;
-}
-
-.lowerBox {
-  width: 90%;
-  font-size: 18px;
-}
-
-.upperContent {
-  width: 90%;
-  height: 34px;
-  line-height: 34px;
-  margin-left: 10px;
-}
-
-.lowerContent {
-  width: 100%;
-  height: 96px;
-  line-height: 34px;
-  overflow: scroll;
-}
-
-.greyLine {
-  width: 100%;
-  height: 1px;
-  background-color: #e4e4e4;
-  margin-top: 15px;
-  margin-bottom: 10px;
 }
 
 .btn {

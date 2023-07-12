@@ -1,9 +1,9 @@
 <template>
   <div class="upperBox" r>
-    <div class="title">
-      {{ titleBox.name }}
+    <div class="upperTitle">
+      {{ upperTitleBox[dataType] }}
     </div>
-    <div class="upperContent">{{ detailData[0].name }}</div>
+    <div class="upperContent">{{ detailData[0][dataType] }}</div>
   </div>
 </template>
 
@@ -11,11 +11,30 @@
 export default {
   name: "UpperContentBox",
   props: {
-    titleBox: Object,
+    upperTitleBox: Object,
     detailData: Object,
-    type: String,
+    dataType: String,
   },
 };
 </script>
 
-<style></style>
+<style>
+.upperBox {
+  width: 90%;
+  font-size: 18px;
+  display: flex;
+}
+
+.upperTitle {
+  width: 70px;
+  line-height: 34px;
+  text-align: end;
+}
+
+.upperContent {
+  width: 90%;
+  height: 34px;
+  line-height: 34px;
+  margin-left: 10px;
+}
+</style>
