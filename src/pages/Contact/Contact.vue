@@ -86,7 +86,7 @@
                       class="textInput"
                       :type="inputType"
                       :placeholder="contactType"
-                      @keyup="onlyNumber"
+                      @keydown="onlyNumber"
                     />
                     <span class="warning" v-if="!contact"
                       >연락처는 필수 입력사항입니다.</span
@@ -107,7 +107,7 @@
                         this.contactRadio === '전화번호' &&
                         this.contact.length !== 11
                       "
-                      >전화번호 양식을 지켜주세요</span
+                      >숫자만 입력해주세요</span
                     >
                   </div>
 
@@ -254,18 +254,6 @@ export default {
         this.inputType = "number";
       }
     },
-    onlyNumber(e) {
-      if (
-        this.inputType === "number" &&
-        !(
-          (e.keyCode > 95 && e.keyCode < 106) ||
-          (e.keyCode > 47 && e.keyCode < 58) ||
-          e.keyCode == 8
-        )
-      ) {
-        return;
-      }
-    },
   },
   created() {
     this.changePlaceholder();
@@ -276,11 +264,6 @@ export default {
 <style lang="scss">
 @import "../../assets/scss/variables.scss";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap");
-
-/* body {
-  width: 100%;
-  height: 100%;
-} */
 
 .backgroundColor {
   background-color: #fff5ea;
