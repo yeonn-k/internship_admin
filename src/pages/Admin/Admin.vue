@@ -1,23 +1,32 @@
 <template>
-  <div class="boardContainer">
+  <div class="boardContainer" @openPopup="isOpened = true">
     <SummaryBoard class="summaryBoard" :summaryData="contactDatas" />
     <AdminBoard
       class="board"
       title="Backlog"
       :dataArray="filteredDatas('Backlog')"
+      :contactDatas="contactDatas"
     />
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredDatas('Progress')"
+      :contactDatas="contactDatas"
     />
-    <AdminBoard class="board" title="Done" :dataArray="filteredDatas('Done')" />
+    <AdminBoard
+      class="board"
+      title="Done"
+      :dataArray="filteredDatas('Done')"
+      :contactDatas="contactDatas"
+    />
   </div>
+  <PopUp v-if="isOpened === true" />
 </template>
 
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
+import PopUp from "./components/PopUp/PopUp.vue";
 import data from "../../assets/contact.json";
 const contactDatas = data;
 
@@ -27,11 +36,13 @@ export default {
   components: {
     AdminBoard,
     SummaryBoard,
+    PopUp,
   },
 
   data() {
     return {
       contactDatas,
+      isOpened: false,
     };
   },
 

@@ -1,5 +1,12 @@
 <template>
   <div class="adminBoard">
+    <PopUp
+      v-if="isOpened === true"
+      @ClosePopup="isOpened = false"
+      :dataId="dataId"
+      :filteredData="filteredData"
+    />
+
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -30,6 +37,9 @@
           <CardComponent
             class="list-group-item"
             :data="element"
+            @openPopup="isOpened = true"
+            @sendId="getDataId"
+            @click="filterId"
           ></CardComponent>
         </template>
       </draggable>
@@ -40,6 +50,7 @@
 <script>
 import CardComponent from "./CardComponent.vue";
 import draggable from "vuedraggable";
+import PopUp from "./PopUp/PopUp.vue";
 
 export default {
   name: "AdminBoard",
@@ -47,16 +58,16 @@ export default {
   props: {
     title: String,
     dataArray: Array,
+    contactDatas: Array,
   },
-
-  components: { CardComponent, draggable },
-
+  components: { CardComponent, draggable, PopUp },
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
       progress: ["회신중", "회신 대기", "추가 회신"],
       dataLists: this.dataArray,
       filteredData: [],
+      isOpened: false,
     };
   },
 
@@ -82,6 +93,14 @@ export default {
         default:
           return (this.dataLists = this.dataArray);
       }
+    },
+    getDataId(data) {
+      this.dataId = data.dataId;
+    },
+    filterId() {
+      this.filteredData = this.contactDatas.filter(
+        (data) => data.id === this.dataId
+      );
     },
   },
 
