@@ -3,9 +3,17 @@
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title">{{ data.type }}</h5>
-        <h6 class="card-subtitle">등록일자 {{ data.createAt }}</h6>
+        <button
+          type="button"
+          class="btn-close deleteBtn"
+          @click="deleteCard()"
+          v-if="cardStatus()"
+        ></button>
       </header>
-      <span :class="['badge', badgeBorder]">{{ data.status }}</span>
+      <div class="labelWrapper">
+        <span :class="['badge', badgeBorder]">{{ data.status }}</span>
+        <h6 class="card-subtitle">등록일자 {{ data.createAt }}</h6>
+      </div>
       <div class="categoryContainer">
         <div class="contactCategory">
           <p class="categoryTitle">이름</p>
@@ -16,7 +24,6 @@
           <p class="categoryValue">{{ data.contact }}</p>
         </div>
       </div>
-      <hr />
       <div class="inChargeInfo">
         <p class="department">담당부서</p>
         <div
@@ -32,11 +39,10 @@
             @click="deleteItem(item)"
           ></button>
         </div>
-
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
+          width="21"
+          height="21"
           fill="currentColor"
           class="bi bi-caret-down-fill"
           viewBox="0 0 16 16"
@@ -66,14 +72,33 @@
 <script>
 export default {
   name: "CardComponent",
+
   props: { data: Object },
+
   data() {
     return { selected: null, isClicked: false, array: [] };
   },
+
   methods: {
+    cardStatus() {
+      if (
+        this.data.status === "회신 완료" ||
+        this.data.status === "미팅 확정"
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    deleteCard() {
+      alert("카드 삭제 기능 추가 구현");
+    },
+
     showDropdown() {
       this.isClicked = !this.isClicked;
     },
+
     addArray(selected) {
       if (this.array.indexOf(selected) == -1) {
         this.array.push(selected);
@@ -82,10 +107,12 @@ export default {
         return this.array;
       }
     },
+
     deleteItem(item) {
       this.array = this.array.filter((data) => data !== item);
       this.selected = null;
     },
+
     labelBorder(item) {
       if (item == "기술") {
         return "label-green";
@@ -96,6 +123,7 @@ export default {
       }
     },
   },
+
   computed: {
     cardBorder() {
       if (this.data.type === "MR 문의") {
@@ -106,6 +134,7 @@ export default {
         return "border-red";
       }
     },
+
     badgeBorder() {
       if (this.data.status === "회신 대기") {
         return "badge-blue";
@@ -145,6 +174,12 @@ export default {
   }
 }
 
+.deleteBtn {
+  text-align: end;
+  width: 16px;
+  height: 16px;
+}
+
 .badge {
   color: black;
   font-size: 1rem;
@@ -179,6 +214,14 @@ export default {
     width: 100%;
     font-size: 1rem;
   }
+}
+
+.labelWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 5px;
 
   .card-subtitle {
     text-align: end;
@@ -189,20 +232,21 @@ export default {
 }
 
 .categoryContainer {
-  display: flex;
   width: 100%;
-  height: 60px;
-  justify-content: space-around;
   text-align: center;
+  margin: 10px 0 5px;
 
   .contactCategory {
     display: flex;
-    flex-direction: column;
-    margin: 15px 0;
     gap: 5px;
+    margin: 3px 0;
 
     .categoryTitle {
       font-weight: 600;
+      margin: 0;
+    }
+
+    .categoryValue {
       margin: 0;
     }
   }
@@ -212,10 +256,17 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid $lightGrey;
 
   .department {
     font-weight: 600;
     margin-bottom: 0px;
+  }
+
+  svg {
+    padding: 2px;
   }
 
   .departmentBadge {

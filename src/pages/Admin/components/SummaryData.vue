@@ -7,6 +7,11 @@
         <span class="number">{{ getLength(list) }}</span
         >건
       </div>
+      <!-- <div class="dataPercentage">
+        <span class="number"
+          >{{ Math.ceil((getLength(list) / data.length) * 100) }}%</span
+        >
+      </div>-->
     </div>
   </div>
 </template>
@@ -14,10 +19,12 @@
 <script>
 export default {
   name: "SummaryData",
+
   props: {
     type: String,
     data: Array,
   },
+
   data() {
     return {
       statusList: [
@@ -32,6 +39,7 @@ export default {
       typeList: ["MR 문의", "컨설팅 문의", "일반 문의"],
     };
   },
+
   methods: {
     getLength(list) {
       if (list == "문의 등록") {
@@ -49,6 +57,7 @@ export default {
       }
     },
   },
+
   computed: {
     lists() {
       if (this.type === "status") {

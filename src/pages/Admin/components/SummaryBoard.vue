@@ -21,17 +21,21 @@ import SummaryData from "./SummaryData.vue";
 
 export default {
   name: "SummaryBoard",
+
   components: {
     SummaryData,
   },
+
   props: {
     summaryData: Array,
   },
+
   data() {
     return {
       summaryList: this.summaryData,
     };
   },
+
   methods: {
     filteredData(type) {
       if (type === "status") {

@@ -23,15 +23,18 @@ const contactDatas = data;
 
 export default {
   name: "AdminVue",
+
   components: {
     AdminBoard,
     SummaryBoard,
   },
+
   data() {
     return {
       contactDatas,
     };
   },
+
   methods: {
     filteredDatas(title) {
       if (title === "Backlog") {

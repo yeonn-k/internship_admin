@@ -11,7 +11,7 @@
           aria-label=".form-select-sm example"
           @click="setFilter()"
         >
-          <option selected>필터 정렬</option>
+          <option selected>전체 보기</option>
           <option v-for="item in items" :key="item" :value="item">
             {{ item }}
           </option>
@@ -43,11 +43,14 @@ import draggable from "vuedraggable";
 
 export default {
   name: "AdminBoard",
+
   props: {
     title: String,
     dataArray: Array,
   },
+
   components: { CardComponent, draggable },
+
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
@@ -56,6 +59,7 @@ export default {
       filteredData: [],
     };
   },
+
   methods: {
     setFilter() {
       const filter = event.target.value;
@@ -80,6 +84,7 @@ export default {
       }
     },
   },
+
   computed: {
     items() {
       if (this.title === "Backlog") {
