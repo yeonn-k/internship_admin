@@ -5,13 +5,20 @@
       class="board"
       title="Backlog"
       :dataArray="filteredDatas('Backlog')"
+      :contactDatas="contactDatas"
     />
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredDatas('Progress')"
+      :contactDatas="contactDatas"
     />
-    <AdminBoard class="board" title="Done" :dataArray="filteredDatas('Done')" />
+    <AdminBoard
+      class="board"
+      title="Done"
+      :dataArray="filteredDatas('Done')"
+      :contactDatas="contactDatas"
+    />
   </div>
   <PopUp v-if="isOpened === true" />
 </template>

@@ -124,7 +124,7 @@
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
-                      v-model="contents"
+                      v-model="managerComment"
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
                     />
                   </div>

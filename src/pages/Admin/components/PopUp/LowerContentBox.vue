@@ -4,7 +4,9 @@
     <div class="lowerTitle">
       {{ lowerTitleBox[dataType] }}
     </div>
-    <div class="lowerContent">{{ detailData[0][dataType] }}</div>
+    <div v-if="dataType !== 'manager'" class="lowerContent">
+      {{ filteredData[0][dataType] }}
+    </div>
   </div>
 </template>
 
@@ -15,6 +17,7 @@ export default {
     lowerTitleBox: Object,
     detailData: Object,
     dataType: String,
+    filteredData: Array,
   },
 };
 </script>

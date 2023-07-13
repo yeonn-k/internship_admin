@@ -1,9 +1,8 @@
 <template>
   <div class="blackBg" v-if="detailData">
     <div class="whiteBg">
-      {{ console.log(dataId) }}
       <div class="content">
-        <div class="colorBox">
+        <div :class="['colorBox', cardType]">
           <div class="Xbox">
             <svg
               @click="$emit('closePopup')"
@@ -20,7 +19,7 @@
             </svg>
           </div>
         </div>
-        <div class="dateBox">등록일자 : {{ detailData[0].createAt }}</div>
+        <div class="dateBox">등록일자 : {{ filteredData[0].createAt }}</div>
         <div class="contentBox">
           <UpperContentBox
             v-for="(dataType, i) in upperDataTypes"
@@ -28,6 +27,8 @@
             :dataType="dataType"
             :detailData="detailData"
             :upperTitleBox="upperTitleBox"
+            :dataId="dataId"
+            :filteredData="filteredData"
           />
         </div>
 
@@ -38,10 +39,26 @@
             :dataType="dataType"
             :detailData="detailData"
             :lowerTitleBox="lowerTitleBox"
+            :dataId="dataId"
+            :filteredData="filteredData"
           />
+
+          <textarea
+            v-model="managerComment"
+            placeholder="(선택) 자세한 문의 내용을 입력해주세요."
+          />
+          <div class="managerCommentBox">
+            {{ managerComment }}
+          </div>
         </div>
       </div>
-      <button type="button" class="btn btn-primary">확인</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="$emit('closePopup')"
+      >
+        확인
+      </button>
     </div>
   </div>
 </template>
@@ -54,6 +71,7 @@ export default {
   name: "PopUp",
   props: {
     dataId: String,
+    filteredData: Array,
   },
   data() {
     return {
@@ -71,6 +89,7 @@ export default {
         manager: "담당자: ",
       },
       detailData: null,
+      managerComment: "",
     };
   },
   components: {
@@ -88,10 +107,24 @@ export default {
         .then((data) => (this.detailData = data));
     },
   },
+
+  computed: {
+    cardType() {
+      if (this.filteredData[0].type === "MR 문의") {
+        return "border-green";
+      } else if (this.filteredData[0].type === "컨설팅 문의") {
+        return "border-blue";
+      } else {
+        return "border-red";
+      }
+    },
+  },
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "../../../../assets/scss/variables.scss";
+
 .blackBg {
   z-index: 10;
   position: fixed;
@@ -124,12 +157,23 @@ export default {
 }
 
 .colorBox {
-  background-color: #fff8bd;
   width: 97%;
   height: 50px;
   margin: 0 auto;
   margin-top: 13px;
   border-radius: 5px;
+
+  &.border-green {
+    background-color: $green;
+  }
+
+  &.border-red {
+    background-color: $red;
+  }
+
+  &.border-blue {
+    background-color: $blue;
+  }
 }
 
 .contents {
@@ -166,10 +210,33 @@ export default {
 .btn {
   width: 120px;
   height: 34px;
+  line-height: 0;
   background-color: #f39366;
   color: #fff;
   border: none;
   border-radius: 5px;
   margin-bottom: 50px;
+
+  &:hover {
+    background-color: #f39366;
+  }
+
+  &:active {
+    background-color: $primaryColor;
+  }
+}
+
+textarea {
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  resize: none;
+  width: 92%;
+  height: 100px;
+  padding: 10px;
+}
+
+.managerCommentBox {
+  width: 90%;
 }
 </style>

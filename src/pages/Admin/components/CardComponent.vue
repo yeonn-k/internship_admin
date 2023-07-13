@@ -91,7 +91,6 @@ export default {
     },
     sendId() {
       this.$emit("sendId", { dataId: this.data.id });
-      // console.log({ dataId: this.data.id });
     },
   },
   computed: {

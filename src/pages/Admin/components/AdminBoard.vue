@@ -4,8 +4,9 @@
       v-if="isOpened === true"
       @ClosePopup="isOpened = false"
       :dataId="dataId"
+      :filteredData="filteredData"
     />
-    {{ console.log("부모:", dataId) }}
+
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -37,6 +38,7 @@
             :data="element"
             @openPopup="isOpened = true"
             @sendId="getDataId"
+            @click="filterId"
           ></CardComponent>
         </template>
       </draggable>
@@ -54,6 +56,7 @@ export default {
   props: {
     title: String,
     dataArray: Array,
+    contactDatas: Array,
   },
   components: { CardComponent, draggable, PopUp },
   data() {
@@ -78,6 +81,11 @@ export default {
   methods: {
     getDataId(data) {
       this.dataId = data.dataId;
+    },
+    filterId() {
+      this.filteredData = this.contactDatas.filter(
+        (data) => data.id === this.dataId
+      );
     },
   },
 };
