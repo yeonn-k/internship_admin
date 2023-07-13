@@ -1,6 +1,6 @@
 <template>
   <div class="blackBg" v-if="detailData">
-    <div class="whiteBg">
+    <div class="popupWhiteBg">
       <div class="content">
         <div :class="['colorBox', cardType]">
           <div class="Xbox">
@@ -135,7 +135,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.whiteBg {
+.popupWhiteBg {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -213,6 +213,7 @@ export default {
 
   border-radius: 5px;
   margin-bottom: 50px;
+  margin-top: 30px;
 
   &:hover {
     background-color: $primaryColor;
@@ -235,5 +236,6 @@ textarea {
 
 .managerCommentBox {
   width: 90%;
+  word-wrap: break-word;
 }
 </style>

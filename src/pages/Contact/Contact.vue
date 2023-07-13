@@ -67,6 +67,7 @@
                           v-model="contactRadio"
                           type="radio"
                           class="radio"
+                          @change="changePlaceholder"
                         />
                         <label for="contactBy">{{ contactBy }}</label>
                       </span>
@@ -76,17 +77,37 @@
                     >
                   </div>
                   <div class="boxLine">
+                    <!-- v-if="contactRadio === 'e-mail'" -->
                     <input
                       name="contactTo"
                       id="contactTo"
                       v-model="contact"
                       required=""
                       class="textInput"
-                      type="text"
-                      placeholder="연락처를 입력해주세요."
+                      :type="inputType"
+                      :placeholder="contactType"
+                      @keydown="onlyNumber"
                     />
                     <span class="warning" v-if="!contact"
                       >연락처는 필수 입력사항입니다.</span
+                    >
+                    <span
+                      class="warning"
+                      v-if="
+                        contact &&
+                        this.contactRadio === 'e-mail' &&
+                        !this.contact.includes('@')
+                      "
+                      >이메일 양식을 지켜주세요 ('@'를 포함해주세요)</span
+                    >
+                    <span
+                      class="warning"
+                      v-if="
+                        contact &&
+                        this.contactRadio === '전화번호' &&
+                        this.contact.length !== 11
+                      "
+                      >숫자만 입력해주세요</span
                     >
                   </div>
 
@@ -124,9 +145,9 @@
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
-                      v-model="managerComment"
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
                     />
+                    <!-- v-model="managerComment" -->
                   </div>
                 </div>
               </form>
@@ -182,9 +203,12 @@ export default {
       errors: [],
       name: null,
       contactRadio: null,
+      contactType: "",
       contact: null,
       type: null,
       contents: null,
+
+      inputType: "",
     };
   },
   methods: {
@@ -208,8 +232,31 @@ export default {
       if (!this.type) {
         this.errors.push("type");
       }
-      if (!this.errors.length) return this.openSubmit();
+      if (this.contactRadio === "e-mail" && !this.contact.includes("@")) {
+        this.errors.push("email");
+      }
+      if (this.contactRadio === "전화번호" && this.contact.length !== 11) {
+        this.errors.push("tel");
+      }
+      return this.openSubmit();
     },
+    changePlaceholder() {
+      if (this.contactType === "") {
+        this.contactType = "연락처를 입력해주세요";
+        this.inputType = "text";
+      }
+      if (this.contactRadio === "e-mail") {
+        this.contactType = "e-mail을 입력해주세요";
+        this.inputType = "text";
+      }
+      if (this.contactRadio === "전화번호") {
+        this.contactType = "전화번호를 입력해주세요";
+        this.inputType = "number";
+      }
+    },
+  },
+  created() {
+    this.changePlaceholder();
   },
 };
 </script>
@@ -220,15 +267,20 @@ export default {
 
 .backgroundColor {
   background-color: #fff5ea;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   display: flex;
   justify-content: center;
+  align-content: center;
   flex-wrap: wrap;
 }
 
 .wrapContact {
   width: 100%;
+  display: flex;
+  margin-top: -140px;
+  justify-content: center;
 }
 
 .contact {
@@ -237,7 +289,7 @@ export default {
   width: 1280px;
   margin: 0 auto;
   padding: 0px 70px;
-  margin-top: 100px;
+  margin-top: 180px;
 }
 
 .contactBox {
@@ -346,6 +398,12 @@ export default {
 .radioBox span {
   display: flex;
   line-height: 32px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .addFile {

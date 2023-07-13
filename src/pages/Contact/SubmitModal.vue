@@ -1,34 +1,29 @@
 <template>
-  <div class="blackBg">
-    <div class="whiteBg">
-      <div class="Xbox">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="currentColor"
-          class="bi bi-x-lg"
-          viewBox="0 0 16 16"
-          @click="$emit('closeSubmit')"
-        >
-          <path
-            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
-          />
-        </svg>
-      </div>
-      <div class="line" />
-      <div class="textBox">
-        <p v-if="errorsLength === 0">제출되었습니다.</p>
-        <p v-else>입력 양식을 지켜주세요.</p>
-      </div>
-      <button
+  <div class="blackBg" @click.stop="$emit('closeSubmit')" />
+  <div class="SubmitWhiteBg">
+    <div class="Xbox">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="bi bi-x-lg"
+        viewBox="0 0 16 16"
         @click="$emit('closeSubmit')"
-        type="button"
-        class="btn btn-primary"
       >
-        확인
-      </button>
+        <path
+          d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+        />
+      </svg>
     </div>
+    <div class="line" />
+    <div class="textBox">
+      <p v-if="errorsLength === 0">제출되었습니다.</p>
+      <p v-else>입력 양식을 지켜주세요.</p>
+    </div>
+    <button @click="$emit('closeSubmit')" type="button" class="btn btn-primary">
+      확인
+    </button>
   </div>
 </template>
 
@@ -58,10 +53,13 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.whiteBg {
-  margin-top: 20%;
+.SubmitWhiteBg {
+  position: absolute;
+  z-index: 15;
+  top: 50%;
+  margin-top: -130px;
   width: 412px;
-  height: 230px;
+  height: 260px;
   background-color: #fff;
   display: flex;
   justify-content: center;
