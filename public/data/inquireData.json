@@ -7,7 +7,7 @@
     "type": "MR 문의",
     "status": "회신 완료",
     "contents": "하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하하",
-    "manager": "김지연",
+    "department": "영업",
     "file": ""
   },
   {
@@ -18,7 +18,7 @@
     "type": "MR 문의",
     "status": "회신 완료",
     "contents": "호호호",
-    "manager": "",
+    "department": "",
     "file": ""
   },
   {
@@ -29,7 +29,7 @@
     "type": "MR 문의",
     "status": "회신 완료",
     "contents": "히히히",
-    "manager": "",
+    "department": "",
     "file": ""
   },
   {
@@ -40,7 +40,7 @@
     "type": "MR 문의",
     "status": "회신 완료",
     "contents": "",
-    "manager": "",
+    "department": "",
     "file": ""
   }
 ]

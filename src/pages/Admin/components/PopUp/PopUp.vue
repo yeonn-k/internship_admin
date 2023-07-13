@@ -52,11 +52,7 @@
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="$emit('closePopup')"
-      >
+      <button type="button" class="btn" @click="$emit('closePopup')">
         확인
       </button>
     </div>
@@ -211,14 +207,15 @@ export default {
   width: 120px;
   height: 34px;
   line-height: 0;
-  background-color: #f39366;
-  color: #fff;
-  border: none;
+  border: 1px solid $primaryColor;
+  background-color: #fff;
+  color: $primaryColor;
+
   border-radius: 5px;
   margin-bottom: 50px;
 
   &:hover {
-    background-color: #f39366;
+    background-color: $primaryColor;
   }
 
   &:active {
