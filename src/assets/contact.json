@@ -40,14 +40,6 @@
     "status": "회신 대기"
   },
   {
-    "id": "6",
-    "createAt": "230711",
-    "name": "김수",
-    "contact": "cccc@bbbb.com",
-    "type": "MR 문의",
-    "status": "회신중"
-  },
-  {
     "id": "7",
     "createAt": "230711",
     "name": "김연",
@@ -70,5 +62,13 @@
     "contact": "010-5678-1234",
     "type": "MR 문의",
     "status": ""
+  },
+  {
+    "id": "10",
+    "createAt": "230711",
+    "name": "김연",
+    "contact": "cccc@bbbb.com",
+    "type": "일반 문의",
+    "status": "회신중"
   }
 ]
