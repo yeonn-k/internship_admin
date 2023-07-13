@@ -1,6 +1,6 @@
 <template>
   <div class="boardContainer" @openPopup="isOpened = true">
-    <SummaryBoard class="summaryBoard" />
+    <SummaryBoard class="summaryBoard" :summaryData="contactDatas" />
     <AdminBoard
       class="board"
       title="Backlog"
@@ -32,26 +32,34 @@ const contactDatas = data;
 
 export default {
   name: "AdminVue",
+
   components: {
     AdminBoard,
     SummaryBoard,
     PopUp,
   },
+
   data() {
     return {
       contactDatas,
       isOpened: false,
     };
   },
+
   methods: {
     filteredDatas(title) {
       if (title === "Backlog") {
-        return this.contactDatas.filter((data) => data.status === "회신 대기");
+        return this.contactDatas.filter((data) => data.status === "");
       } else if (title === "Done") {
-        return this.contactDatas.filter((data) => data.status === "회신 완료");
+        return this.contactDatas.filter(
+          (data) => data.status === "회신 완료" || data.status === "미팅 확정"
+        );
       } else if (title === "Progress") {
         return this.contactDatas.filter(
-          (data) => data.status === "회신중" || data.status === "추가 회신"
+          (data) =>
+            data.status === "회신중" ||
+            data.status === "추가 회신" ||
+            data.status === "회신 대기"
         );
       } else {
         return [];

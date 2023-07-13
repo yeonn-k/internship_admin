@@ -4,14 +4,14 @@
     <div class="totalSummary">
       <div>총 회신:</div>
       <div>
-        <span class="number">8</span>
+        <span class="number">{{ summaryData.length }}</span>
         건
       </div>
     </div>
     <div class="dataContainer">
-      <SummaryData type="status" />
-      <SummaryData type="department" />
-      <SummaryData type="type" />
+      <SummaryData type="status" :data="filteredData('status')" />
+      <SummaryData type="department" :data="filteredData('department')" />
+      <SummaryData type="type" :data="filteredData('type')" />
     </div>
   </div>
 </template>
@@ -21,8 +21,33 @@ import SummaryData from "./SummaryData.vue";
 
 export default {
   name: "SummaryBoard",
+
   components: {
     SummaryData,
+  },
+
+  props: {
+    summaryData: Array,
+  },
+
+  data() {
+    return {
+      summaryList: this.summaryData,
+    };
+  },
+
+  methods: {
+    filteredData(type) {
+      if (type === "status") {
+        return this.summaryList.map((data) => data.status);
+      } else if (type === "department") {
+        return this.summaryList.map((data) => data.department);
+      } else if (type === "type") {
+        return this.summaryList.map((data) => data.type);
+      } else {
+        return [];
+      }
+    },
   },
 };
 </script>

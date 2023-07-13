@@ -1,55 +1,55 @@
 [
   {
     "id": "1",
-    "createAt": "23.07.02",
+    "createAt": "230702",
     "name": "홍길동",
     "contact": "010-1234-1234",
     "type": "MR 문의",
-    "status": "회신 완료"
-  },
-  {
-    "id": "2",
-    "createAt": "23.07.04",
-    "name": "김철수",
-    "contact": "aaaaa@aaa.com",
-    "type": "일반 문의",
-    "status": "추가 회신"
-  },
-  {
-    "id": "3",
-    "createAt": "23.07.08",
-    "name": "이영희",
-    "contact": "010-1234-5678",
-    "type": "컨설팅 문의",
-    "status": "회신 대기"
-  },
-  {
-    "id": "4",
-    "createAt": "23.07.10",
-    "name": "박순희",
-    "contact": "010-9876-5432",
-    "type": "컨설팅 문의",
     "status": "회신중"
   },
   {
-    "id": "5",
-    "createAt": "23.07.11",
-    "name": "이영수",
-    "contact": "cccc@bbbb.com",
+    "id": "2",
+    "createAt": "230704",
+    "name": "김철수",
+    "contact": "aaaaa@aaa.com",
+    "type": "MR 문의",
+    "status": "미팅 확정"
+  },
+  {
+    "id": "3",
+    "createAt": "230708",
+    "name": "이영희",
+    "contact": "010-1234-5678",
+    "type": "컨설팅 문의",
+    "status": ""
+  },
+  {
+    "id": "4",
+    "createAt": "230710",
+    "name": "박순희",
+    "contact": "010-9876-5432",
     "type": "일반 문의",
     "status": "추가 회신"
   },
   {
-    "id": "6",
-    "createAt": "23.07.11",
-    "name": "김수",
+    "id": "5",
+    "createAt": "230711",
+    "name": "이영수",
     "contact": "cccc@bbbb.com",
-    "type": "MR 문의",
+    "type": "컨설팅 문의",
     "status": "회신 대기"
   },
   {
+    "id": "6",
+    "createAt": "230711",
+    "name": "김수",
+    "contact": "cccc@bbbb.com",
+    "type": "MR 문의",
+    "status": "회신중"
+  },
+  {
     "id": "7",
-    "createAt": "23.07.11",
+    "createAt": "230711",
     "name": "김연",
     "contact": "cccc@bbbb.com",
     "type": "일반 문의",
@@ -57,10 +57,18 @@
   },
   {
     "id": "8",
-    "createAt": "23.07.11",
+    "createAt": "230711",
     "name": "이혁",
     "contact": "cccc@bbbb.com",
     "type": "컨설팅 문의",
     "status": "회신 완료"
+  },
+  {
+    "id": "9",
+    "createAt": "230712",
+    "name": "김율",
+    "contact": "010-5678-1234",
+    "type": "MR 문의",
+    "status": ""
   }
 ]

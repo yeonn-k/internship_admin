@@ -2,11 +2,16 @@
   <div class="summaryData">
     <div>{{ list }}</div>
     <div class="dataList" v-for="list in lists" :key="list">
-      <span class="dataCategory">{{ list.title }}</span>
+      <span class="dataCategory">{{ list }}</span>
       <div class="dataLength">
-        <span class="number">{{ list.length }}</span
+        <span class="number">{{ getLength(list) }}</span
         >건
       </div>
+      <!-- <div class="dataPercentage">
+        <span class="number"
+          >{{ Math.ceil((getLength(list) / data.length) * 100) }}%</span
+        >
+      </div>-->
     </div>
   </div>
 </template>
@@ -14,35 +19,53 @@
 <script>
 export default {
   name: "SummaryData",
+
   props: {
     type: String,
+    data: Array,
   },
+
   data() {
     return {
-      statusLists: [
-        { title: "회신 대기", length: "2" },
-        { title: "회신 진행", length: "3" },
-        { title: "회신 완료", length: "3" },
+      statusList: [
+        "문의 등록",
+        "회신 대기",
+        "추가 회신",
+        "회신중",
+        "회신 완료",
+        "미팅 확정",
       ],
-      departmentLists: [
-        { title: "영업팀", length: "3" },
-        { title: "기술팀", length: "5" },
-      ],
-      typeLists: [
-        { title: "MR 문의", length: "3" },
-        { title: "컨설팅 문의", length: "2" },
-        { title: "일반 문의", length: "3" },
-      ],
+      departmentList: ["영업팀", "기술팀"],
+      typeList: ["MR 문의", "컨설팅 문의", "일반 문의"],
     };
   },
+
+  methods: {
+    getLength(list) {
+      if (list == "문의 등록") {
+        const count = this.data.reduce((lengths, item) => {
+          if (item == "") return lengths + 1;
+          return lengths;
+        }, 0);
+        return count;
+      } else {
+        const count = this.data.reduce((lengths, item) => {
+          if (item == list) return lengths + 1;
+          return lengths;
+        }, 0);
+        return count;
+      }
+    },
+  },
+
   computed: {
     lists() {
       if (this.type === "status") {
-        return this.statusLists;
+        return this.statusList;
       } else if (this.type === "department") {
-        return this.departmentLists;
+        return this.departmentList;
       } else if (this.type === "type") {
-        return this.typeLists;
+        return this.typeList;
       } else {
         return [];
       }
