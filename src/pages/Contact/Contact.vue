@@ -108,7 +108,7 @@
                       </span>
                     </div>
 
-                    <span class="warning" v-if="!inquireRadio"
+                    <span class="warning" v-if="!type"
                       >요청 사항 선택은 필수 입력사항입니다.</span
                     >
                   </div>
@@ -116,15 +116,15 @@
                   <div class="boxLine">
                     <input
                       type="file"
-                      class="form-control"
                       id="inputFile"
+                      class="addFile"
                       aria-describedby="inputFile"
                       aria-label="Upload"
                     />
                   </div>
                   <div class="textAreaBoxLine">
                     <textarea
-                      v-model="contents"
+                      v-model="managerComment"
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
                     />
                   </div>
@@ -348,13 +348,10 @@ export default {
   line-height: 32px;
 }
 
-.form-control {
+.addFile {
   background: none;
   margin-top: 5px;
   margin-left: 10px;
-}
-
-.form-control {
   line-height: 0;
 }
 
