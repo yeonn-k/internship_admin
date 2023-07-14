@@ -1,6 +1,6 @@
 <template>
-  <div class="blackBg" v-if="detailData">
-    <div class="popupWhiteBg">
+  <div class="blackBg" v-if="detailData" @click="$emit('closePopup')">
+    <div class="popupWhiteBg" @click.stop>
       <div class="content">
         <div :class="['colorBox', cardType]">
           <div class="Xbox">
@@ -43,12 +43,47 @@
             :filteredData="filteredData"
           />
 
-          <textarea
-            v-model="managerComment"
-            placeholder="(선택) 자세한 문의 내용을 입력해주세요."
-          />
-          <div class="managerCommentBox">
-            {{ managerComment }}
+          <div class="manager">
+            <textarea
+              class="managerComment"
+              v-model="managerComment"
+              placeholder="필요한 메모를 작성해주세요."
+              @keyup.enter="submit"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pen"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+              />
+            </svg>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="primaryColor"
+              class="bi bi-check-circle-fill"
+              viewBox="0 0 16 16"
+              @click="isSubmit(), saveComment()"
+            >
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+              />
+            </svg>
+
+            <div>
+              {{ managerCommentBox }}
+            </div>
+
+            {{ console.log("managerComment:", managerComment) }}
+            {{ console.log("managerCommentBox: ", managerCommentBox) }}
+            {{ console.log("submit: ", submit) }}
           </div>
         </div>
       </div>
@@ -86,6 +121,9 @@ export default {
       },
       detailData: null,
       managerComment: "",
+      managerCommentBox: "",
+      managerComments: [],
+      submit: false,
     };
   },
   components: {
@@ -102,6 +140,23 @@ export default {
         .then((response) => response.json())
         .then((data) => (this.detailData = data));
     },
+
+    isSubmit() {
+      return (this.submit = true);
+    },
+
+    saveComment() {
+      if (this.managerComment && this.submit) {
+        this.managerComments.push(this.managerComment);
+
+        this.managerCommentBox = this.managerComments.join(" ");
+        this.managerComment = "";
+      }
+
+      return this.managerCommentBox;
+    },
+
+    //managerCommentBox &&
   },
 
   computed: {
@@ -210,7 +265,6 @@ export default {
   border: 1px solid $primaryColor;
   background-color: #fff;
   color: $primaryColor;
-
   border-radius: 5px;
   margin-bottom: 50px;
   margin-top: 30px;
@@ -224,18 +278,54 @@ export default {
   }
 }
 
-textarea {
+.bi-check-circle-fill {
+  fill: $primaryColor;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    cursor: pointer;
+  }
+}
+
+.bi-pen {
+  fill: $primaryColor;
+  width: 24px;
+  height: 24px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    cursor: pointer;
+  }
+}
+
+.manager {
+  position: relative;
+  width: 90%;
+  overflow: scroll;
+}
+
+.managerComment {
   outline: none;
   border: none;
   border-radius: 3px;
   resize: none;
   width: 92%;
-  height: 100px;
+  height: 55px;
   padding: 10px;
 }
 
 .managerCommentBox {
-  width: 90%;
+  margin-top: 10px;
+  width: 100%;
   word-wrap: break-word;
 }
 </style>
