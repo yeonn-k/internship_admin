@@ -105,11 +105,18 @@ export default {
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
-      size: 2,
+      size: 3,
       dataLists: this.dataArray.slice(this.pageNumber, this.size),
     };
   },
-
+  watch: {
+    dataArray: {
+      handler() {
+        this.updateDataLists();
+      },
+      immediate: true,
+    },
+  },
   methods: {
     setFilter() {
       const filter = event.target.value;

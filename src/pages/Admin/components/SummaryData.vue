@@ -1,17 +1,11 @@
 <template>
   <div class="summaryData">
-    <div>{{ list }}</div>
     <div class="dataList" v-for="list in lists" :key="list">
       <span class="dataCategory">{{ list }}</span>
       <div class="dataLength">
         <span class="number">{{ getLength(list) }}</span
         >건
       </div>
-      <!-- <div class="dataPercentage">
-        <span class="number"
-          >{{ Math.ceil((getLength(list) / data.length) * 100) }}%</span
-        >
-      </div>-->
     </div>
   </div>
 </template>

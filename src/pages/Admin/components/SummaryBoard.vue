@@ -13,6 +13,16 @@
       <SummaryData type="department" :data="filteredData('department')" />
       <SummaryData type="type" :data="filteredData('type')" />
     </div>
+    <div class="searchContainer">
+      <div>문의 찾기</div>
+      <input
+        class="searchBar"
+        type="text"
+        :value="searchValue"
+        @input="checkValue"
+        placeholder="이름을 검색하세요"
+      />
+    </div>
   </div>
 </template>
 
@@ -33,6 +43,7 @@ export default {
   data() {
     return {
       summaryList: this.summaryData,
+      searchValue: "",
     };
   },
 
@@ -48,6 +59,10 @@ export default {
         return [];
       }
     },
+    checkValue() {
+      this.searchValue = event.target.value;
+      this.$emit("searchedValue", this.searchValue);
+    },
   },
 };
 </script>
@@ -60,6 +75,7 @@ export default {
   background-color: $lightGrey;
   border-radius: 5px;
   font-family: $fontFamily;
+  padding-bottom: 10px;
 
   .boardTitle {
     display: flex;
@@ -85,6 +101,22 @@ export default {
     .number {
       font-weight: 900;
       color: $primaryColor;
+    }
+  }
+  .searchContainer {
+    font-family: $fontFamily;
+    font-weight: 900;
+    margin: auto;
+    background-color: #ffffff;
+    width: 80%;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .searchBar {
+      border: 1px solid #dadada;
+      width: 80%;
     }
   }
 }
