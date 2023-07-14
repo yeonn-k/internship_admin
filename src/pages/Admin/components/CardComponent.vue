@@ -9,12 +9,9 @@
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title">{{ data.type }}</h5>
-        <button
-          type="button"
-          class="btn-close deleteBtn"
-          @click.stop="deleteCard()"
-          v-if="cardStatus()"
-        ></button>
+        <div>
+          D+<span>{{ this.today - data.createAt + 1 }}</span>
+        </div>
       </header>
       <div class="labelWrapper">
         <span :class="['badge', badgeBorder]">{{ data.status }}</span>
@@ -82,7 +79,7 @@ export default {
   props: { data: Object },
 
   data() {
-    return { selected: null, isClicked: false, array: [] };
+    return { selected: null, isClicked: false, array: [], today: 230717 };
   },
 
   methods: {
@@ -95,10 +92,6 @@ export default {
       } else {
         return false;
       }
-    },
-
-    deleteCard() {
-      alert("카드 삭제 기능 추가 구현");
     },
 
     showDropdown() {
@@ -181,12 +174,6 @@ export default {
   &.border-blue {
     border-color: $blue;
   }
-}
-
-.deleteBtn {
-  text-align: end;
-  width: 16px;
-  height: 16px;
 }
 
 .badge {
