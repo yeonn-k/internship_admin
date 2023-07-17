@@ -2,7 +2,7 @@
   <div class="adminBoard">
     <PopUp
       v-if="isOpened === true"
-      @ClosePopup="isOpened = false"
+      @ClosePopup="ClosePopup"
       :dataId="dataId"
       :filteredData="filteredData"
     />
@@ -101,6 +101,10 @@ export default {
       this.filteredData = this.contactDatas.filter(
         (data) => data.id === this.dataId
       );
+    },
+
+    ClosePopup() {
+      this.isOpened = false;
     },
   },
 

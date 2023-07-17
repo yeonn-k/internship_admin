@@ -31,6 +31,22 @@
             :filteredData="filteredData"
           />
         </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            진행상황 선택
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li v-for="(status, i) in status" :key="i">
+              <a class="dropdown-item">{{ status }}</a>
+            </li>
+          </ul>
+        </div>
 
         <div class="contentBox">
           <LowerContentBox
@@ -44,46 +60,50 @@
           />
 
           <div class="manager">
-            <textarea
-              class="managerComment"
-              v-model="managerComment"
-              placeholder="필요한 메모를 작성해주세요."
-              @keyup.enter="submit"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-pen"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+            <div class="managerBox">
+              <textarea
+                class="managerComment"
+                v-model="managerComment"
+                placeholder="필요한 메모를 작성해주세요."
               />
-            </svg>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="primaryColor"
-              class="bi bi-check-circle-fill"
-              viewBox="0 0 16 16"
-              @click="isSubmit(), saveComment()"
-            >
-              <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-              />
-            </svg>
-
-            <div>
-              {{ managerCommentBox }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="primaryColor"
+                class="bi bi-check-circle-fill"
+                viewBox="0 0 16 16"
+                @click="isSubmit(), saveComment()"
+              >
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                />
+              </svg>
             </div>
-
-            {{ console.log("managerComment:", managerComment) }}
-            {{ console.log("managerCommentBox: ", managerCommentBox) }}
-            {{ console.log("submit: ", submit) }}
+            <div
+              class="managerCommentBox"
+              v-for="(managerComments, i) in managerComments"
+              :key="i"
+            >
+              <div class="comment">
+                <div class="date">{{ createDate(comment.timestamp) }}</div>
+                {{ managerComments.content }}
+              </div>
+              <svg
+                @click="deleteComment(id)"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-lg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -124,6 +144,8 @@ export default {
       managerCommentBox: "",
       managerComments: [],
       submit: false,
+      comment: "",
+      status: ["회신중", "회신대기", "추가회신", "미팅확정"],
     };
   },
   components: {
@@ -147,16 +169,37 @@ export default {
 
     saveComment() {
       if (this.managerComment && this.submit) {
-        this.managerComments.push(this.managerComment);
+        this.comment = {
+          id: this.managerComment + 1,
+          content: this.managerComment,
+          timestamp: new Date(),
+        };
 
-        this.managerCommentBox = this.managerComments.join(" ");
+        this.managerComments.push(this.comment);
+
         this.managerComment = "";
       }
 
-      return this.managerCommentBox;
+      return this.managerComments, this.comment;
     },
 
-    //managerCommentBox &&
+    deleteComment(i) {
+      let copy = [...this.managerComments];
+      copy.splice(i, 1);
+      console.log(this.managerCommentBox);
+
+      return (this.managerComments = copy);
+    },
+
+    createDate() {
+      let year = this.comment.timestamp.getFullYear();
+      let month = this.comment.timestamp.getMonth() + 1;
+      let date = this.comment.timestamp.getDate();
+      let hour = this.comment.timestamp.getHours();
+      let minute = this.comment.timestamp.getMinutes();
+
+      return month + ". " + date + ". " + year + " " + hour + ":" + minute;
+    },
   },
 
   computed: {
@@ -191,16 +234,40 @@ export default {
 }
 
 .popupWhiteBg {
+  position: relative;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 4%;
   width: 64%;
   min-width: 600px;
+  min-height: 750px;
   height: 87%;
   overflow: scroll;
   background-color: #fff;
   border-radius: 5px;
+}
+
+.dropdown {
+  position: absolute;
+  right: 30px;
+  top: 170px;
+}
+
+#dropdownMenuButton1 {
+  font-size: 14px;
+}
+
+.dropdown-menu {
+  min-width: 120px;
+}
+
+.dropdown-item {
+  font-size: 14px;
+
+  &:active {
+    background-color: $primaryColor;
+  }
 }
 
 .content {
@@ -293,24 +360,43 @@ export default {
   }
 }
 
-.bi-pen {
-  fill: $primaryColor;
-  width: 24px;
-  height: 24px;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:active {
-    cursor: pointer;
-  }
-}
-
 .manager {
   position: relative;
   width: 90%;
   overflow: scroll;
+}
+
+.managerBox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.managerCommentBox {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  line-height: 0.8;
+  margin-bottom: 8px;
+
+  &.date {
+    margin-right: 20px;
+  }
+
+  .bi-x-lg {
+    height: 16px;
+    width: 16px;
+    line-height: 0.8;
+  }
+}
+
+.comment {
+  display: flex;
+  line-height: 1.3;
+}
+
+.date {
+  margin-right: 10px;
+  min-width: 120px;
 }
 
 .managerComment {
@@ -318,14 +404,15 @@ export default {
   border: none;
   border-radius: 3px;
   resize: none;
-  width: 92%;
+  width: 94%;
   height: 55px;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
-.managerCommentBox {
-  margin-top: 10px;
-  width: 100%;
-  word-wrap: break-word;
+.managerComments {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 </style>
