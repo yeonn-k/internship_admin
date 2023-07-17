@@ -46,10 +46,7 @@ export default {
           if (item == "") return lengths + 1;
           return lengths;
         }, 0);
-        {
-          this.chartLength.push(count);
-          return count;
-        }
+        return count;
       } else if (list == "문의 진행") {
         const count = this.data.reduce((lengths, item) => {
           if (
@@ -60,28 +57,19 @@ export default {
             return lengths + 1;
           return lengths;
         }, 0);
-        {
-          this.chartLength.push(count);
-          return count;
-        }
+        return count;
       } else if (list == "문의 완료") {
         const count = this.data.reduce((lengths, item) => {
           if (item == "미팅 확정" || item == "문의 완료") return lengths + 1;
           return lengths;
         }, 0);
-        {
-          this.chartLength.push(count);
-          return count;
-        }
+        return count;
       } else {
         const count = this.data.reduce((lengths, item) => {
           if (item == list) return lengths + 1;
           return lengths;
         }, 0);
-        {
-          this.chartLength.push(count);
-          return count;
-        }
+        return count;
       }
     },
   },
@@ -104,8 +92,12 @@ export default {
           labels: this.statusList,
           datasets: [
             {
-              backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
-              data: this.chartLength,
+              backgroundColor: ["#63da60", "#65aaea", "#f36666"],
+              data: [
+                this.getLength("문의 접수"),
+                this.getLength("문의 진행"),
+                this.getLength("문의 완료"),
+              ],
             },
           ],
         };
@@ -114,8 +106,12 @@ export default {
           labels: this.typeList,
           datasets: [
             {
-              backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
-              data: this.chartLength,
+              backgroundColor: ["#63da60", "#65aaea", "#f36666"],
+              data: [
+                this.getLength("MR 문의"),
+                this.getLength("컨설팅 문의"),
+                this.getLength("일반 문의"),
+              ],
             },
           ],
         };
