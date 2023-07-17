@@ -10,7 +10,7 @@
     </div>
     <div class="dataContainer">
       <SummaryData type="status" :data="filteredData('status')" />
-      <SummaryData type="department" :data="filteredData('department')" />
+      <!-- <SummaryData type="department" :data="filteredData('department')" /> -->
       <SummaryData type="type" :data="filteredData('type')" />
     </div>
     <div class="searchContainer">
@@ -20,7 +20,7 @@
         type="text"
         :value="searchValue"
         @input="checkValue"
-        placeholder="이름을 검색하세요"
+        placeholder="이름/문의 유형으로 검색하기"
       />
     </div>
   </div>
@@ -108,16 +108,11 @@ export default {
     font-weight: 900;
     margin: auto;
     background-color: #ffffff;
-    width: 80%;
+    width: 90%;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    .searchBar {
-      border: 1px solid #dadada;
-      width: 80%;
-    }
   }
 }
 </style>

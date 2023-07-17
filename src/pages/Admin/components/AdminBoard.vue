@@ -9,7 +9,7 @@
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
-        <span class="boardLength">{{ dataLists.length }}건</span>
+        <span class="boardLength">{{ dataArray.length }}건</span>
       </div>
       <div v-if="title !== 'Done'" class="selectBox">
         <select
@@ -101,7 +101,7 @@ export default {
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
-      progress: ["회신중", "회신 대기", "추가 회신"],
+      progress: ["회신작업중", "회신 완료", "추가 회신"],
       filteredData: [],
       isOpened: false,
       pageNumber: 0,

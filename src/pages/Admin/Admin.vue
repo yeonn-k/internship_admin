@@ -61,23 +61,28 @@ export default {
   computed: {
     filteredBacklogDatas() {
       return this.contactArray.filter(
-        (data) => data.status === "" && data.name.includes(this.searchValue)
+        (data) =>
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue)) &&
+          data.status === ""
       );
     },
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          data.name.includes(this.searchValue) &&
-          (data.status === "회신중" ||
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue)) &&
+          (data.status === "회신 작업중" ||
             data.status === "추가 회신" ||
-            data.status === "회신 대기")
+            data.status === "회신 완료")
       );
     },
     filteredDoneDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.status === "회신 완료" || data.status === "미팅 확정") &&
-          data.name.includes(this.searchValue)
+          (data.status === "문의 완료" || data.status === "미팅 확정") &&
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue))
       );
     },
   },
