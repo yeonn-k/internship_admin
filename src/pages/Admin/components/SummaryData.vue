@@ -1,5 +1,8 @@
 <template>
   <div class="summaryData">
+    <div class="chartContainer">
+      <Doughnut :data="chartData" :options="options" />
+    </div>
     <div class="dataList" v-for="list in lists" :key="list">
       <span class="dataCategory">{{ list }}</span>
       <div class="dataLength">
@@ -11,9 +14,14 @@
 </template>
 
 <script>
+import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
+import { Doughnut } from "vue-chartjs";
+
+ChartJS.register(ArcElement, Tooltip);
+
 export default {
   name: "SummaryData",
-
+  components: { Doughnut },
   props: {
     type: String,
     data: Array,
@@ -24,6 +32,10 @@ export default {
       statusList: ["문의 접수", "문의 진행", "문의 완료"],
       // departmentList: ["영업팀", "기술팀"],
       typeList: ["MR 문의", "컨설팅 문의", "일반 문의"],
+      chartLength: [],
+      options: {
+        responsive: true,
+      },
     };
   },
 
@@ -34,7 +46,10 @@ export default {
           if (item == "") return lengths + 1;
           return lengths;
         }, 0);
-        return count;
+        {
+          this.chartLength.push(count);
+          return count;
+        }
       } else if (list == "문의 진행") {
         const count = this.data.reduce((lengths, item) => {
           if (
@@ -45,19 +60,28 @@ export default {
             return lengths + 1;
           return lengths;
         }, 0);
-        return count;
+        {
+          this.chartLength.push(count);
+          return count;
+        }
       } else if (list == "문의 완료") {
         const count = this.data.reduce((lengths, item) => {
           if (item == "미팅 확정" || item == "문의 완료") return lengths + 1;
           return lengths;
         }, 0);
-        return count;
+        {
+          this.chartLength.push(count);
+          return count;
+        }
       } else {
         const count = this.data.reduce((lengths, item) => {
           if (item == list) return lengths + 1;
           return lengths;
         }, 0);
-        return count;
+        {
+          this.chartLength.push(count);
+          return count;
+        }
       }
     },
   },
@@ -74,6 +98,29 @@ export default {
         return [];
       }
     },
+    chartData() {
+      if (this.type == "status") {
+        return {
+          labels: this.statusList,
+          datasets: [
+            {
+              backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
+              data: this.chartLength,
+            },
+          ],
+        };
+      } else if (this.type == "type") {
+        return {
+          labels: this.typeList,
+          datasets: [
+            {
+              backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
+              data: this.chartLength,
+            },
+          ],
+        };
+      } else return {};
+    },
   },
 };
 </script>
@@ -88,7 +135,10 @@ export default {
   margin: 20px auto;
   padding: 10px 0;
 }
-
+.chartContainer {
+  width: 80%;
+  margin: auto;
+}
 .dataList {
   display: flex;
   align-items: center;

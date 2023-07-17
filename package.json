@@ -11,9 +11,11 @@
     "bootstrap": "^5.3.0",
     "bootstrap-vue": "^2.23.1",
     "bootstrap-vue-3": "^0.5.1",
+    "chart.js": "^4.3.0",
     "core-js": "^3.8.3",
     "sass": "^1.63.6",
     "vue": "^3.3.4",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.0.13",
     "vuedraggable": "^4.1.0"
   },
