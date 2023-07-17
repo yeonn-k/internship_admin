@@ -8,9 +8,19 @@
         건
       </div>
     </div>
+    <div class="searchContainer">
+      <div>문의 검색</div>
+      <input
+        class="searchBar"
+        type="text"
+        :value="searchValue"
+        @input="checkValue"
+        placeholder="이름/문의 유형으로 검색하기"
+      />
+    </div>
     <div class="dataContainer">
       <SummaryData type="status" :data="filteredData('status')" />
-      <SummaryData type="department" :data="filteredData('department')" />
+      <!-- <SummaryData type="department" :data="filteredData('department')" /> -->
       <SummaryData type="type" :data="filteredData('type')" />
     </div>
   </div>
@@ -33,6 +43,7 @@ export default {
   data() {
     return {
       summaryList: this.summaryData,
+      searchValue: "",
     };
   },
 
@@ -48,6 +59,10 @@ export default {
         return [];
       }
     },
+    checkValue() {
+      this.searchValue = event.target.value;
+      this.$emit("searchedValue", this.searchValue);
+    },
   },
 };
 </script>
@@ -60,6 +75,7 @@ export default {
   background-color: $lightGrey;
   border-radius: 5px;
   font-family: $fontFamily;
+  padding-bottom: 10px;
 
   .boardTitle {
     display: flex;
@@ -86,6 +102,18 @@ export default {
       font-weight: 900;
       color: $primaryColor;
     }
+  }
+  .searchContainer {
+    font-family: $fontFamily;
+    font-weight: 900;
+    margin: 10px auto;
+    padding: 5px 0;
+    background-color: #ffffff;
+    width: 80%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 </style>

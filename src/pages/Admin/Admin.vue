@@ -1,22 +1,27 @@
 <template>
   <div class="boardContainer" @openPopup="isOpened = true">
-    <SummaryBoard class="summaryBoard" :summaryData="contactDatas" />
+    <SummaryBoard
+      class="summaryBoard"
+      :summaryData="contactArray"
+      @searchedValue="receiveSearch"
+    />
+
     <AdminBoard
       class="board"
       title="Backlog"
-      :dataArray="filteredDatas('Backlog')"
+      :dataArray="filteredBacklogDatas"
       :contactDatas="contactDatas"
     />
     <AdminBoard
       class="board"
       title="Progress"
-      :dataArray="filteredDatas('Progress')"
+      :dataArray="filteredProgressDatas"
       :contactDatas="contactDatas"
     />
     <AdminBoard
       class="board"
       title="Done"
-      :dataArray="filteredDatas('Done')"
+      :dataArray="filteredDoneDatas"
       :contactDatas="contactDatas"
     />
   </div>
@@ -43,27 +48,42 @@ export default {
     return {
       contactDatas,
       isOpened: false,
+      contactArray: contactDatas,
+      searchValue: "",
     };
   },
 
   methods: {
-    filteredDatas(title) {
-      if (title === "Backlog") {
-        return this.contactDatas.filter((data) => data.status === "");
-      } else if (title === "Done") {
-        return this.contactDatas.filter(
-          (data) => data.status === "회신 완료" || data.status === "미팅 확정"
-        );
-      } else if (title === "Progress") {
-        return this.contactDatas.filter(
-          (data) =>
-            data.status === "회신중" ||
+    receiveSearch(searchValue) {
+      this.searchValue = searchValue;
+    },
+  },
+  computed: {
+    filteredBacklogDatas() {
+      return this.contactArray.filter(
+        (data) =>
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue)) &&
+          data.status === ""
+      );
+    },
+    filteredProgressDatas() {
+      return this.contactArray.filter(
+        (data) =>
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue)) &&
+          (data.status === "회신 작업중" ||
             data.status === "추가 회신" ||
-            data.status === "회신 대기"
-        );
-      } else {
-        return [];
-      }
+            data.status === "회신 완료")
+      );
+    },
+    filteredDoneDatas() {
+      return this.contactArray.filter(
+        (data) =>
+          (data.status === "문의 완료" || data.status === "미팅 확정") &&
+          (data.name.includes(this.searchValue) ||
+            data.type.includes(this.searchValue))
+      );
     },
   },
 };

@@ -9,12 +9,9 @@
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title">{{ data.type }}</h5>
-        <button
-          type="button"
-          class="btn-close deleteBtn"
-          @click="deleteCard()"
-          v-if="cardStatus()"
-        ></button>
+        <div v-if="!cardStatus()" :class="[dueDateCheck]">
+          D+<span>{{ this.passedDate }}</span>
+        </div>
       </header>
       <div class="labelWrapper">
         <span :class="['badge', badgeBorder]">{{ data.status }}</span>
@@ -42,7 +39,7 @@
           <button
             type="button"
             class="btn-close"
-            @click="deleteItem(item)"
+            @click.stop="deleteItem(item)"
           ></button>
         </div>
         <svg
@@ -52,14 +49,14 @@
           fill="currentColor"
           class="bi bi-caret-down-fill"
           viewBox="0 0 16 16"
-          @click="showDropdown"
+          @click.stop="showDropdown"
         >
           <path
             d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
           />
         </svg>
       </div>
-      <div class="selectContainer" v-show="isClicked === true">
+      <div class="selectContainer" v-show="isClicked === true" @click.stop>
         <select
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
@@ -76,29 +73,35 @@
 </template>
 
 <script>
+const date = new Date().toLocaleDateString();
+const year = date.substring(2, 4);
+const month = date.substring(6, 7).padStart(2, "0");
+const day = date.substring(9, 11);
+
 export default {
   name: "CardComponent",
 
   props: { data: Object },
 
   data() {
-    return { selected: null, isClicked: false, array: [] };
+    return {
+      selected: null,
+      isClicked: false,
+      array: [],
+      today: year + month + day,
+    };
   },
 
   methods: {
     cardStatus() {
       if (
-        this.data.status === "회신 완료" ||
+        this.data.status === "문의 완료" ||
         this.data.status === "미팅 확정"
       ) {
         return true;
       } else {
         return false;
       }
-    },
-
-    deleteCard() {
-      alert("카드 삭제 기능 추가 구현");
     },
 
     showDropdown() {
@@ -145,14 +148,24 @@ export default {
     },
 
     badgeBorder() {
-      if (this.data.status === "회신 대기") {
+      if (this.data.status === "회신 완료") {
         return "badge-blue";
-      } else if (this.data.status === "회신중") {
+      } else if (this.data.status === "회신 작업중") {
         return "badge-green";
       } else if (this.data.status === "추가 회신") {
         return "badge-yellow";
       } else {
         return "badge-red";
+      }
+    },
+    passedDate() {
+      return this.today - Number(this.data.createAt) + 1;
+    },
+    dueDateCheck() {
+      if (this.passedDate >= 14) {
+        return "alert";
+      } else {
+        return "";
       }
     },
   },
@@ -181,12 +194,6 @@ export default {
   &.border-blue {
     border-color: $blue;
   }
-}
-
-.deleteBtn {
-  text-align: end;
-  width: 16px;
-  height: 16px;
 }
 
 .badge {
@@ -316,5 +323,11 @@ button {
 
 .selectContainer {
   margin-top: 7px;
+}
+
+.alert {
+  padding: 0;
+  color: red;
+  font-weight: bold;
 }
 </style>
