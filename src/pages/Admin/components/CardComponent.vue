@@ -9,8 +9,8 @@
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title">{{ data.type }}</h5>
-        <div>
-          D+<span>{{ this.today - data.createAt + 1 }}</span>
+        <div v-if="!cardStatus()" :class="[dueDateCheck]">
+          D+<span>{{ this.passedDate }}</span>
         </div>
       </header>
       <div class="labelWrapper">
@@ -73,19 +73,29 @@
 </template>
 
 <script>
+const date = new Date().toLocaleDateString();
+const year = date.substring(2, 4);
+const month = date.substring(6, 7).padStart(2, "0");
+const day = date.substring(9, 11);
+
 export default {
   name: "CardComponent",
 
   props: { data: Object },
 
   data() {
-    return { selected: null, isClicked: false, array: [], today: 230717 };
+    return {
+      selected: null,
+      isClicked: false,
+      array: [],
+      today: year + month + day,
+    };
   },
 
   methods: {
     cardStatus() {
       if (
-        this.data.status === "회신 완료" ||
+        this.data.status === "문의 완료" ||
         this.data.status === "미팅 확정"
       ) {
         return true;
@@ -138,14 +148,24 @@ export default {
     },
 
     badgeBorder() {
-      if (this.data.status === "회신 대기") {
+      if (this.data.status === "회신 완료") {
         return "badge-blue";
-      } else if (this.data.status === "회신중") {
+      } else if (this.data.status === "회신 작업중") {
         return "badge-green";
       } else if (this.data.status === "추가 회신") {
         return "badge-yellow";
       } else {
         return "badge-red";
+      }
+    },
+    passedDate() {
+      return this.today - Number(this.data.createAt) + 1;
+    },
+    dueDateCheck() {
+      if (this.passedDate >= 14) {
+        return "alert";
+      } else {
+        return "";
       }
     },
   },
@@ -303,5 +323,11 @@ button {
 
 .selectContainer {
   margin-top: 7px;
+}
+
+.alert {
+  padding: 0;
+  color: red;
+  font-weight: bold;
 }
 </style>
