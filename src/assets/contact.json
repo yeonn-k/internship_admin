@@ -5,7 +5,7 @@
     "name": "홍길동",
     "contact": "010-1234-1234",
     "type": "MR 문의",
-    "status": "회신중"
+    "status": "회신 작업중"
   },
   {
     "id": "2",
@@ -37,18 +37,10 @@
     "name": "이영수",
     "contact": "cccc@bbbb.com",
     "type": "컨설팅 문의",
-    "status": "회신 대기"
+    "status": "회신 작업중"
   },
   {
     "id": "6",
-    "createAt": "230711",
-    "name": "김수",
-    "contact": "cccc@bbbb.com",
-    "type": "MR 문의",
-    "status": "회신중"
-  },
-  {
-    "id": "7",
     "createAt": "230711",
     "name": "김연",
     "contact": "cccc@bbbb.com",
@@ -56,19 +48,27 @@
     "status": "회신 완료"
   },
   {
-    "id": "8",
+    "id": "7",
     "createAt": "230711",
     "name": "이혁",
     "contact": "cccc@bbbb.com",
     "type": "컨설팅 문의",
-    "status": "회신 완료"
+    "status": "문의 완료"
   },
   {
-    "id": "9",
+    "id": "8",
     "createAt": "230712",
     "name": "김율",
     "contact": "010-5678-1234",
     "type": "MR 문의",
     "status": ""
+  },
+  {
+    "id": "9",
+    "createAt": "230713",
+    "name": "김연",
+    "contact": "cccc@bbbb.com",
+    "type": "일반 문의",
+    "status": "문의 완료"
   }
 ]
