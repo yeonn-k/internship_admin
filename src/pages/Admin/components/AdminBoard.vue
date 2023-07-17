@@ -180,9 +180,9 @@ export default {
       );
     },
 
-
     ClosePopup() {
       this.isOpened = false;
+    },
 
     nextPage() {
       if (this.pageNumber == this.pageCount - 1) {
