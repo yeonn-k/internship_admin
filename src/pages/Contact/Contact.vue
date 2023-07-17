@@ -76,6 +76,7 @@
                       >연락처 선택은 필수사항입니다.</span
                     >
                   </div>
+
                   <div class="boxLine">
                     <!-- v-if="contactRadio === 'e-mail'" -->
                     <input

@@ -2,7 +2,7 @@
   <div class="adminBoard">
     <PopUp
       v-if="isOpened === true"
-      @ClosePopup="isOpened = false"
+      @ClosePopup="ClosePopup"
       :dataId="dataId"
       :filteredData="filteredData"
     />
@@ -179,6 +179,10 @@ export default {
         (data) => data.id === this.dataId
       );
     },
+
+
+    ClosePopup() {
+      this.isOpened = false;
 
     nextPage() {
       if (this.pageNumber == this.pageCount - 1) {

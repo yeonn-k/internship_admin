@@ -1,6 +1,6 @@
 <template>
-  <div class="blackBg" v-if="detailData">
-    <div class="popupWhiteBg">
+  <div class="blackBg" v-if="detailData" @click="$emit('closePopup')">
+    <div class="popupWhiteBg" @click.stop>
       <div class="content">
         <div :class="['colorBox', cardType]">
           <div class="Xbox">
@@ -31,6 +31,22 @@
             :filteredData="filteredData"
           />
         </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            진행상황 선택
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li v-for="(status, i) in status" :key="i">
+              <a class="dropdown-item">{{ status }}</a>
+            </li>
+          </ul>
+        </div>
 
         <div class="contentBox">
           <LowerContentBox
@@ -43,12 +59,51 @@
             :filteredData="filteredData"
           />
 
-          <textarea
-            v-model="managerComment"
-            placeholder="(선택) 자세한 문의 내용을 입력해주세요."
-          />
-          <div class="managerCommentBox">
-            {{ managerComment }}
+          <div class="manager">
+            <div class="managerBox">
+              <textarea
+                class="managerComment"
+                v-model="managerComment"
+                placeholder="필요한 메모를 작성해주세요."
+              />
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="primaryColor"
+                class="bi bi-check-circle-fill"
+                viewBox="0 0 16 16"
+                @click="isSubmit(), saveComment()"
+              >
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                />
+              </svg>
+            </div>
+            <div
+              class="managerCommentBox"
+              v-for="(managerComments, i) in managerComments"
+              :key="i"
+            >
+              <div class="comment">
+                <div class="date">{{ createDate(comment.timestamp) }}</div>
+                {{ managerComments.content }}
+              </div>
+              <svg
+                @click="deleteComment(id)"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x-lg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -86,6 +141,11 @@ export default {
       },
       detailData: null,
       managerComment: "",
+      managerCommentBox: "",
+      managerComments: [],
+      submit: false,
+      comment: "",
+      status: ["회신중", "회신대기", "추가회신", "미팅확정"],
     };
   },
   components: {
@@ -101,6 +161,44 @@ export default {
       fetch("/data/inquireData.json")
         .then((response) => response.json())
         .then((data) => (this.detailData = data));
+    },
+
+    isSubmit() {
+      return (this.submit = true);
+    },
+
+    saveComment() {
+      if (this.managerComment && this.submit) {
+        this.comment = {
+          id: this.managerComment + 1,
+          content: this.managerComment,
+          timestamp: new Date(),
+        };
+
+        this.managerComments.push(this.comment);
+
+        this.managerComment = "";
+      }
+
+      return this.managerComments, this.comment;
+    },
+
+    deleteComment(i) {
+      let copy = [...this.managerComments];
+      copy.splice(i, 1);
+      console.log(this.managerCommentBox);
+
+      return (this.managerComments = copy);
+    },
+
+    createDate() {
+      let year = this.comment.timestamp.getFullYear();
+      let month = this.comment.timestamp.getMonth() + 1;
+      let date = this.comment.timestamp.getDate();
+      let hour = this.comment.timestamp.getHours();
+      let minute = this.comment.timestamp.getMinutes();
+
+      return month + ". " + date + ". " + year + " " + hour + ":" + minute;
     },
   },
 
@@ -136,16 +234,40 @@ export default {
 }
 
 .popupWhiteBg {
+  position: relative;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 4%;
   width: 64%;
   min-width: 600px;
+  min-height: 750px;
   height: 87%;
   overflow: scroll;
   background-color: #fff;
   border-radius: 5px;
+}
+
+.dropdown {
+  position: absolute;
+  right: 30px;
+  top: 170px;
+}
+
+#dropdownMenuButton1 {
+  font-size: 14px;
+}
+
+.dropdown-menu {
+  min-width: 120px;
+}
+
+.dropdown-item {
+  font-size: 14px;
+
+  &:active {
+    background-color: $primaryColor;
+  }
 }
 
 .content {
@@ -210,7 +332,6 @@ export default {
   border: 1px solid $primaryColor;
   background-color: #fff;
   color: $primaryColor;
-
   border-radius: 5px;
   margin-bottom: 50px;
   margin-top: 30px;
@@ -224,18 +345,74 @@ export default {
   }
 }
 
-textarea {
+.bi-check-circle-fill {
+  fill: $primaryColor;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    cursor: pointer;
+  }
+}
+
+.manager {
+  position: relative;
+  width: 90%;
+  overflow: scroll;
+}
+
+.managerBox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.managerCommentBox {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  line-height: 0.8;
+  margin-bottom: 8px;
+
+  &.date {
+    margin-right: 20px;
+  }
+
+  .bi-x-lg {
+    height: 16px;
+    width: 16px;
+    line-height: 0.8;
+  }
+}
+
+.comment {
+  display: flex;
+  line-height: 1.3;
+}
+
+.date {
+  margin-right: 10px;
+  min-width: 120px;
+}
+
+.managerComment {
   outline: none;
   border: none;
   border-radius: 3px;
   resize: none;
-  width: 92%;
-  height: 100px;
+  width: 94%;
+  height: 55px;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
-.managerCommentBox {
-  width: 90%;
-  word-wrap: break-word;
+.managerComments {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 </style>
