@@ -147,6 +147,7 @@
                   <div class="textAreaBoxLine">
                     <textarea
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
+                      v-model="contents"
                     />
                     <!-- v-model="managerComment" -->
                   </div>
@@ -160,7 +161,10 @@
     <input
       type="submit"
       value="제출하기"
-      @click="checkForm"
+      @click="
+        checkForm();
+        submitData();
+      "
       class="btn btn-primary"
     />
 
@@ -176,6 +180,7 @@
 
 <script>
 import SubmitModal from "./SubmitModal.vue";
+import axios from "axios";
 
 export default {
   name: "ContactVue",
@@ -213,12 +218,40 @@ export default {
     };
   },
   methods: {
+    submitData() {
+      const url = "http://110.165.17.239:8000/api/contact";
+      const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
+
+      const data = {
+        user_name: this.name,
+        contact_by: this.contactRadio,
+        contact: this.contact,
+        contact_type: this.type,
+        status: this.status,
+        contents: this.contents,
+        file: this.file,
+      };
+
+      axios
+        .post(CORSURL, data, {
+          headers: {
+            "Content-Type": "Application/json",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     openSubmit() {
       this.isClicked = true;
       this.isSubmit = true;
     },
-    checkForm(e) {
-      e.preventDefault();
+    checkForm() {
+      // e.preventDefault();
 
       this.errors = [];
       if (!this.name) {

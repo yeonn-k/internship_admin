@@ -1,7 +1,9 @@
 <template>
-  <div class="blackBg" v-if="detailData" @click="$emit('closePopup')">
+  <div class="blackBg" v-if="type" @click="$emit('closePopup')">
+    <!-- event bubbling 방지 -->
     <div class="popupWhiteBg" @click.stop>
       <div class="content">
+        <!-- 카드 유형 칼라 변경 -->
         <div :class="['colorBox', cardType]">
           <div class="Xbox">
             <svg
@@ -20,6 +22,8 @@
           </div>
         </div>
         <div class="dateBox">등록일자 : {{ filteredData[0].createAt }}</div>
+
+        <!-- 문의 기본 정보 -->
         <div class="contentBox">
           <UpperContentBox
             v-for="(dataType, i) in upperDataTypes"
@@ -31,6 +35,8 @@
             :filteredData="filteredData"
           />
         </div>
+
+        <!-- dropdown -->
         <div class="dropdown">
           <button
             class="btn btn-secondary dropdown-toggle"
@@ -48,6 +54,7 @@
           </ul>
         </div>
 
+        <!-- 문의 상세 정보 -->
         <div class="contentBox">
           <LowerContentBox
             v-for="(dataType, i) in lowerDataTypes"
@@ -59,6 +66,7 @@
             :filteredData="filteredData"
           />
 
+          <!-- 담당자 커맨트 -->
           <div class="manager">
             <div class="managerBox">
               <textarea
@@ -87,11 +95,15 @@
               :key="i"
             >
               <div class="comment">
-                <div class="date">{{ createDate(comment.timestamp) }}</div>
+                <div class="date">
+                  {{ createDate(managerComments.timestamp) }}
+                </div>
                 {{ managerComments.content }}
               </div>
-              <svg
-                @click="deleteComment(id)"
+
+              <!-- 담당자 커맨트 삭제 -->
+              <!-- <svg
+                @click="deleteComment(i)"
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -102,7 +114,7 @@
                 <path
                   d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
                 />
-              </svg>
+              </svg> -->
             </div>
           </div>
         </div>
@@ -115,6 +127,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import LowerContentBox from "./LowerContentBox.vue";
 import UpperContentBox from "./UpperContentBox.vue";
 
@@ -139,12 +152,12 @@ export default {
         file: "파일첨부: ",
         manager: "담당자: ",
       },
-      detailData: null,
+      cardData: null,
       managerComment: "",
       managerCommentBox: "",
       managerComments: [],
       submit: false,
-      comment: "",
+      comment: {},
       status: ["회신중", "회신대기", "추가회신", "미팅확정"],
     };
   },
@@ -152,16 +165,58 @@ export default {
     LowerContentBox: LowerContentBox,
     UpperContentBox: UpperContentBox,
   },
+
   created() {
-    this.getDetails();
+    this.getCardData();
   },
 
   methods: {
-    getDetails() {
-      fetch("/data/inquireData.json")
-        .then((response) => response.json())
-        .then((data) => (this.detailData = data));
+    getCardData() {
+      const url = `http://110.165.17.239:8000/api/contactlist${this.cardData.contact_seq}`;
+      const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
+
+      axios
+        .get(CORSURL, {
+          headers: {
+            "Content-Type": "Application/json",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          this.cardData = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
+
+    // submitData() {
+    //   const url = "http://110.165.17.239:8000/api/contactlist";
+    //   const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
+
+    //   const data = {
+    //     user_name: this.name,
+    //     contact_by: this.contactRadio,
+    //     contact: this.contact,
+    //     contact_type: this.type,
+    //     status: this.status,
+    //     contents: this.contents,
+    //     file: this.file,
+    //   };
+
+    //   axios
+    //     .post(CORSURL, data, {
+    //       headers: {
+    //         "Content-Type": "Application/json",
+    //       },
+    //     })
+    //     .then((response) => {
+    //       console.log(response);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // },
 
     isSubmit() {
       return (this.submit = true);
@@ -170,7 +225,7 @@ export default {
     saveComment() {
       if (this.managerComment && this.submit) {
         this.comment = {
-          id: this.managerComment + 1,
+          id: this.managerComment,
           content: this.managerComment,
           timestamp: new Date(),
         };
@@ -183,20 +238,19 @@ export default {
       return this.managerComments, this.comment;
     },
 
-    deleteComment(i) {
-      let copy = [...this.managerComments];
-      copy.splice(i, 1);
-      console.log(this.managerCommentBox);
+    // deleteComment(i) {
+    //   let copy = [...this.managerComments];
+    //   copy.splice(i, 1);
 
-      return (this.managerComments = copy);
-    },
+    //   return (this.managerComments = copy);
+    // },
 
-    createDate() {
-      let year = this.comment.timestamp.getFullYear();
-      let month = this.comment.timestamp.getMonth() + 1;
-      let date = this.comment.timestamp.getDate();
-      let hour = this.comment.timestamp.getHours();
-      let minute = this.comment.timestamp.getMinutes();
+    createDate(el) {
+      let year = el.getFullYear();
+      let month = el.getMonth() + 1;
+      let date = el.getDate();
+      let hour = el.getHours();
+      let minute = el.getMinutes();
 
       return month + ". " + date + ". " + year + " " + hour + ":" + minute;
     },

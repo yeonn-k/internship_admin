@@ -46,8 +46,6 @@ export default {
 
   data() {
     return {
-      // contactDatas,
-      // contactArray: contactDatas,
       contactArray: [],
       isOpened: false,
       searchValue: "",
@@ -66,10 +64,12 @@ export default {
           this.contactArray = data;
         });
     },
+
     receiveSearch(searchValue) {
       this.searchValue = searchValue;
     },
   },
+
   computed: {
     filteredBacklogDatas() {
       return this.contactArray.filter(
