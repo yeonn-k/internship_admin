@@ -83,7 +83,6 @@
         :item-key="this.title"
         animation="500"
         :move="restrictMove"
-        @end="submitStatus(102)"
       >
         <template #item="{ element }">
           <CardComponent
@@ -92,6 +91,7 @@
             @openPopup="isOpened = true"
             @sendId="getDataId"
             @click="filterId"
+            :move="submitStatus(element)"
           ></CardComponent>
         </template>
       </draggable>
@@ -160,12 +160,12 @@ export default {
           ));
         case "최근 7일": {
           return (this.dataLists = this.filteredData.filter(
-            (item) => item.createAt > this.today - 7
+            (item) => item.create_dtm > this.today - 7
           ));
         }
         case "최근 30일": {
           return (this.dataLists = this.filteredData.filter(
-            (item) => item.createAt > this.today - 14
+            (item) => item.create_dtm > this.today - 14
           ));
         }
         default:
@@ -230,19 +230,23 @@ export default {
       }
     },
 
-    submitStatus(seq) {
-      const url = "http://110.165.17.239:8000/api/contact";
-      fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contact_seq: seq,
-          status: "진행",
-        }),
-      });
+    submitStatus(element) {
+      fetch(
+        `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact`,
+        {
+          method: "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: element.contact_seq,
+            status: "",
+            department: element.department,
+            manager_comments: element.manager_comments,
+          }),
+        }
+      );
     },
   },
 

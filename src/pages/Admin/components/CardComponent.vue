@@ -8,7 +8,7 @@
   >
     <div class="card-body">
       <header class="cardHeader">
-        <h5 class="card-title">{{ data.contact_type }}</h5>
+        <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
         <div v-if="!cardStatus()" :class="[dueDateCheck]">
           D+<span>{{ this.passedDate }}</span>
         </div>
@@ -97,26 +97,29 @@ export default {
       selected: null,
       isClicked: false,
       array: [],
+      cardData: this.data,
       today: date,
     };
   },
 
   methods: {
     submitDepartment(seq, department) {
-      const url = "http://110.165.17.239:8000/api/contact";
-      fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contact_seq: seq,
-          status: "진행",
-          department: department,
-          manager_comments: "",
-        }),
-      });
+      fetch(
+        `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact`,
+        {
+          method: "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: department,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }
+      );
     },
     cardStatus() {
       if (

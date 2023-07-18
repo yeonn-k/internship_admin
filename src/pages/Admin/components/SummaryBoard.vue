@@ -20,7 +20,6 @@
     </div>
     <div class="dataContainer">
       <SummaryData type="status" :data="filteredData('status')" />
-      <!-- <SummaryData type="department" :data="filteredData('department')" /> -->
       <SummaryData type="type" :data="filteredData('type')" />
     </div>
   </div>
@@ -51,8 +50,6 @@ export default {
     filteredData(type) {
       if (type === "status") {
         return this.summaryList.map((data) => data.status);
-      } else if (type === "department") {
-        return this.summaryList.map((data) => data.department);
       } else if (type === "type") {
         return this.summaryList.map((data) => data.contact_type);
       } else {

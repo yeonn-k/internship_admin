@@ -49,6 +49,7 @@ export default {
       } else if (list == "문의 진행") {
         const count = this.data.reduce((lengths, item) => {
           if (
+            item == "진행" ||
             item == "회신 작업중" ||
             item == "회신 완료" ||
             item == "추가 회신"
@@ -77,8 +78,6 @@ export default {
     lists() {
       if (this.type === "status") {
         return this.statusList;
-        // } else if (this.type === "department") {
-        //   return this.departmentList;
       } else if (this.type === "type") {
         return this.typeList;
       } else {
