@@ -79,8 +79,10 @@
         v-model="dataLists"
         class="list-group"
         group="board"
-        item-key="id"
+        :id="this.title"
+        :item-key="this.title"
         animation="500"
+        :move="restrictMove"
       >
         <template #item="{ element }">
           <CardComponent
@@ -217,6 +219,14 @@ export default {
     updateDataLists() {
       const start = this.pageNumber * this.size;
       this.dataLists = this.dataArray.slice(start, start + this.size);
+    },
+
+    restrictMove(event) {
+      if (event.from.id === "Progress" && event.to.id == "Backlog") {
+        return false;
+      } else if (event.from.id === "Done" && event.to.id == "Backlog") {
+        return false;
+      }
     },
   },
 

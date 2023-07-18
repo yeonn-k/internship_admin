@@ -8,19 +8,21 @@
   >
     <div class="card-body">
       <header class="cardHeader">
-        <h5 class="card-title">{{ data.type }}</h5>
+        <h5 class="card-title">{{ data.contact_type }}</h5>
         <div v-if="!cardStatus()" :class="[dueDateCheck]">
           D+<span>{{ this.passedDate }}</span>
         </div>
       </header>
       <div class="labelWrapper">
         <span :class="['badge', badgeBorder]">{{ data.status }}</span>
-        <h6 class="card-subtitle">등록일자 {{ data.createAt }}</h6>
+        <h6 class="card-subtitle">
+          등록일자 {{ data.create_dtm.substring(0, 10) }}
+        </h6>
       </div>
       <div class="categoryContainer">
         <div class="contactCategory">
           <p class="categoryTitle">이름</p>
-          <p class="categoryValue">{{ data.name }}</p>
+          <p class="categoryValue">{{ data.user_name }}</p>
         </div>
         <div class="contactCategory">
           <p class="categoryTitle">연락처</p>
@@ -29,13 +31,23 @@
       </div>
       <div class="inChargeInfo">
         <p class="department">담당부서</p>
-        <div
-          v-for="(item, index) in array"
-          :key="index"
-          class="departmentBadge"
-          :class="[labelBorder(item)]"
-        >
-          {{ item }}
+        <div v-if="data.department.length == 0">
+          <div
+            v-for="(item, index) in array"
+            :key="index"
+            class="departmentBadge"
+            :class="[labelBorder(item)]"
+          >
+            {{ item }}
+            <button
+              type="button"
+              class="btn-close"
+              @click.stop="deleteItem(item)"
+            ></button>
+          </div>
+        </div>
+        <div v-else class="departmentBadge" :class="[labelBorder(item)]">
+          {{ data.department }}
           <button
             type="button"
             class="btn-close"
@@ -61,7 +73,7 @@
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
           v-model="selected"
-          @change="addArray(selected)"
+          @change="addArray(selected, data.contact_seq)"
         >
           <option disabled>부서 선택</option>
           <option value="영업">영업</option>
@@ -73,10 +85,7 @@
 </template>
 
 <script>
-const date = new Date().toLocaleDateString();
-const year = date.substring(2, 4);
-const month = date.substring(6, 7).padStart(2, "0");
-const day = date.substring(9, 11);
+const date = new Date().toISOString();
 
 export default {
   name: "CardComponent",
@@ -88,11 +97,37 @@ export default {
       selected: null,
       isClicked: false,
       array: [],
-      today: year + month + day,
+      today: date,
     };
   },
 
   methods: {
+    submitDepartment(seq, department) {
+      const url = "http://110.165.17.239:8000/api/contact";
+      fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact_seq: seq,
+          status: "",
+          department: department,
+          manager_comments: "",
+        }),
+      }).then((response) => {
+        if (response.ok) {
+          fetch(
+            `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact/102`
+          ).then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          });
+        }
+      });
+    },
     cardStatus() {
       if (
         this.data.status === "문의 완료" ||
@@ -108,9 +143,11 @@ export default {
       this.isClicked = !this.isClicked;
     },
 
-    addArray(selected) {
+    addArray(selected, seq) {
       if (this.array.indexOf(selected) == -1) {
         this.array.push(selected);
+        const [department] = this.array;
+        this.submitDepartment(seq, department);
         this.selected = null;
       } else {
         return this.array;
@@ -138,9 +175,9 @@ export default {
 
   computed: {
     cardBorder() {
-      if (this.data.type === "MR 문의") {
+      if (this.data.contact_type === "MR 문의") {
         return "border-green";
-      } else if (this.data.type === "컨설팅 문의") {
+      } else if (this.data.contact_type === "컨설팅 문의") {
         return "border-blue";
       } else {
         return "border-red";
@@ -159,7 +196,7 @@ export default {
       }
     },
     passedDate() {
-      return this.today - Number(this.data.createAt) + 1;
+      return this.today - Number(this.data.create_dtm) + 1;
     },
     dueDateCheck() {
       if (this.passedDate >= 14) {
