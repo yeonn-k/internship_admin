@@ -83,6 +83,7 @@
         :item-key="this.title"
         animation="500"
         :move="restrictMove"
+        @end="submitStatus(102)"
       >
         <template #item="{ element }">
           <CardComponent
@@ -227,6 +228,21 @@ export default {
       } else if (event.from.id === "Done" && event.to.id == "Backlog") {
         return false;
       }
+    },
+
+    submitStatus(seq) {
+      const url = "http://110.165.17.239:8000/api/contact";
+      fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact_seq: seq,
+          status: "진행",
+        }),
+      });
     },
   },
 

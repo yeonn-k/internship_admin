@@ -73,7 +73,7 @@
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
           v-model="selected"
-          @change="addArray(selected, data.contact_seq)"
+          @change="addArray(data.contact_seq, selected)"
         >
           <option disabled>부서 선택</option>
           <option value="영업">영업</option>
@@ -112,20 +112,10 @@ export default {
         },
         body: JSON.stringify({
           contact_seq: seq,
-          status: "",
+          status: "진행",
           department: department,
           manager_comments: "",
         }),
-      }).then((response) => {
-        if (response.ok) {
-          fetch(
-            `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact/102`
-          ).then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          });
-        }
       });
     },
     cardStatus() {
@@ -143,11 +133,10 @@ export default {
       this.isClicked = !this.isClicked;
     },
 
-    addArray(selected, seq) {
+    addArray(seq, selected) {
       if (this.array.indexOf(selected) == -1) {
         this.array.push(selected);
-        const [department] = this.array;
-        this.submitDepartment(seq, department);
+        this.submitDepartment(seq, selected);
         this.selected = null;
       } else {
         return this.array;
@@ -196,7 +185,13 @@ export default {
       }
     },
     passedDate() {
-      return this.today - Number(this.data.create_dtm) + 1;
+      return (
+        Math.floor(
+          (new Date(this.today).getTime() -
+            new Date(this.data.create_dtm).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      );
     },
     dueDateCheck() {
       if (this.passedDate >= 14) {

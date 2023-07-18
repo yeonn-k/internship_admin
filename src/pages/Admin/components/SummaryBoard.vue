@@ -54,7 +54,7 @@ export default {
       } else if (type === "department") {
         return this.summaryList.map((data) => data.department);
       } else if (type === "type") {
-        return this.summaryList.map((data) => data.type);
+        return this.summaryList.map((data) => data.contact_type);
       } else {
         return [];
       }

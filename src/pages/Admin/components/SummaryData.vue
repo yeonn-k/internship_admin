@@ -30,7 +30,6 @@ export default {
   data() {
     return {
       statusList: ["문의 접수", "문의 진행", "문의 완료"],
-      // departmentList: ["영업팀", "기술팀"],
       typeList: ["MR 문의", "컨설팅 문의", "일반 문의"],
       chartLength: [],
       options: {
