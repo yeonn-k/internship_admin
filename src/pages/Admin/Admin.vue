@@ -32,8 +32,8 @@
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
 import PopUp from "./components/PopUp/PopUp.vue";
-import data from "../../assets/contact.json";
-const contactDatas = data;
+// import data from "../../assets/contact.json";
+// const contactDatas = data;
 
 export default {
   name: "AdminVue",
@@ -46,14 +46,26 @@ export default {
 
   data() {
     return {
-      contactDatas,
+      // contactDatas,
+      // contactArray: contactDatas,
+      contactArray: [],
       isOpened: false,
-      contactArray: contactDatas,
       searchValue: "",
     };
   },
-
   methods: {
+    fetchContactData() {
+      const url = "http://110.165.17.239:8000/api/contactlist";
+      fetch(`https://cors-anywhere.herokuapp.com/${url}`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          this.contactArray = data;
+        });
+    },
     receiveSearch(searchValue) {
       this.searchValue = searchValue;
     },
@@ -62,29 +74,35 @@ export default {
     filteredBacklogDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.name.includes(this.searchValue) ||
-            data.type.includes(this.searchValue)) &&
+          // (
+          //   data.name.includes(this.searchValue) ||
+          //     data.type.includes(this.searchValue)
+          // ) &&
           data.status === ""
       );
     },
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.name.includes(this.searchValue) ||
-            data.type.includes(this.searchValue)) &&
-          (data.status === "회신 작업중" ||
-            data.status === "추가 회신" ||
-            data.status === "회신 완료")
+          // (data.name.includes(this.searchValue) ||
+          //   data.type.includes(this.searchValue)) &&
+          data.status === "진행" ||
+          data.status === "회신 작업중" ||
+          data.status === "추가 회신" ||
+          data.status === "회신 완료"
       );
     },
     filteredDoneDatas() {
       return this.contactArray.filter(
-        (data) =>
-          (data.status === "문의 완료" || data.status === "미팅 확정") &&
-          (data.name.includes(this.searchValue) ||
-            data.type.includes(this.searchValue))
+        (data) => data.status === "문의 완료" || data.status === "미팅 확정"
+        //  &&
+        // (data.name.includes(this.searchValue) ||
+        //   data.type.includes(this.searchValue))
       );
     },
+  },
+  mounted() {
+    this.fetchContactData();
   },
 };
 </script>
