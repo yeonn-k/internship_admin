@@ -1,5 +1,5 @@
 <template>
-  <div class="boardContainer" @openPopup="isOpened = true">
+  <div class="boardContainer">
     <SummaryBoard
       class="summaryBoard"
       :summaryData="contactArray"
@@ -25,13 +25,12 @@
       :contactDatas="contactDatas"
     />
   </div>
-  <PopUp v-if="isOpened === true" />
 </template>
 
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
-import PopUp from "./components/PopUp/PopUp.vue";
+// import PopUp from "./components/PopUp/PopUp.vue";
 // import data from "../../assets/contact.json";
 // const contactDatas = data;
 
@@ -41,20 +40,20 @@ export default {
   components: {
     AdminBoard,
     SummaryBoard,
-    PopUp,
+    // PopUp,
   },
 
   data() {
     return {
       contactArray: [],
-      isOpened: false,
+
       searchValue: "",
     };
   },
   methods: {
     fetchContactData() {
       const url = "http://110.165.17.239:8000/api/contactlist";
-      fetch(`https://cors-anywhere.herokuapp.com/${url}`)
+      fetch(url)
         .then((response) => {
           if (response.ok) {
             return response.json();

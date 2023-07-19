@@ -3,9 +3,9 @@
     <PopUp
       v-if="isOpened === true"
       @ClosePopup="ClosePopup"
-      :dataId="dataId"
-      :filteredData="filteredData"
+      :dataSeq="dataSeq"
     />
+
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -89,8 +89,7 @@
             class="list-group-item"
             :data="element"
             @openPopup="isOpened = true"
-            @sendId="getDataId"
-            @click="filterId"
+            @sendSeq="getDataSeq"
           ></CardComponent>
         </template>
       </draggable>
@@ -128,6 +127,7 @@ export default {
       size: 3,
       dataLists: this.dataArray.slice(this.pageNumber, this.size),
       today: year + month + day,
+      dataSeq: "",
     };
   },
   watch: {
@@ -172,14 +172,8 @@ export default {
       }
     },
 
-    getDataId(data) {
-      this.dataId = data.dataId;
-    },
-
-    filterId() {
-      this.filteredData = this.contactDatas.filter(
-        (data) => data.id === this.dataId
-      );
+    getDataSeq(data) {
+      this.dataSeq = data.dataSeq;
     },
 
     ClosePopup() {
