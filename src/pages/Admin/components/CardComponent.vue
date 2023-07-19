@@ -42,16 +42,22 @@
             <button
               type="button"
               class="btn-close"
-              @click.stop="deleteItem(item)"
+              @click.stop="deleteItem(data.contact_seq, item)"
             ></button>
           </div>
         </div>
-        <div v-else class="departmentBadge" :class="[labelBorder(item)]">
-          {{ data.department }}
+        <div
+          v-else
+          class="departmentBadge"
+          :class="[labelBorder(item)]"
+          v-for="(item, index) in Object.values(this.departmentData)"
+          :key="index"
+        >
+          {{ item }}
           <button
             type="button"
             class="btn-close"
-            @click.stop="deleteItem(data.contact_seq)"
+            @click.stop="deleteItem(data.contact_seq, item)"
           ></button>
         </div>
         <svg
@@ -99,42 +105,48 @@ export default {
       array: [],
       cardData: this.data,
       today: date,
+      departmentData: this.data.department.split(","),
     };
   },
 
   methods: {
     submitDepartment(seq, department) {
-      if (this.cardData.department == "") {
-        fetch(`http://110.165.17.239:8000/api/contact`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contact_seq: seq,
-            status: this.cardData.status,
-            department: department,
-            manager_comments: this.cardData.manager_comments,
-          }),
-        }).then(() => {
-          this.$emit("departmentUpdated");
-        });
+      if (Object.values(this.departmentData).indexOf(department) == -1) {
+        if (Object.values(this.departmentData)[0] === "") {
+          fetch(`http://110.165.17.239:8000/api/contact`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contact_seq: seq,
+              status: this.cardData.status,
+              department: department,
+              manager_comments: this.cardData.manager_comments,
+            }),
+          }).then(() => {
+            this.$emit("departmentUpdated");
+          });
+        } else if (Object.values(this.departmentData)[0] !== "") {
+          const newDepartment =
+            Object.values(this.departmentData)[0] + ", " + department;
+          fetch(`http://110.165.17.239:8000/api/contact`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contact_seq: seq,
+              status: this.cardData.status,
+              department: newDepartment,
+              manager_comments: this.cardData.manager_comments,
+            }),
+          }).then(() => {
+            this.$emit("departmentUpdated");
+          });
+        }
       } else {
-        const addDepartment = this.cardData.department + ", " + department;
-        fetch(`http://110.165.17.239:8000/api/contact`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contact_seq: seq,
-            status: this.cardData.status,
-            department: addDepartment,
-            manager_comments: this.cardData.manager_comments,
-          }),
-        }).then(() => {
-          this.$emit("departmentUpdated");
-        });
+        return;
       }
     },
     cardStatus() {
@@ -162,7 +174,10 @@ export default {
       }
     },
 
-    deleteItem(seq) {
+    deleteItem(seq, department) {
+      const newDepartment = Object.values(this.departmentData).filter(
+        (item) => item !== department && item !== ""
+      );
       fetch(`http://110.165.17.239:8000/api/contact`, {
         method: "PUT",
         headers: {
@@ -171,7 +186,7 @@ export default {
         body: JSON.stringify({
           contact_seq: seq,
           status: this.cardData.status,
-          department: "",
+          department: newDepartment.join(),
           manager_comments: this.cardData.manager_comments,
         }),
       }).then(() => {
