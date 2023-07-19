@@ -51,7 +51,7 @@
           <button
             type="button"
             class="btn-close"
-            @click.stop="deleteItem(item)"
+            @click.stop="deleteItem(data.contact_seq)"
           ></button>
         </div>
         <svg
@@ -104,11 +104,9 @@ export default {
 
   methods: {
     submitDepartment(seq, department) {
-      fetch(
-        `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact`,
-        {
+      if (this.cardData.department == "") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
           method: "PUT",
-          mode: "cors",
           headers: {
             "Content-Type": "application/json",
           },
@@ -118,8 +116,26 @@ export default {
             department: department,
             manager_comments: this.cardData.manager_comments,
           }),
-        }
-      );
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      } else {
+        const addDepartment = this.cardData.department + ", " + department;
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: addDepartment,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      }
     },
     cardStatus() {
       if (
@@ -146,9 +162,21 @@ export default {
       }
     },
 
-    deleteItem(item) {
-      this.array = this.array.filter((data) => data !== item);
-      this.selected = null;
+    deleteItem(seq) {
+      fetch(`http://110.165.17.239:8000/api/contact`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact_seq: seq,
+          status: this.cardData.status,
+          department: "",
+          manager_comments: this.cardData.manager_comments,
+        }),
+      }).then(() => {
+        this.$emit("departmentUpdated");
+      });
     },
 
     labelBorder(item) {
@@ -183,6 +211,8 @@ export default {
         return "badge-green";
       } else if (this.data.status === "추가 회신") {
         return "badge-yellow";
+      } else if (this.data.status === "진행") {
+        return "badge-green";
       } else {
         return "badge-red";
       }
