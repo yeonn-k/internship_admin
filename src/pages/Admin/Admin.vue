@@ -1,28 +1,28 @@
 <template>
   <div class="boardContainer" @openPopup="isOpened = true">
-    <SummaryBoard
-      class="summaryBoard"
-      :summaryData="contactArray"
-      @searchedValue="receiveSearch"
-    />
+    <SummaryBoard class="summaryBoard" @searchedValue="receiveSearch" />
 
     <AdminBoard
+      ref="adminBoard"
       class="board"
       title="Backlog"
       :dataArray="filteredBacklogDatas"
       :contactDatas="contactDatas"
+      @departmentUpdated="fetchContactData"
     />
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredProgressDatas"
       :contactDatas="contactDatas"
+      @departmentUpdated="fetchContactData"
     />
     <AdminBoard
       class="board"
       title="Done"
       :dataArray="filteredDoneDatas"
       :contactDatas="contactDatas"
+      @departmentUpdated="fetchContactData"
     />
   </div>
   <PopUp v-if="isOpened === true" />
@@ -32,8 +32,6 @@
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
 import PopUp from "./components/PopUp/PopUp.vue";
-// import data from "../../assets/contact.json";
-// const contactDatas = data;
 
 export default {
   name: "AdminVue",
@@ -51,10 +49,19 @@ export default {
       searchValue: "",
     };
   },
+  watch: {
+    contactArray: {
+      handler() {
+        this.filteredBacklogDatas;
+        this.filteredProgressDatas;
+        this.filteredDoneDatas;
+      },
+      immediate: true,
+    },
+  },
   methods: {
     fetchContactData() {
-      const url = "http://110.165.17.239:8000/api/contactlist";
-      fetch(`https://cors-anywhere.herokuapp.com/${url}`)
+      fetch(`http://110.165.17.239:8000/api/contactlist`)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -74,19 +81,17 @@ export default {
     filteredBacklogDatas() {
       return this.contactArray.filter(
         (data) =>
-          // (
-          //   data.name.includes(this.searchValue) ||
-          //     data.type.includes(this.searchValue)
-          // ) &&
+          (data.user_name.includes(this.searchValue) ||
+            data.contact_type.includes(this.searchValue)) &&
           data.status === ""
       );
     },
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          // (data.name.includes(this.searchValue) ||
-          //   data.type.includes(this.searchValue)) &&
-          data.status === "진행" ||
+          ((data.user_name.includes(this.searchValue) ||
+            data.contact_type.includes(this.searchValue)) &&
+            data.status === "진행") ||
           data.status === "회신 작업중" ||
           data.status === "추가 회신" ||
           data.status === "회신 완료"
@@ -94,10 +99,11 @@ export default {
     },
     filteredDoneDatas() {
       return this.contactArray.filter(
-        (data) => data.status === "문의 완료" || data.status === "미팅 확정"
-        //  &&
-        // (data.name.includes(this.searchValue) ||
-        //   data.type.includes(this.searchValue))
+        (data) =>
+          data.status === "문의 완료" ||
+          (data.status === "미팅 확정" &&
+            (data.user_name.includes(this.searchValue) ||
+              data.contact_type.includes(this.searchValue)))
       );
     },
   },
