@@ -79,13 +79,16 @@
         v-model="dataLists"
         class="list-group"
         group="board"
-        item-key="id"
+        :id="this.title"
+        :item-key="this.title"
         animation="500"
+        :move="restrictMove"
       >
         <template #item="{ element }">
           <CardComponent
             class="list-group-item"
             :data="element"
+            @departmentUpdated="$emit('departmentUpdated')"
             @openPopup="isOpened = true"
             @sendId="getDataId"
             @click="filterId"
@@ -101,10 +104,7 @@ import CardComponent from "./CardComponent.vue";
 import draggable from "vuedraggable";
 import PopUp from "./PopUp/PopUp.vue";
 
-const date = new Date().toLocaleDateString();
-const year = date.substring(2, 4);
-const month = date.substring(6, 7).padStart(2, "0");
-const day = date.substring(9, 11);
+const date = new Date().toISOString();
 
 export default {
   name: "AdminBoard",
@@ -118,14 +118,14 @@ export default {
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
-      progress: ["회신 작업중", "회신 완료", "추가 회신"],
+      progress: ["회신 작업중", "회신 완료", "추가 회신", "진행"],
       done: ["최근 7일", "최근 30일"],
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
-      size: 3,
-      dataLists: this.dataArray.slice(this.pageNumber, this.size),
-      today: year + month + day,
+      size: 5,
+      dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
+      today: date,
     };
   },
   watch: {
@@ -143,12 +143,15 @@ export default {
       switch (filter) {
         case "최신순":
           return (this.dataLists = this.filteredData.sort(
-            (a, b) => b.createAt - a.createAt
+            (a, b) =>
+              this.dateFormat(b.create_dtm) - this.dateFormat(a.create_dtm)
           ));
         case "오래된순":
           return (this.dataLists = this.filteredData.sort(
-            (a, b) => a.createAt - b.createAt
+            (a, b) =>
+              this.dateFormat(a.create_dtm) - this.dateFormat(b.create_dtm)
           ));
+        case "진행":
         case "회신 작업중":
         case "추가 회신":
         case "회신 완료":
@@ -157,12 +160,15 @@ export default {
           ));
         case "최근 7일": {
           return (this.dataLists = this.filteredData.filter(
-            (item) => item.createAt > this.today - 7
+            (item) =>
+              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
           ));
         }
         case "최근 30일": {
           return (this.dataLists = this.filteredData.filter(
-            (item) => item.createAt > this.today - 14
+            (item) =>
+              this.dateFormat(item.create_dtm) >
+              this.dateFormat(this.today) - 14
           ));
         }
         default:
@@ -217,6 +223,65 @@ export default {
     updateDataLists() {
       const start = this.pageNumber * this.size;
       this.dataLists = this.dataArray.slice(start, start + this.size);
+    },
+
+    restrictMove(event) {
+      if (event.from.id === "Progress" && event.to.id == "Backlog") {
+        return false;
+      } else if (event.from.id === "Done" && event.to.id == "Backlog") {
+        return false;
+      } else if (event.from.id === "Backlog" && event.to.id == "Progress") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: event.draggedContext.element.contact_seq,
+            status: "진행",
+            department: event.draggedContext.element.department,
+            manager_comments: event.draggedContext.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      } else if (event.from.id === "Progress" && event.to.id == "Done") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: event.draggedContext.element.contact_seq,
+            status: "문의 완료",
+            department: event.draggedContext.element.department,
+            manager_comments: event.draggedContext.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      } else if (event.from.id === "Done" && event.to.id == "Progress") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: event.draggedContext.element.contact_seq,
+            status: "진행",
+            department: event.draggedContext.element.department,
+            manager_comments: event.draggedContext.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      }
+    },
+
+    dateFormat(date) {
+      return (
+        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
+      );
     },
   },
 

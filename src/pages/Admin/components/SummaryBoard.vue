@@ -15,12 +15,11 @@
         type="text"
         :value="searchValue"
         @input="checkValue"
-        placeholder="이름/문의 유형으로 검색하기"
+        placeholder="이름/문의 유형으로 검색"
       />
     </div>
     <div class="dataContainer">
       <SummaryData type="status" :data="filteredData('status')" />
-      <!-- <SummaryData type="department" :data="filteredData('department')" /> -->
       <SummaryData type="type" :data="filteredData('type')" />
     </div>
   </div>
@@ -36,25 +35,33 @@ export default {
     SummaryData,
   },
 
-  props: {
-    summaryData: Array,
-  },
-
   data() {
     return {
-      summaryList: this.summaryData,
       searchValue: "",
+      summaryData: [],
     };
   },
-
+  mounted() {
+    this.fetchSummaryData();
+  },
   methods: {
+    fetchSummaryData() {
+      fetch(`http://110.165.17.239:8000/api/contactlist`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          this.summaryData = data;
+        });
+    },
+
     filteredData(type) {
       if (type === "status") {
-        return this.summaryList.map((data) => data.status);
-      } else if (type === "department") {
-        return this.summaryList.map((data) => data.department);
+        return this.summaryData.map((data) => data.status);
       } else if (type === "type") {
-        return this.summaryList.map((data) => data.type);
+        return this.summaryData.map((data) => data.contact_type);
       } else {
         return [];
       }
@@ -114,6 +121,10 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .searchBar {
+      width: 90%;
+    }
   }
 }
 </style>

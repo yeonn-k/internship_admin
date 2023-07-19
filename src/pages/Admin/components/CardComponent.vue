@@ -8,19 +8,21 @@
   >
     <div class="card-body">
       <header class="cardHeader">
-        <h5 class="card-title">{{ data.type }}</h5>
+        <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
         <div v-if="!cardStatus()" :class="[dueDateCheck]">
           D+<span>{{ this.passedDate }}</span>
         </div>
       </header>
       <div class="labelWrapper">
         <span :class="['badge', badgeBorder]">{{ data.status }}</span>
-        <h6 class="card-subtitle">등록일자 {{ data.createAt }}</h6>
+        <h6 class="card-subtitle">
+          등록일자 {{ data.create_dtm.substring(0, 10) }}
+        </h6>
       </div>
       <div class="categoryContainer">
         <div class="contactCategory">
           <p class="categoryTitle">이름</p>
-          <p class="categoryValue">{{ data.name }}</p>
+          <p class="categoryValue">{{ data.user_name }}</p>
         </div>
         <div class="contactCategory">
           <p class="categoryTitle">연락처</p>
@@ -29,17 +31,27 @@
       </div>
       <div class="inChargeInfo">
         <p class="department">담당부서</p>
-        <div
-          v-for="(item, index) in array"
-          :key="index"
-          class="departmentBadge"
-          :class="[labelBorder(item)]"
-        >
-          {{ item }}
+        <div v-if="data.department.length == 0">
+          <div
+            v-for="(item, index) in array"
+            :key="index"
+            class="departmentBadge"
+            :class="[labelBorder(item)]"
+          >
+            {{ item }}
+            <button
+              type="button"
+              class="btn-close"
+              @click.stop="deleteItem(item)"
+            ></button>
+          </div>
+        </div>
+        <div v-else class="departmentBadge" :class="[labelBorder(item)]">
+          {{ data.department }}
           <button
             type="button"
             class="btn-close"
-            @click.stop="deleteItem(item)"
+            @click.stop="deleteItem(data.contact_seq)"
           ></button>
         </div>
         <svg
@@ -61,7 +73,7 @@
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
           v-model="selected"
-          @change="addArray(selected)"
+          @change="addArray(data.contact_seq, selected)"
         >
           <option disabled>부서 선택</option>
           <option value="영업">영업</option>
@@ -73,10 +85,7 @@
 </template>
 
 <script>
-const date = new Date().toLocaleDateString();
-const year = date.substring(2, 4);
-const month = date.substring(6, 7).padStart(2, "0");
-const day = date.substring(9, 11);
+const date = new Date().toISOString();
 
 export default {
   name: "CardComponent",
@@ -88,11 +97,46 @@ export default {
       selected: null,
       isClicked: false,
       array: [],
-      today: year + month + day,
+      cardData: this.data,
+      today: date,
     };
   },
 
   methods: {
+    submitDepartment(seq, department) {
+      if (this.cardData.department == "") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: department,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      } else {
+        const addDepartment = this.cardData.department + ", " + department;
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: addDepartment,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      }
+    },
     cardStatus() {
       if (
         this.data.status === "문의 완료" ||
@@ -108,18 +152,31 @@ export default {
       this.isClicked = !this.isClicked;
     },
 
-    addArray(selected) {
+    addArray(seq, selected) {
       if (this.array.indexOf(selected) == -1) {
         this.array.push(selected);
+        this.submitDepartment(seq, selected);
         this.selected = null;
       } else {
         return this.array;
       }
     },
 
-    deleteItem(item) {
-      this.array = this.array.filter((data) => data !== item);
-      this.selected = null;
+    deleteItem(seq) {
+      fetch(`http://110.165.17.239:8000/api/contact`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact_seq: seq,
+          status: this.cardData.status,
+          department: "",
+          manager_comments: this.cardData.manager_comments,
+        }),
+      }).then(() => {
+        this.$emit("departmentUpdated");
+      });
     },
 
     labelBorder(item) {
@@ -138,9 +195,9 @@ export default {
 
   computed: {
     cardBorder() {
-      if (this.data.type === "MR 문의") {
+      if (this.data.contact_type === "MR 문의") {
         return "border-green";
-      } else if (this.data.type === "컨설팅 문의") {
+      } else if (this.data.contact_type === "컨설팅 문의") {
         return "border-blue";
       } else {
         return "border-red";
@@ -154,12 +211,20 @@ export default {
         return "badge-green";
       } else if (this.data.status === "추가 회신") {
         return "badge-yellow";
+      } else if (this.data.status === "진행") {
+        return "badge-green";
       } else {
         return "badge-red";
       }
     },
     passedDate() {
-      return this.today - Number(this.data.createAt) + 1;
+      return (
+        Math.floor(
+          (new Date(this.today).getTime() -
+            new Date(this.data.create_dtm).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      );
     },
     dueDateCheck() {
       if (this.passedDate >= 14) {
