@@ -52,6 +52,7 @@
           :class="[labelBorder(item)]"
           v-for="(item, index) in Object.values(this.departmentData)"
           :key="index"
+          @click.stop="check(item)"
         >
           {{ item }}
           <button
@@ -110,6 +111,10 @@ export default {
   },
 
   methods: {
+    check(item) {
+      console.log(item);
+      console.log(item.length);
+    },
     submitDepartment(seq, department) {
       if (Object.values(this.departmentData).indexOf(department) == -1) {
         if (Object.values(this.departmentData)[0] === "") {
@@ -129,7 +134,7 @@ export default {
           });
         } else if (Object.values(this.departmentData)[0] !== "") {
           const newDepartment =
-            Object.values(this.departmentData)[0] + ", " + department;
+            Object.values(this.departmentData)[0] + "," + department;
           fetch(`http://110.165.17.239:8000/api/contact`, {
             method: "PUT",
             headers: {
