@@ -100,6 +100,9 @@
                     {{ createDate(managerComments.timestamp) }}
                   </div>
                   {{ managerComments.content }}
+
+                  {{ console.log(managerComments) }}
+                  {{ console.log(managerComments.content) }}
                 </div>
               </div>
               <!-- 담당자 커맨트 삭제 -->
@@ -120,7 +123,11 @@
           </div>
         </div>
       </div>
-      <button type="button" class="btn" @click="$emit('closePopup')">
+      <button
+        type="button"
+        class="btn"
+        @click="$emit('closePopup'), putPopupContents()"
+      >
         확인
       </button>
     </div>
@@ -190,33 +197,52 @@ export default {
         });
     },
 
-    // putManagerComment() {
-    //   const api = axios.create({
-    //     baseURL: "http://110.165.17.239:8000",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
+    putPopupContents() {
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    //   api
-    //     .put("contact")
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.cardData = response.data;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
+      const commentDate = this.createDate(this.comment.timestamp);
+      // const comment = this.comment.content;
+      // const comments = [];
+
+      const data = {
+        contact_seq: `${this.dataSeq}`,
+        manager_comments: `${commentDate}`,
+      };
+
+      api
+        .put("/api/contact", data)
+        .then((response) => {
+          console.log(response);
+          this.cardData = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     isSubmit() {
       return (this.submit = true);
     },
 
+    createDate(el) {
+      // let year = el.getFullYear();
+      let month = el.getMonth() + 1;
+      let date = el.getDate();
+      // let hour = el.getHours();
+      // let minute = el.getMinutes();
+
+      return month + ". " + date;
+    },
+
     saveComment() {
       if (this.managerComment && this.submit) {
         this.comment = {
-          id: this.managerComment,
+          // id: this.managerComment,
           content: this.managerComment,
           timestamp: new Date(),
         };
@@ -235,16 +261,6 @@ export default {
 
     //   return (this.managerComments = copy);
     // },
-
-    createDate(el) {
-      // let year = el.getFullYear();
-      let month = el.getMonth() + 1;
-      let date = el.getDate();
-      // let hour = el.getHours();
-      // let minute = el.getMinutes();
-
-      return month + ". " + date + ". ";
-    },
 
     formatUpdateDtm(el) {
       const updateDtm = new Date(el);
