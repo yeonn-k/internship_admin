@@ -111,10 +111,6 @@ export default {
   },
 
   methods: {
-    check(item) {
-      console.log(item);
-      console.log(item.length);
-    },
     submitDepartment(seq, department) {
       if (Object.values(this.departmentData).indexOf(department) == -1) {
         if (Object.values(this.departmentData)[0] === "") {
