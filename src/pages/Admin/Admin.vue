@@ -100,10 +100,9 @@ export default {
     filteredDoneDatas() {
       return this.contactArray.filter(
         (data) =>
-          data.status === "문의 완료" ||
-          (data.status === "미팅 확정" &&
-            (data.user_name.includes(this.searchValue) ||
-              data.contact_type.includes(this.searchValue)))
+          (data.user_name.includes(this.searchValue) ||
+            data.contact_type.includes(this.searchValue)) &&
+          (data.status === "문의 완료" || data.status === "미팅 확정")
       );
     },
   },
