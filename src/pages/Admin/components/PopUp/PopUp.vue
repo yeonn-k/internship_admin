@@ -199,7 +199,7 @@ export default {
     //   });
 
     //   api
-    //     .put(`/api/contact/${this.dataSeq}`)
+    //     .put("contact")
     //     .then((response) => {
     //       console.log(response);
     //       this.cardData = response.data;
