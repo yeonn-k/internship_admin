@@ -220,7 +220,6 @@ export default {
   methods: {
     submitData() {
       const url = "http://110.165.17.239:8000/api/contact";
-      const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
 
       const data = {
         user_name: this.name,
@@ -233,7 +232,7 @@ export default {
       };
 
       axios
-        .post(CORSURL, data, {
+        .post(url, data, {
           headers: {
             "Content-Type": "Application/json",
           },
