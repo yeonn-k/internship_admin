@@ -34,7 +34,6 @@
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
-import PopUp from "./components/PopUp/PopUp.vue";
 
 export default {
   name: "AdminVue",
@@ -42,7 +41,6 @@ export default {
   components: {
     AdminBoard,
     SummaryBoard,
-    // PopUp,
   },
 
   data() {
@@ -52,6 +50,7 @@ export default {
       searchValue: "",
     };
   },
+
   watch: {
     contactArray: {
       handler() {
@@ -103,10 +102,9 @@ export default {
     filteredDoneDatas() {
       return this.contactArray.filter(
         (data) =>
-          data.status === "문의 완료" ||
-          (data.status === "미팅 확정" &&
-            (data.user_name.includes(this.searchValue) ||
-              data.contact_type.includes(this.searchValue)))
+          (data.user_name.includes(this.searchValue) ||
+            data.contact_type.includes(this.searchValue)) &&
+          (data.status === "문의 완료" || data.status === "미팅 확정")
       );
     },
   },
