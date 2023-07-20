@@ -1,11 +1,5 @@
 <template>
-  <div
-    :class="['card', cardBorder]"
-    @click="
-      $emit('openPopup');
-      sendId();
-    "
-  >
+  <div :class="['card', cardBorder]" @click="$emit('openPopup', sendId())">
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
@@ -99,6 +93,7 @@ export default {
       array: [],
       cardData: this.data,
       today: date,
+      // url: "http://110.165.17.239:8000/api/contact${this.contact_seq}",
     };
   },
 
@@ -189,7 +184,7 @@ export default {
       }
     },
     sendId() {
-      this.$emit("sendId", { dataId: this.data.id });
+      this.$emit("sendSeq", { dataSeq: this.data.contact_seq });
     },
   },
 

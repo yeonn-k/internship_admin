@@ -147,7 +147,6 @@
                   <div class="textAreaBoxLine">
                     <textarea
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
-                      v-model="contents"
                     />
                     <!-- v-model="managerComment" -->
                   </div>
@@ -161,10 +160,8 @@
     <input
       type="submit"
       value="제출하기"
-      @click="
-        checkForm();
-        submitData();
-      "
+      np
+      @click="checkForm(), submitData()"
       class="btn btn-primary"
     />
 
