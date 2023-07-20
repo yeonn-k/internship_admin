@@ -2,7 +2,7 @@
   <div :class="['card', cardBorder]" @click="$emit('openPopup', sendId())">
     <div class="card-body">
       <header class="cardHeader">
-        <h5 class="card-title">{{ data.contact_type }}</h5>
+        <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
         <div v-if="!cardStatus()" :class="[dueDateCheck]">
           D+<span>{{ this.passedDate }}</span>
         </div>
@@ -45,7 +45,7 @@
           <button
             type="button"
             class="btn-close"
-            @click.stop="deleteItem(item)"
+            @click.stop="deleteItem(data.contact_seq)"
           ></button>
         </div>
         <svg
@@ -67,7 +67,7 @@
           class="form-select form-select-sm"
           aria-label=".form-select-sm example"
           v-model="selected"
-          @change="addArray(selected, data.contact_seq)"
+          @change="addArray(data.contact_seq, selected)"
         >
           <option disabled>부서 선택</option>
           <option value="영업">영업</option>
@@ -91,6 +91,7 @@ export default {
       selected: null,
       isClicked: false,
       array: [],
+      cardData: this.data,
       today: date,
       // url: "http://110.165.17.239:8000/api/contact${this.contact_seq}",
     };
@@ -98,30 +99,38 @@ export default {
 
   methods: {
     submitDepartment(seq, department) {
-      const url = "http://110.165.17.239:8000/api/contact";
-      fetch(`https://cors-anywhere.herokuapp.com/${url}`, {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contact_seq: seq,
-          status: "",
-          department: department,
-          manager_comments: "",
-        }),
-      }).then((response) => {
-        if (response.ok) {
-          fetch(
-            `https://cors-anywhere.herokuapp.com/http://110.165.17.239:8000/api/contact/102`
-          ).then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          });
-        }
-      });
+      if (this.cardData.department == "") {
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: department,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      } else {
+        const addDepartment = this.cardData.department + ", " + department;
+        fetch(`http://110.165.17.239:8000/api/contact`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contact_seq: seq,
+            status: this.cardData.status,
+            department: addDepartment,
+            manager_comments: this.cardData.manager_comments,
+          }),
+        }).then(() => {
+          this.$emit("departmentUpdated");
+        });
+      }
     },
     cardStatus() {
       if (
@@ -138,20 +147,31 @@ export default {
       this.isClicked = !this.isClicked;
     },
 
-    addArray(selected, seq) {
+    addArray(seq, selected) {
       if (this.array.indexOf(selected) == -1) {
         this.array.push(selected);
-        const [department] = this.array;
-        this.submitDepartment(seq, department);
+        this.submitDepartment(seq, selected);
         this.selected = null;
       } else {
         return this.array;
       }
     },
 
-    deleteItem(item) {
-      this.array = this.array.filter((data) => data !== item);
-      this.selected = null;
+    deleteItem(seq) {
+      fetch(`http://110.165.17.239:8000/api/contact`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact_seq: seq,
+          status: this.cardData.status,
+          department: "",
+          manager_comments: this.cardData.manager_comments,
+        }),
+      }).then(() => {
+        this.$emit("departmentUpdated");
+      });
     },
 
     labelBorder(item) {
@@ -186,12 +206,20 @@ export default {
         return "badge-green";
       } else if (this.data.status === "추가 회신") {
         return "badge-yellow";
+      } else if (this.data.status === "진행") {
+        return "badge-green";
       } else {
         return "badge-red";
       }
     },
     passedDate() {
-      return this.today - Number(this.data.create_dtm) + 1;
+      return (
+        Math.floor(
+          (new Date(this.today).getTime() -
+            new Date(this.data.create_dtm).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      );
     },
     dueDateCheck() {
       if (this.passedDate >= 14) {

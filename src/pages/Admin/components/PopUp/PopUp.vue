@@ -1,6 +1,5 @@
 <template>
   <div class="blackBg" v-if="cardData" @click="$emit('closePopup')">
-    {{ console.log("cardData", this.cardData) }}
     <!-- event bubbling 방지 -->
     <div class="popupWhiteBg" @click.stop>
       <div class="content">
@@ -50,7 +49,14 @@
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li v-for="(status, i) in status" :key="i">
-              <a class="dropdown-item">{{ status }}</a>
+              <a
+                @click="
+                  getStatus(i);
+                  putStatus();
+                "
+                class="dropdown-item"
+                >{{ status }}</a
+              >
             </li>
           </ul>
         </div>
@@ -71,7 +77,7 @@
             <div class="managerBox">
               <textarea
                 class="managerComment"
-                v-model="managerComment"
+                v-model="managerCommentInput"
                 placeholder="필요한 메모를 작성해주세요."
               />
 
@@ -82,7 +88,7 @@
                 fill="primaryColor"
                 class="bi bi-check-circle-fill"
                 viewBox="0 0 16 16"
-                @click="isSubmit(), saveComment()"
+                @click="isSubmit(), saveComment(), putComments()"
               >
                 <path
                   d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
@@ -90,19 +96,12 @@
               </svg>
             </div>
             <div class="commentBox">
-              <div
-                class="managerCommentBox"
-                v-for="(managerComments, i) in managerComments"
-                :key="i"
-              >
-                <div class="comment">
-                  <div class="date">
-                    {{ createDate(managerComments.timestamp) }}
-                  </div>
-                  {{ managerComments.content }}
+              <div class="managerCommentBox">
+                <!-- v-for="(manager_comments, i) in this.cardData.manager_comments"
+                :key="i" -->
 
-                  {{ console.log(managerComments) }}
-                  {{ console.log(managerComments.content) }}
+                <div class="comment">
+                  {{ this.cardData.manager_comments }}
                 </div>
               </div>
               <!-- 담당자 커맨트 삭제 -->
@@ -123,11 +122,7 @@
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        class="btn"
-        @click="$emit('closePopup'), putPopupContents()"
-      >
+      <button type="button" class="btn" @click="$emit('closePopup')">
         확인
       </button>
     </div>
@@ -160,12 +155,14 @@ export default {
         file: "파일첨부: ",
         manager: "담당자: ",
       },
-      managerComment: "",
+      managerComment: [],
       managerCommentBox: "",
-      managerComments: [],
+      managerComments: "",
+      department: "",
+      changeStatus: "",
       submit: false,
       comment: {},
-      status: ["회신중", "회신대기", "추가회신", "미팅확정"],
+      status: ["진행", "문의 완료"],
     };
   },
   components: {
@@ -197,7 +194,33 @@ export default {
         });
     },
 
-    putPopupContents() {
+    // putPopupContents() {
+    //   const api = axios.create({
+    //     baseURL: "http://110.165.17.239:8000",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
+
+    //   const data = {
+    //     contact_seq: `${this.dataSeq}`,
+    //     status: `${this.changeStatus}`,
+    //     department: `${this.cardData.department}`,
+    //     manager_comments: `${this.managerComments}`,
+    //   };
+
+    //   api
+    //     .put("/api/contact", data)
+    //     .then((response) => {
+    //       console.log(response);
+    //       this.cardData = response.data;
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // },
+
+    putStatus() {
       const api = axios.create({
         baseURL: "http://110.165.17.239:8000",
         headers: {
@@ -205,13 +228,11 @@ export default {
         },
       });
 
-      const commentDate = this.createDate(this.comment.timestamp);
-      // const comment = this.comment.content;
-      // const comments = [];
-
       const data = {
         contact_seq: `${this.dataSeq}`,
-        manager_comments: `${commentDate}`,
+        status: `${this.changeStatus}`,
+        department: `${this.cardData.department}`,
+        manager_comments: `${this.cardData.manager_comments}`,
       };
 
       api
@@ -219,6 +240,34 @@ export default {
         .then((response) => {
           console.log(response);
           this.cardData = response.data;
+          this.getCardData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    putComments() {
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = {
+        contact_seq: `${this.dataSeq}`,
+        status: `${this.cardData.status}`,
+        department: `${this.cardData.department}`,
+        manager_comments: `${this.managerComments}`,
+      };
+
+      api
+        .put("/api/contact", data)
+        .then((response) => {
+          console.log(response);
+          this.cardData = response.data;
+          this.getCardData();
         })
         .catch((error) => {
           console.log(error);
@@ -229,30 +278,47 @@ export default {
       return (this.submit = true);
     },
 
-    createDate(el) {
-      // let year = el.getFullYear();
-      let month = el.getMonth() + 1;
-      let date = el.getDate();
-      // let hour = el.getHours();
-      // let minute = el.getMinutes();
+    // createDate(el) {
+    //   // let year = el.getFullYear();
+    //   // let hour = el.getHours();
+    //   // let minute = el.getMinutes();
+    // },
 
-      return month + ". " + date;
+    getStatus(i) {
+      this.changeStatus = this.status[i];
+
+      return this.changeStatus;
     },
+    // console.log(this.changeStatus);
 
     saveComment() {
-      if (this.managerComment && this.submit) {
+      if (this.managerCommentInput && this.submit) {
         this.comment = {
           // id: this.managerComment,
-          content: this.managerComment,
+          content: this.managerCommentInput,
           timestamp: new Date(),
         };
 
-        this.managerComments.push(this.comment);
+        let month = this.comment.timestamp.getMonth() + 1;
+        let date = this.comment.timestamp.getDate();
 
-        this.managerComment = "";
+        const managerCommentDate = "[" + month + ". " + date + "]";
+
+        this.managerComments = managerCommentDate + " " + this.comment.content;
+
+        this.managerCommentInput = "";
+      } else {
+        // this.managerComments =  this.cardData.manager_comments;
       }
 
-      return this.managerComments, this.comment;
+      // console.log(this.cardData.manager_comments);
+      // console.log(this.managerComments);
+
+      // this.managerComments = this.cardData.manager_comments.join(
+      //   this.managerComment
+      // );
+
+      return this.managerComments;
     },
 
     // deleteComment(i) {
