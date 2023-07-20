@@ -130,12 +130,19 @@ export default {
       size: 5,
       dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
       today: date,
+      filterList: [],
     };
   },
   watch: {
     dataArray: {
       handler() {
         this.updateDataLists();
+      },
+      immediate: true,
+    },
+    filterList: {
+      handler() {
+        this.updateFilterData();
       },
       immediate: true,
     },
@@ -147,13 +154,11 @@ export default {
       switch (filter) {
         case "최신순":
           return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(b.create_dtm) - this.dateFormat(a.create_dtm)
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
           ));
         case "오래된순":
           return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(a.create_dtm) - this.dateFormat(b.create_dtm)
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
           ));
         case "진행":
         case "회신 작업중":
@@ -167,31 +172,29 @@ export default {
             (item) =>
               this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
           ));
-        case "등록 최신순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(b.create_dtm) - this.dateFormat(a.create_dtm)
-          ));
-        case "등록 오래된순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(a.create_dtm) - this.dateFormat(b.create_dtm)
-          ));
-        case "업데이트 최신순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
-          ));
-        case "업데이트 오래된순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
-          ));
         case "최근 30일": {
           return (this.dataLists = this.filteredData.filter(
             (item) =>
               this.dateFormat(item.create_dtm) >
-              this.dateFormat(this.today) - 14
+              this.dateFormat(this.today) - 30
           ));
         }
+        case "등록 최신순":
+          return (this.filterList = this.filteredData.sort(
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+          ));
+        case "등록 오래된순":
+          return (this.filterList = this.filteredData.sort(
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+          ));
+        case "업데이트 최신순":
+          return (this.filterList = this.filteredData.sort(
+            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+          ));
+        case "업데이트 오래된순":
+          return (this.filterList = this.filteredData.sort(
+            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+          ));
         default:
           return (this.dataLists = this.dataArray);
       }
@@ -203,7 +206,6 @@ export default {
 
     closePopup() {
       this.isOpened = false;
-      // this.$emit("fetchAll");
     },
 
     nextPage() {
@@ -239,6 +241,10 @@ export default {
     updateDataLists() {
       const start = this.pageNumber * this.size;
       this.dataLists = this.dataArray.slice(start, start + this.size);
+    },
+    updateFilterData() {
+      const start = this.pageNumber * this.size;
+      this.dataLists = this.filterList.slice(start, start + this.size);
     },
 
     restrictMove(event) {
