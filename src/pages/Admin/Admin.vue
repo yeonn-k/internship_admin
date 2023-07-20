@@ -17,7 +17,6 @@
       :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData"
     />
-    <!-- @fetchAll="fetchContactData" -->
 
     <AdminBoard
       class="board"
@@ -26,7 +25,6 @@
       :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData"
     />
-
     {{ console.log(contactArray) }}
   </div>
 </template>
@@ -91,12 +89,12 @@ export default {
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          ((data.user_name.includes(this.searchValue) ||
+          (data.user_name.includes(this.searchValue) ||
             data.contact_type.includes(this.searchValue)) &&
-            data.status === "진행") ||
-          data.status === "회신 작업중" ||
-          data.status === "추가 회신" ||
-          data.status === "회신 완료"
+          (data.status === "진행" ||
+            data.status === "회신 작업중" ||
+            data.status === "추가 회신" ||
+            data.status === "회신 완료")
       );
     },
     filteredDoneDatas() {
