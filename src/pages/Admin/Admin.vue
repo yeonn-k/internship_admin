@@ -34,9 +34,7 @@
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
-// import PopUp from "./components/PopUp/PopUp.vue";
-// import data from "../../assets/contact.json";
-// const contactDatas = data;
+import PopUp from "./components/PopUp/PopUp.vue";
 
 export default {
   name: "AdminVue",
