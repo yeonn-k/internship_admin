@@ -2,10 +2,10 @@
   <div class="adminBoard">
     <PopUp
       v-if="isOpened === true"
-      @ClosePopup="ClosePopup"
-      :dataId="dataId"
-      :filteredData="filteredData"
+      @closePopup="closePopup"
+      :dataSeq="dataSeq"
     />
+
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -90,8 +90,7 @@
             :data="element"
             @departmentUpdated="$emit('departmentUpdated')"
             @openPopup="isOpened = true"
-            @sendId="getDataId"
-            @click="filterId"
+            @sendSeq="getDataSeq"
           ></CardComponent>
         </template>
       </draggable>
@@ -113,6 +112,7 @@ export default {
     title: String,
     dataArray: Array,
     contactDatas: Array,
+    // fetchAll: Function,
   },
   components: { CardComponent, draggable, PopUp },
   data() {
@@ -176,18 +176,13 @@ export default {
       }
     },
 
-    getDataId(data) {
-      this.dataId = data.dataId;
+    getDataSeq(data) {
+      this.dataSeq = data.dataSeq;
     },
 
-    filterId() {
-      this.filteredData = this.contactDatas.filter(
-        (data) => data.id === this.dataId
-      );
-    },
-
-    ClosePopup() {
+    closePopup() {
       this.isOpened = false;
+      // this.$emit("fetchAll");
     },
 
     nextPage() {

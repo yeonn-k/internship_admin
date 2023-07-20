@@ -17,6 +17,8 @@
       :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData"
     />
+    <!-- @fetchAll="fetchContactData" -->
+
     <AdminBoard
       class="board"
       title="Done"
@@ -24,14 +26,14 @@
       :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData"
     />
+
+    {{ console.log(contactArray) }}
   </div>
-  <PopUp v-if="isOpened === true" />
 </template>
 
 <script>
 import AdminBoard from "./components/AdminBoard.vue";
 import SummaryBoard from "./components/SummaryBoard.vue";
-import PopUp from "./components/PopUp/PopUp.vue";
 
 export default {
   name: "AdminVue",
@@ -39,13 +41,12 @@ export default {
   components: {
     AdminBoard,
     SummaryBoard,
-    PopUp,
   },
 
   data() {
     return {
       contactArray: [],
-      isOpened: false,
+
       searchValue: "",
     };
   },

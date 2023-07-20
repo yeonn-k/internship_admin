@@ -1,5 +1,5 @@
 <template>
-  <div class="blackBg" v-if="type" @click="$emit('closePopup')">
+  <div class="blackBg" v-if="cardData" @click="$emit('closePopup')">
     <!-- event bubbling 방지 -->
     <div class="popupWhiteBg" @click.stop>
       <div class="content">
@@ -21,7 +21,9 @@
             </svg>
           </div>
         </div>
-        <div class="dateBox">등록일자 : {{ filteredData[0].createAt }}</div>
+        <div class="dateBox">
+          등록일자 : {{ formatUpdateDtm(cardData.update_dtm) }}
+        </div>
 
         <!-- 문의 기본 정보 -->
         <div class="contentBox">
@@ -29,10 +31,8 @@
             v-for="(dataType, i) in upperDataTypes"
             :key="i"
             :dataType="dataType"
-            :detailData="detailData"
+            :cardData="cardData"
             :upperTitleBox="upperTitleBox"
-            :dataId="dataId"
-            :filteredData="filteredData"
           />
         </div>
 
@@ -49,7 +49,14 @@
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li v-for="(status, i) in status" :key="i">
-              <a class="dropdown-item">{{ status }}</a>
+              <a
+                @click="
+                  getStatus(i);
+                  putStatus();
+                "
+                class="dropdown-item"
+                >{{ status }}</a
+              >
             </li>
           </ul>
         </div>
@@ -60,10 +67,9 @@
             v-for="(dataType, i) in lowerDataTypes"
             :key="i"
             :dataType="dataType"
-            :detailData="detailData"
+            :cardData="cardData"
             :lowerTitleBox="lowerTitleBox"
             :dataId="dataId"
-            :filteredData="filteredData"
           />
 
           <!-- 담당자 커맨트 -->
@@ -71,7 +77,7 @@
             <div class="managerBox">
               <textarea
                 class="managerComment"
-                v-model="managerComment"
+                v-model="managerCommentInput"
                 placeholder="필요한 메모를 작성해주세요."
               />
 
@@ -82,25 +88,22 @@
                 fill="primaryColor"
                 class="bi bi-check-circle-fill"
                 viewBox="0 0 16 16"
-                @click="isSubmit(), saveComment()"
+                @click="isSubmit(), saveComment(), putComments()"
               >
                 <path
                   d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
                 />
               </svg>
             </div>
-            <div
-              class="managerCommentBox"
-              v-for="(managerComments, i) in managerComments"
-              :key="i"
-            >
-              <div class="comment">
-                <div class="date">
-                  {{ createDate(managerComments.timestamp) }}
-                </div>
-                {{ managerComments.content }}
-              </div>
+            <div class="commentBox">
+              <div class="managerCommentBox">
+                <!-- v-for="(manager_comments, i) in this.cardData.manager_comments"
+                :key="i" -->
 
+                <div class="comment">
+                  {{ this.cardData.manager_comments }}
+                </div>
+              </div>
               <!-- 담당자 커맨트 삭제 -->
               <!-- <svg
                 @click="deleteComment(i)"
@@ -134,15 +137,15 @@ import UpperContentBox from "./UpperContentBox.vue";
 export default {
   name: "PopUp",
   props: {
-    dataId: String,
-    filteredData: Array,
+    dataSeq: String,
   },
   data() {
     return {
-      upperDataTypes: ["name", "contact", "type", "status"],
+      cardData: {},
+      upperDataTypes: ["user_name", "contact", "type", "status"],
       lowerDataTypes: ["contents", "file", "manager"],
       upperTitleBox: {
-        name: "이름: ",
+        user_name: "이름: ",
         contact: "연락처: ",
         type: "문의유형: ",
         status: "진행상황: ",
@@ -152,13 +155,14 @@ export default {
         file: "파일첨부: ",
         manager: "담당자: ",
       },
-      cardData: null,
-      managerComment: "",
+      managerComment: [],
       managerCommentBox: "",
-      managerComments: [],
+      managerComments: "",
+      department: "",
+      changeStatus: "",
       submit: false,
       comment: {},
-      status: ["회신중", "회신대기", "추가회신", "미팅확정"],
+      status: ["진행", "문의 완료"],
     };
   },
   components: {
@@ -172,15 +176,15 @@ export default {
 
   methods: {
     getCardData() {
-      const url = `http://110.165.17.239:8000/api/contactlist${this.cardData.contact_seq}`;
-      const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      axios
-        .get(CORSURL, {
-          headers: {
-            "Content-Type": "Application/json",
-          },
-        })
+      api
+        .get(`/api/contact/${this.dataSeq}`)
         .then((response) => {
           console.log(response);
           this.cardData = response.data;
@@ -190,52 +194,131 @@ export default {
         });
     },
 
-    // submitData() {
-    //   const url = "http://110.165.17.239:8000/api/contactlist";
-    //   const CORSURL = `https://cors-anywhere.herokuapp.com/${url}`;
+    // putPopupContents() {
+    //   const api = axios.create({
+    //     baseURL: "http://110.165.17.239:8000",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
 
     //   const data = {
-    //     user_name: this.name,
-    //     contact_by: this.contactRadio,
-    //     contact: this.contact,
-    //     contact_type: this.type,
-    //     status: this.status,
-    //     contents: this.contents,
-    //     file: this.file,
+    //     contact_seq: `${this.dataSeq}`,
+    //     status: `${this.changeStatus}`,
+    //     department: `${this.cardData.department}`,
+    //     manager_comments: `${this.managerComments}`,
     //   };
 
-    //   axios
-    //     .post(CORSURL, data, {
-    //       headers: {
-    //         "Content-Type": "Application/json",
-    //       },
-    //     })
+    //   api
+    //     .put("/api/contact", data)
     //     .then((response) => {
     //       console.log(response);
+    //       this.cardData = response.data;
     //     })
     //     .catch((error) => {
     //       console.log(error);
     //     });
     // },
 
+    putStatus() {
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = {
+        contact_seq: `${this.dataSeq}`,
+        status: `${this.changeStatus}`,
+        department: `${this.cardData.department}`,
+        manager_comments: `${this.cardData.manager_comments}`,
+      };
+
+      api
+        .put("/api/contact", data)
+        .then((response) => {
+          console.log(response);
+          this.cardData = response.data;
+          this.getCardData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    putComments() {
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = {
+        contact_seq: `${this.dataSeq}`,
+        status: `${this.cardData.status}`,
+        department: `${this.cardData.department}`,
+        manager_comments: `${this.managerComments}`,
+      };
+
+      api
+        .put("/api/contact", data)
+        .then((response) => {
+          console.log(response);
+          this.cardData = response.data;
+          this.getCardData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     isSubmit() {
       return (this.submit = true);
     },
 
+    // createDate(el) {
+    //   // let year = el.getFullYear();
+    //   // let hour = el.getHours();
+    //   // let minute = el.getMinutes();
+    // },
+
+    getStatus(i) {
+      this.changeStatus = this.status[i];
+
+      return this.changeStatus;
+    },
+    // console.log(this.changeStatus);
+
     saveComment() {
-      if (this.managerComment && this.submit) {
+      if (this.managerCommentInput && this.submit) {
         this.comment = {
-          id: this.managerComment,
-          content: this.managerComment,
+          // id: this.managerComment,
+          content: this.managerCommentInput,
           timestamp: new Date(),
         };
 
-        this.managerComments.push(this.comment);
+        let month = this.comment.timestamp.getMonth() + 1;
+        let date = this.comment.timestamp.getDate();
 
-        this.managerComment = "";
+        const managerCommentDate = "[" + month + ". " + date + "]";
+
+        this.managerComments = managerCommentDate + " " + this.comment.content;
+
+        this.managerCommentInput = "";
+      } else {
+        // this.managerComments =  this.cardData.manager_comments;
       }
 
-      return this.managerComments, this.comment;
+      // console.log(this.cardData.manager_comments);
+      // console.log(this.managerComments);
+
+      // this.managerComments = this.cardData.manager_comments.join(
+      //   this.managerComment
+      // );
+
+      return this.managerComments;
     },
 
     // deleteComment(i) {
@@ -245,22 +328,22 @@ export default {
     //   return (this.managerComments = copy);
     // },
 
-    createDate(el) {
-      let year = el.getFullYear();
-      let month = el.getMonth() + 1;
-      let date = el.getDate();
-      let hour = el.getHours();
-      let minute = el.getMinutes();
+    formatUpdateDtm(el) {
+      const updateDtm = new Date(el);
 
-      return month + ". " + date + ". " + year + " " + hour + ":" + minute;
+      let year = updateDtm.getFullYear();
+      let month = updateDtm.getMonth() + 1;
+      let date = updateDtm.getDate();
+
+      return year + ". " + month + ". " + date;
     },
   },
 
   computed: {
     cardType() {
-      if (this.filteredData[0].type === "MR 문의") {
+      if (this.cardData.contact_type === "MR 문의") {
         return "border-green";
-      } else if (this.filteredData[0].type === "컨설팅 문의") {
+      } else if (this.cardData.contact_type === "컨설팅 문의") {
         return "border-blue";
       } else {
         return "border-red";
@@ -443,6 +526,11 @@ export default {
   }
 }
 
+.commentBox {
+  width: 100%;
+  height: 270px;
+  overflow-y: scroll;
+}
 .comment {
   display: flex;
   line-height: 1.3;

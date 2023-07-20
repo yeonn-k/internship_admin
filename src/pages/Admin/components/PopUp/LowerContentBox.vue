@@ -5,7 +5,7 @@
       {{ lowerTitleBox[dataType] }}
     </div>
     <div v-if="dataType !== 'manager'" class="lowerContent">
-      {{ filteredData[0][dataType] }}
+      {{ cardData[dataType] }}
     </div>
   </div>
 </template>
@@ -15,9 +15,8 @@ export default {
   name: "LowerContentBox",
   props: {
     lowerTitleBox: Object,
-    detailData: Object,
+    cardData: Object,
     dataType: String,
-    filteredData: Array,
   },
 };
 </script>

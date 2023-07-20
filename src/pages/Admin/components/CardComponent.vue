@@ -1,11 +1,5 @@
 <template>
-  <div
-    :class="['card', cardBorder]"
-    @click="
-      $emit('openPopup');
-      sendId();
-    "
-  >
+  <div :class="['card', cardBorder]" @click="$emit('openPopup', sendId())">
     <div class="card-body">
       <header class="cardHeader">
         <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
@@ -92,7 +86,6 @@ export default {
       cardData: this.data,
       today: date,
       departmentData: this.data.department.split(","),
-      cardUpdateKey: 0,
     };
   },
   watch: {
@@ -210,7 +203,7 @@ export default {
       }
     },
     sendId() {
-      this.$emit("sendId", { dataId: this.data.id });
+      this.$emit("sendSeq", { dataSeq: this.data.contact_seq });
     },
   },
 
