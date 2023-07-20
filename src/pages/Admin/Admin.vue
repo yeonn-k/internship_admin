@@ -49,6 +49,7 @@ export default {
       searchValue: "",
     };
   },
+
   watch: {
     contactArray: {
       handler() {

@@ -31,28 +31,13 @@
       </div>
       <div class="inChargeInfo">
         <p class="department">담당부서</p>
-        <div v-if="data.department.length == 0">
-          <div
-            v-for="(item, index) in array"
-            :key="index"
-            class="departmentBadge"
-            :class="[labelBorder(item)]"
-          >
-            {{ item }}
-            <button
-              type="button"
-              class="btn-close"
-              @click.stop="deleteItem(data.contact_seq, item)"
-            ></button>
-          </div>
-        </div>
+        <div v-if="labelCheck"><div></div></div>
         <div
           v-else
           class="departmentBadge"
           :class="[labelBorder(item)]"
-          v-for="(item, index) in Object.values(this.departmentData)"
+          v-for="(item, index) in labelData"
           :key="index"
-          @click.stop="check(item)"
         >
           {{ item }}
           <button
@@ -97,7 +82,7 @@ const date = new Date().toISOString();
 export default {
   name: "CardComponent",
 
-  props: { data: Object },
+  props: { data: Object, componentKey: Number },
 
   data() {
     return {
@@ -107,9 +92,17 @@ export default {
       cardData: this.data,
       today: date,
       departmentData: this.data.department.split(","),
+      cardUpdateKey: 0,
     };
   },
-
+  watch: {
+    departmentData: {
+      handler() {
+        this.labelData;
+      },
+      immediate: true,
+    },
+  },
   methods: {
     submitDepartment(seq, department) {
       if (Object.values(this.departmentData).indexOf(department) == -1) {
@@ -126,7 +119,11 @@ export default {
               manager_comments: this.cardData.manager_comments,
             }),
           }).then(() => {
-            this.$emit("departmentUpdated");
+            fetch(`http://110.165.17.239:8000/api/contact/${seq}`)
+              .then((res) => res.json())
+              .then((data) => {
+                this.departmentData = data.department.split(",");
+              });
           });
         } else if (Object.values(this.departmentData)[0] !== "") {
           const newDepartment =
@@ -143,7 +140,11 @@ export default {
               manager_comments: this.cardData.manager_comments,
             }),
           }).then(() => {
-            this.$emit("departmentUpdated");
+            fetch(`http://110.165.17.239:8000/api/contact/${seq}`)
+              .then((res) => res.json())
+              .then((data) => {
+                this.departmentData = data.department.split(",");
+              });
           });
         }
       } else {
@@ -191,7 +192,11 @@ export default {
           manager_comments: this.cardData.manager_comments,
         }),
       }).then(() => {
-        this.$emit("departmentUpdated");
+        fetch(`http://110.165.17.239:8000/api/contact/${seq}`)
+          .then((res) => res.json())
+          .then((data) => {
+            this.departmentData = data.department.split(",");
+          });
       });
     },
 
@@ -247,6 +252,20 @@ export default {
         return "alert";
       } else {
         return "";
+      }
+    },
+    labelData() {
+      if (this.departmentData.length !== 0) {
+        return Object.values(this.departmentData);
+      } else {
+        return false;
+      }
+    },
+    labelCheck() {
+      if (this.departmentData[0]["0"] !== undefined) {
+        return false;
+      } else {
+        return true;
       }
     },
   },
