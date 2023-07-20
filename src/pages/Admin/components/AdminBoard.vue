@@ -5,7 +5,6 @@
       @closePopup="closePopup"
       :dataSeq="dataSeq"
     />
-
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -117,7 +116,13 @@ export default {
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
-      progress: ["회신 작업중", "회신 완료", "추가 회신", "진행"],
+      // progress: ["회신 작업중", "회신 완료", "추가 회신", "진행"],
+      progress: [
+        "등록 최신순",
+        "등록 오래된순",
+        "업데이트 최신순",
+        "업데이트 오래된순",
+      ],
       done: ["최근 7일", "최근 30일"],
       filteredData: [],
       isOpened: false,
@@ -157,12 +162,29 @@ export default {
           return (this.dataLists = this.filteredData.filter(
             (data) => data.status === filter
           ));
-        case "최근 7일": {
+        case "최근 7일":
           return (this.dataLists = this.filteredData.filter(
             (item) =>
               this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
           ));
-        }
+        case "등록 최신순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) =>
+              this.dateFormat(b.create_dtm) - this.dateFormat(a.create_dtm)
+          ));
+        case "등록 오래된순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) =>
+              this.dateFormat(a.create_dtm) - this.dateFormat(b.create_dtm)
+          ));
+        case "업데이트 최신순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+          ));
+        case "업데이트 오래된순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+          ));
         case "최근 30일": {
           return (this.dataLists = this.filteredData.filter(
             (item) =>
