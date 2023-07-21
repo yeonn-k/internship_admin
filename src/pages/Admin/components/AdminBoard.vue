@@ -82,6 +82,7 @@
         :item-key="this.title"
         animation="500"
         :move="restrictMove"
+        :key="updateKey"
       >
         <template #item="{ element }">
           <CardComponent
@@ -126,9 +127,12 @@ export default {
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
-      size: 5,
+      size: 1,
+      filterLists: this.dataArray,
       dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
       today: date,
+      isClicked: false,
+      newDataArray: [],
     };
   },
   watch: {
@@ -141,46 +145,76 @@ export default {
   },
   methods: {
     setFilter() {
-      this.$emit("filtered");
-      // const filter = event.target.value;
-      // this.filteredData = [...this.dataArray];
-      // switch (filter) {
-      //   case "최신순":
-      //   case "등록 최신순":
-      //     return (this.dataLists = this.filteredData.sort(
-      //       (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
-      //     ));
-      //   case "오래된순":
-      //   case "등록 오래된순":
-      //     return (this.dataLists = this.filteredData.sort(
-      //       (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
-      //     ));
-      //   case "최근 7일":
-      //     return (this.dataLists = this.filteredData.filter(
-      //       (item) =>
-      //         this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
-      //     ));
-      //   case "최근 30일": {
-      //     return (this.dataLists = this.filteredData.filter(
-      //       (item) =>
-      //         this.dateFormat(item.create_dtm) >
-      //         this.dateFormat(this.today) - 30
-      //     ));
-      //   }
-      //   case "업데이트 최신순":
-      //     return (this.dataLists = this.filteredData.sort(
-      //       (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
-      //     ));
-      //   case "업데이트 오래된순":
-      //     return (this.dataLists = this.filteredData.sort(
-      //       (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
-      //     ));
-      //   case "전체 보기":
-      //     this.$emit("departmentUpdated");
-      //     return (this.dataLists = this.dataArray);
-      //   default:
-      //     return (this.dataLists = this.dataArray);
-      // }
+      const filter = event.target.value;
+      this.filteredData = [...this.dataArray];
+      this.isClicked = true;
+      switch (filter) {
+        case "최신순":
+        case "등록 최신순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "오래된순":
+        case "등록 오래된순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "최근 7일":
+          this.newDataArray = this.filteredData.filter(
+            (item) =>
+              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "최근 30일": {
+          this.newDataArray = this.filteredData.filter(
+            (item) =>
+              this.dateFormat(item.create_dtm) >
+              this.dateFormat(this.today) - 30
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        }
+        case "업데이트 최신순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "업데이트 오래된순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "전체 보기":
+        case "검색 기간":
+          this.$emit("departmentUpdated");
+          return (this.dataLists = this.dataArray);
+        default:
+          return (this.dataLists = this.dataArray);
+      }
+    },
+    dateFormat(date) {
+      return (
+        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
+      );
     },
 
     getDataSeq(data) {
@@ -195,15 +229,27 @@ export default {
       if (this.pageNumber == this.pageCount - 1) {
         return;
       } else {
-        this.pageNumber++;
-        this.updateDataLists();
+        if (this.isClicked == true) {
+          this.pageNumber++;
+          const start = this.pageNumber * this.size;
+          this.dataLists = this.newDataArray.slice(start, start + this.size);
+        } else {
+          this.pageNumber++;
+          this.updateDataLists();
+        }
       }
     },
 
     prevPage() {
       if (this.pageNumber > 0) {
-        this.pageNumber--;
-        this.updateDataLists();
+        if (this.isClicked == true) {
+          this.pageNumber--;
+          const start = this.pageNumber * this.size;
+          this.dataLists = this.newDataArray.slice(start, start + this.size);
+        } else {
+          this.pageNumber--;
+          this.updateDataLists();
+        }
       } else {
         return;
       }
@@ -211,7 +257,12 @@ export default {
 
     setPageNumber(number) {
       this.pageNumber = number;
-      this.updateDataLists();
+      if (this.isClicked == true) {
+        const start = this.pageNumber * this.size;
+        this.dataLists = this.newDataArray.slice(start, start + this.size);
+      } else {
+        this.updateDataLists();
+      }
     },
 
     setIndex(page) {
@@ -298,12 +349,6 @@ export default {
         size = this.size;
       return Math.ceil(length / size);
     },
-
-    paginatedData() {
-      const start = this.pageNumber * this.size,
-        end = start + this.size;
-      return this.dataLists.slice(start, end);
-    },
   },
   mounted() {
     this.updateDataLists();
@@ -372,5 +417,8 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.ghost {
+  display: none;
 }
 </style>
