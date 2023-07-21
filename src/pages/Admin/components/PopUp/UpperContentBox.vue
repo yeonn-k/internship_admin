@@ -22,14 +22,11 @@ export default {
     cardData: Object,
     dataType: String,
   },
+
   computed: {
     badgeBorder() {
-      if (this.cardData.status === "회신 대기") {
-        return "badge-blue";
-      } else if (this.cardData.status === "회신중") {
+      if (this.cardData.status === "진행") {
         return "badge-green";
-      } else if (this.cardData.status === "추가 회신") {
-        return "badge-yellow";
       } else {
         return "badge-red";
       }

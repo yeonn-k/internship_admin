@@ -202,6 +202,7 @@ export default {
         return "label-blue";
       }
     },
+
     sendId() {
       this.$emit("sendSeq", { dataSeq: this.data.contact_seq });
     },
