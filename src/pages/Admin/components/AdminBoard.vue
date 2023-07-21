@@ -8,7 +8,10 @@
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
-        <span class="boardLength">{{ dataArray.length }}건</span>
+        <span v-if="newDataArray.length !== 0" class="boardLength"
+          >{{ newDataArray.length }}건</span
+        >
+        <span v-else class="boardLength">{{ dataArray.length }}건</span>
       </div>
       <div class="selectBox">
         <select
@@ -169,7 +172,7 @@ export default {
         case "최근 7일":
           this.newDataArray = this.filteredData.filter(
             (item) =>
-              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
+              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 2
           );
           return (this.dataLists = this.newDataArray.slice(
             this.pageNumber * this.size,
@@ -204,6 +207,7 @@ export default {
         case "전체 보기":
         case "검색 기간":
           this.$emit("departmentUpdated");
+          this.newDataArray = this.dataArray;
           return (this.dataLists = this.dataArray);
         default:
           return (this.dataLists = this.dataArray);
@@ -343,9 +347,15 @@ export default {
     },
 
     pageCount() {
-      let length = this.dataArray.length,
-        size = this.size;
-      return Math.ceil(length / size);
+      if (this.isClicked == true) {
+        let length = this.newDataArray.length,
+          size = this.size;
+        return Math.ceil(length / size);
+      } else {
+        let length = this.dataArray.length,
+          size = this.size;
+        return Math.ceil(length / size);
+      }
     },
 
     displayPageNumbers() {
