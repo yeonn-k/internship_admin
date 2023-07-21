@@ -48,8 +48,9 @@
             >
               진행상황 선택
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <v-select
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li
                 v-for="(status, i) in status"
                 :key="i"
                 :items="status"
@@ -58,9 +59,10 @@
                   putStatus();
                 "
                 class="dropdown-item"
-                >{{ status }}</v-select
               >
-            </div>
+                {{ status }}
+              </li>
+            </ul>
           </div>
 
           <!-- 문의 상세 정보 -->

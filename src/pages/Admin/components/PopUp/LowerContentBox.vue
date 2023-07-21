@@ -10,7 +10,7 @@
       v-if="dataType === 'manager' && this.cardData.department"
     >
       <span
-        v-for="(department, i) in splitDepartments(i)"
+        v-for="(department, i) in splitDepartments()"
         :key="i"
         :class="['departmentPopup', labelBorder(department)]"
       >
@@ -22,6 +22,7 @@
       {{ cardData[dataType] }}
     </div>
   </div>
+  {{ console.log(cardData) }}
 </template>
 
 <script>
@@ -29,7 +30,10 @@ export default {
   name: "LowerContentBox",
   props: {
     lowerTitleBox: Object,
-    cardData: Object,
+    cardData: {
+      type: Object,
+      required: true,
+    },
     dataType: String,
   },
 
