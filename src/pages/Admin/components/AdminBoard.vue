@@ -116,7 +116,6 @@ export default {
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
-      // progress: ["회신 작업중", "회신 완료", "추가 회신", "진행"],
       progress: [
         "등록 최신순",
         "등록 오래된순",
@@ -130,7 +129,6 @@ export default {
       size: 5,
       dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
       today: date,
-      filterList: [],
     };
   },
   watch: {
@@ -140,64 +138,49 @@ export default {
       },
       immediate: true,
     },
-    filterList: {
-      handler() {
-        this.updateFilterData();
-      },
-      immediate: true,
-    },
   },
   methods: {
     setFilter() {
-      const filter = event.target.value;
-      this.filteredData = [...this.dataArray];
-      switch (filter) {
-        case "최신순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
-          ));
-        case "오래된순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
-          ));
-        case "진행":
-        case "회신 작업중":
-        case "추가 회신":
-        case "회신 완료":
-          return (this.dataLists = this.filteredData.filter(
-            (data) => data.status === filter
-          ));
-        case "최근 7일":
-          return (this.dataLists = this.filteredData.filter(
-            (item) =>
-              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
-          ));
-        case "최근 30일": {
-          return (this.dataLists = this.filteredData.filter(
-            (item) =>
-              this.dateFormat(item.create_dtm) >
-              this.dateFormat(this.today) - 30
-          ));
-        }
-        case "등록 최신순":
-          return (this.filterList = this.filteredData.sort(
-            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
-          ));
-        case "등록 오래된순":
-          return (this.filterList = this.filteredData.sort(
-            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
-          ));
-        case "업데이트 최신순":
-          return (this.filterList = this.filteredData.sort(
-            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
-          ));
-        case "업데이트 오래된순":
-          return (this.filterList = this.filteredData.sort(
-            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
-          ));
-        default:
-          return (this.dataLists = this.dataArray);
-      }
+      this.$emit("filtered");
+      // const filter = event.target.value;
+      // this.filteredData = [...this.dataArray];
+      // switch (filter) {
+      //   case "최신순":
+      //   case "등록 최신순":
+      //     return (this.dataLists = this.filteredData.sort(
+      //       (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+      //     ));
+      //   case "오래된순":
+      //   case "등록 오래된순":
+      //     return (this.dataLists = this.filteredData.sort(
+      //       (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+      //     ));
+      //   case "최근 7일":
+      //     return (this.dataLists = this.filteredData.filter(
+      //       (item) =>
+      //         this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
+      //     ));
+      //   case "최근 30일": {
+      //     return (this.dataLists = this.filteredData.filter(
+      //       (item) =>
+      //         this.dateFormat(item.create_dtm) >
+      //         this.dateFormat(this.today) - 30
+      //     ));
+      //   }
+      //   case "업데이트 최신순":
+      //     return (this.dataLists = this.filteredData.sort(
+      //       (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+      //     ));
+      //   case "업데이트 오래된순":
+      //     return (this.dataLists = this.filteredData.sort(
+      //       (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+      //     ));
+      //   case "전체 보기":
+      //     this.$emit("departmentUpdated");
+      //     return (this.dataLists = this.dataArray);
+      //   default:
+      //     return (this.dataLists = this.dataArray);
+      // }
     },
 
     getDataSeq(data) {
@@ -241,10 +224,6 @@ export default {
     updateDataLists() {
       const start = this.pageNumber * this.size;
       this.dataLists = this.dataArray.slice(start, start + this.size);
-    },
-    updateFilterData() {
-      const start = this.pageNumber * this.size;
-      this.dataLists = this.filterList.slice(start, start + this.size);
     },
 
     restrictMove(event) {
@@ -298,12 +277,6 @@ export default {
           this.$emit("departmentUpdated");
         });
       }
-    },
-
-    dateFormat(date) {
-      return (
-        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
-      );
     },
   },
 

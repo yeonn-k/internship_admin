@@ -8,14 +8,16 @@
       title="Backlog"
       :dataArray="filteredBacklogDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
+      @filtered="setFilter()"
     />
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredProgressDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
+      @filtered="setFilter()"
     />
 
     <AdminBoard
@@ -23,9 +25,9 @@
       title="Done"
       :dataArray="filteredDoneDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
+      @filtered="setFilter()"
     />
-    {{ console.log(contactArray) }}
   </div>
 </template>
 
@@ -44,7 +46,6 @@ export default {
   data() {
     return {
       contactArray: [],
-
       searchValue: "",
     };
   },
@@ -75,6 +76,60 @@ export default {
     receiveSearch(searchValue) {
       this.searchValue = searchValue;
     },
+
+    setFilter() {
+      const filter = event.target.value;
+
+      switch (filter) {
+        case "최신순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+          ));
+        case "등록 최신순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+          ));
+        case "오래된순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+          ));
+        case "등록 오래된순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+          ));
+        case "최근 7일":
+          return (this.dataLists = this.filteredData.filter(
+            (item) =>
+              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
+          ));
+        case "최근 30일": {
+          return (this.dataLists = this.filteredData.filter(
+            (item) =>
+              this.dateFormat(item.create_dtm) >
+              this.dateFormat(this.today) - 30
+          ));
+        }
+        case "업데이트 최신순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+          ));
+        case "업데이트 오래된순":
+          return (this.dataLists = this.filteredData.sort(
+            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+          ));
+        case "전체 보기":
+          this.$emit("departmentUpdated");
+          return (this.dataLists = this.dataArray);
+        default:
+          return (this.dataLists = this.dataArray);
+      }
+    },
+
+    dateFormat(date) {
+      return (
+        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
+      );
+    },
   },
 
   computed: {
@@ -86,6 +141,7 @@ export default {
           data.status === ""
       );
     },
+
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
@@ -106,6 +162,7 @@ export default {
       );
     },
   },
+
   mounted() {
     this.fetchContactData();
   },
