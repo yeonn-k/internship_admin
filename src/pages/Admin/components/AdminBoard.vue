@@ -82,7 +82,6 @@
         :item-key="this.title"
         animation="500"
         :move="restrictMove"
-        :key="updateKey"
       >
         <template #item="{ element }">
           <CardComponent
@@ -176,7 +175,7 @@ export default {
             this.pageNumber * this.size,
             this.pageNumber * this.size + this.size
           ));
-        case "최근 30일": {
+        case "최근 30일":
           this.newDataArray = this.filteredData.filter(
             (item) =>
               this.dateFormat(item.create_dtm) >
@@ -186,7 +185,6 @@ export default {
             this.pageNumber * this.size,
             this.pageNumber * this.size + this.size
           ));
-        }
         case "업데이트 최신순":
           this.newDataArray = this.filteredData.sort(
             (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)

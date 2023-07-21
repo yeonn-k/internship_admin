@@ -80,8 +80,12 @@ export default {
     filteredBacklogDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
           data.status === ""
       );
     },
@@ -89,8 +93,12 @@ export default {
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
           (data.status === "진행" ||
             data.status === "회신 작업중" ||
             data.status === "추가 회신" ||
@@ -100,8 +108,12 @@ export default {
     filteredDoneDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
           (data.status === "문의 완료" || data.status === "미팅 확정")
       );
     },
