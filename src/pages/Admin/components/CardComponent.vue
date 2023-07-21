@@ -10,7 +10,7 @@
       <div class="labelWrapper">
         <span :class="['badge', badgeBorder]">{{ data.status }}</span>
         <h6 class="card-subtitle">
-          등록일자 {{ data.create_dtm.substring(0, 10) }}
+          등록일자 {{ data.create_dtm.substring(2, 10) }}
         </h6>
       </div>
       <div class="categoryContainer">

@@ -5,7 +5,6 @@
       @closePopup="closePopup"
       :dataSeq="dataSeq"
     />
-
     <div class="boardHeader">
       <div class="boardInfo">
         <h1 class="boardTitle">{{ title }}</h1>
@@ -52,7 +51,7 @@
       </svg>
       <ul>
         <button
-          v-for="num in pageCount"
+          v-for="num in displayPageNumbers"
           :key="num"
           @click="setPageNumber(num - 1)"
           :class="['pageBtn', setIndex(num)]"
@@ -117,14 +116,22 @@ export default {
   data() {
     return {
       backlogs: ["최신순", "오래된순"],
-      progress: ["회신 작업중", "회신 완료", "추가 회신", "진행"],
+      progress: [
+        "등록 최신순",
+        "등록 오래된순",
+        "업데이트 최신순",
+        "업데이트 오래된순",
+      ],
       done: ["최근 7일", "최근 30일"],
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
-      size: 5,
+      size: 4,
+      filterLists: this.dataArray,
       dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
       today: date,
+      isClicked: false,
+      newDataArray: [],
     };
   },
   watch: {
@@ -139,40 +146,73 @@ export default {
     setFilter() {
       const filter = event.target.value;
       this.filteredData = [...this.dataArray];
+      this.isClicked = true;
       switch (filter) {
         case "최신순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(b.create_dtm) - this.dateFormat(a.create_dtm)
+        case "등록 최신순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(b.create_dtm) - new Date(a.create_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
           ));
         case "오래된순":
-          return (this.dataLists = this.filteredData.sort(
-            (a, b) =>
-              this.dateFormat(a.create_dtm) - this.dateFormat(b.create_dtm)
+        case "등록 오래된순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(a.create_dtm) - new Date(b.create_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
           ));
-        case "진행":
-        case "회신 작업중":
-        case "추가 회신":
-        case "회신 완료":
-          return (this.dataLists = this.filteredData.filter(
-            (data) => data.status === filter
-          ));
-        case "최근 7일": {
-          return (this.dataLists = this.filteredData.filter(
+        case "최근 7일":
+          this.newDataArray = this.filteredData.filter(
             (item) =>
               this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
           ));
-        }
-        case "최근 30일": {
-          return (this.dataLists = this.filteredData.filter(
+        case "최근 30일":
+          this.newDataArray = this.filteredData.filter(
             (item) =>
               this.dateFormat(item.create_dtm) >
-              this.dateFormat(this.today) - 14
+              this.dateFormat(this.today) - 30
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
           ));
-        }
+        case "업데이트 최신순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(b.update_dtm) - new Date(a.update_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "업데이트 오래된순":
+          this.newDataArray = this.filteredData.sort(
+            (a, b) => new Date(a.update_dtm) - new Date(b.update_dtm)
+          );
+          return (this.dataLists = this.newDataArray.slice(
+            this.pageNumber * this.size,
+            this.pageNumber * this.size + this.size
+          ));
+        case "전체 보기":
+        case "검색 기간":
+          this.$emit("departmentUpdated");
+          return (this.dataLists = this.dataArray);
         default:
           return (this.dataLists = this.dataArray);
       }
+    },
+    dateFormat(date) {
+      return (
+        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
+      );
     },
 
     getDataSeq(data) {
@@ -187,15 +227,27 @@ export default {
       if (this.pageNumber == this.pageCount - 1) {
         return;
       } else {
-        this.pageNumber++;
-        this.updateDataLists();
+        if (this.isClicked == true) {
+          this.pageNumber++;
+          const start = this.pageNumber * this.size;
+          this.dataLists = this.newDataArray.slice(start, start + this.size);
+        } else {
+          this.pageNumber++;
+          this.updateDataLists();
+        }
       }
     },
 
     prevPage() {
       if (this.pageNumber > 0) {
-        this.pageNumber--;
-        this.updateDataLists();
+        if (this.isClicked == true) {
+          this.pageNumber--;
+          const start = this.pageNumber * this.size;
+          this.dataLists = this.newDataArray.slice(start, start + this.size);
+        } else {
+          this.pageNumber--;
+          this.updateDataLists();
+        }
       } else {
         return;
       }
@@ -203,7 +255,12 @@ export default {
 
     setPageNumber(number) {
       this.pageNumber = number;
-      this.updateDataLists();
+      if (this.isClicked == true) {
+        const start = this.pageNumber * this.size;
+        this.dataLists = this.newDataArray.slice(start, start + this.size);
+      } else {
+        this.updateDataLists();
+      }
     },
 
     setIndex(page) {
@@ -270,12 +327,6 @@ export default {
         });
       }
     },
-
-    dateFormat(date) {
-      return (
-        date.substring(2, 4) + date.substring(5, 7) + date.substring(8, 10)
-      );
-    },
   },
 
   computed: {
@@ -297,10 +348,24 @@ export default {
       return Math.ceil(length / size);
     },
 
-    paginatedData() {
-      const start = this.pageNumber * this.size,
-        end = start + this.size;
-      return this.dataLists.slice(start, end);
+    displayPageNumbers() {
+      const currentPage = this.pageNumber + 1;
+      const pageRange = 10;
+
+      let startPage = currentPage - Math.floor(pageRange / 2);
+      let endPage = currentPage + Math.floor(pageRange / 2);
+
+      if (startPage < 1) {
+        startPage = 1;
+        endPage = Math.min(startPage + pageRange - 1, this.pageCount);
+      } else if (endPage > this.pageCount) {
+        endPage = this.pageCount;
+        startPage = Math.max(endPage - pageRange + 1, 1);
+      }
+
+      return Array(endPage - startPage + 1)
+        .fill()
+        .map((num, index) => startPage + index);
     },
   },
   mounted() {
@@ -370,5 +435,8 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.ghost {
+  display: none;
 }
 </style>

@@ -8,26 +8,23 @@
       title="Backlog"
       :dataArray="filteredBacklogDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
     />
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredProgressDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
     />
-    <!-- @fetchAll="fetchContactData" -->
 
     <AdminBoard
       class="board"
       title="Done"
       :dataArray="filteredDoneDatas"
       :contactDatas="contactDatas"
-      @departmentUpdated="fetchContactData"
+      @departmentUpdated="fetchContactData()"
     />
-
-    {{ console.log(contactArray) }}
   </div>
 </template>
 
@@ -46,8 +43,8 @@ export default {
   data() {
     return {
       contactArray: [],
-
       searchValue: "",
+      componentKey: 0,
     };
   },
 
@@ -83,31 +80,45 @@ export default {
     filteredBacklogDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
           data.status === ""
       );
     },
+
     filteredProgressDatas() {
       return this.contactArray.filter(
         (data) =>
-          ((data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
-            data.status === "진행") ||
-          data.status === "회신 작업중" ||
-          data.status === "추가 회신" ||
-          data.status === "회신 완료"
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
+          (data.status === "진행" ||
+            data.status === "회신 작업중" ||
+            data.status === "추가 회신" ||
+            data.status === "회신 완료")
       );
     },
     filteredDoneDatas() {
       return this.contactArray.filter(
         (data) =>
-          (data.user_name.includes(this.searchValue) ||
-            data.contact_type.includes(this.searchValue)) &&
+          (data.user_name
+            .toLocaleLowerCase()
+            .includes(this.searchValue.toLocaleLowerCase()) ||
+            data.contact_type
+              .toLocaleLowerCase()
+              .includes(this.searchValue.toLocaleLowerCase())) &&
           (data.status === "문의 완료" || data.status === "미팅 확정")
       );
     },
   },
+
   mounted() {
     this.fetchContactData();
   },
