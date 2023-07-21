@@ -51,7 +51,7 @@
       </svg>
       <ul>
         <button
-          v-for="num in pageCount"
+          v-for="num in displayPageNumbers"
           :key="num"
           @click="setPageNumber(num - 1)"
           :class="['pageBtn', setIndex(num)]"
@@ -127,7 +127,7 @@ export default {
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
-      size: 1,
+      size: 4,
       filterLists: this.dataArray,
       dataLists: [{}, ...this.dataArray.slice(this.pageNumber, this.size)],
       today: date,
@@ -348,6 +348,26 @@ export default {
       let length = this.dataArray.length,
         size = this.size;
       return Math.ceil(length / size);
+    },
+
+    displayPageNumbers() {
+      const currentPage = this.pageNumber + 1;
+      const pageRange = 10;
+
+      let startPage = currentPage - Math.floor(pageRange / 2);
+      let endPage = currentPage + Math.floor(pageRange / 2);
+
+      if (startPage < 1) {
+        startPage = 1;
+        endPage = Math.min(startPage + pageRange - 1, this.pageCount);
+      } else if (endPage > this.pageCount) {
+        endPage = this.pageCount;
+        startPage = Math.max(endPage - pageRange + 1, 1);
+      }
+
+      return Array(endPage - startPage + 1)
+        .fill()
+        .map((num, index) => startPage + index);
     },
   },
   mounted() {
