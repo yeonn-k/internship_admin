@@ -134,7 +134,7 @@
                       >요청 사항 선택은 필수 입력사항입니다.</span
                     >
                   </div>
-
+                  <!-- 
                   <div class="boxLine">
                     <input
                       type="file"
@@ -143,12 +143,12 @@
                       aria-describedby="inputFile"
                       aria-label="Upload"
                     />
-                  </div>
+                  </div> -->
                   <div class="textAreaBoxLine">
                     <textarea
                       placeholder="(선택) 자세한 문의 내용을 입력해주세요."
+                      v-model="contents"
                     />
-                    <!-- v-model="managerComment" -->
                   </div>
                 </div>
               </form>
@@ -196,7 +196,6 @@ export default {
         "연락처 선택",
         "연락처",
         "요청 사항",
-        "파일 첨부",
         "문의 내용",
       ],
       contactBy: ["e-mail", "전화번호"],
@@ -246,9 +245,8 @@ export default {
       this.isClicked = true;
       this.isSubmit = true;
     },
-    checkForm() {
-      // e.preventDefault();
 
+    checkForm() {
       this.errors = [];
       if (!this.name) {
         this.errors.push("name");
@@ -462,7 +460,7 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-top: 40px;
   margin-bottom: 70px;
 }
-
+/* 
 input[type="file"]::file-selector-button {
   height: 24px;
   margin-right: 10px;
@@ -478,7 +476,7 @@ input[type="file"]::file-selector-button:hover {
 input[type="file"]:active {
   border: none;
   background: none;
-}
+} */
 
 .contents input {
   height: 34px;

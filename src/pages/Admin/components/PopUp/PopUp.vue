@@ -3,113 +3,15 @@
     <!-- event bubbling 방지 -->
     <div class="popupWhiteBg" @click.stop>
       <div class="content">
-        <!-- 카드 유형 칼라 변경 -->
-        <div :class="['colorBox', cardType]">
-          <div class="Xbox">
-            <svg
-              @click="$emit('closePopup')"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              class="bi bi-x-lg"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
-              />
-            </svg>
-          </div>
-        </div>
-        <div class="dateBox">
-          등록일자 : {{ formatUpdateDtm(cardData.update_dtm) }}
-        </div>
-
-        <!-- 문의 기본 정보 -->
-        <div class="contentBox">
-          <UpperContentBox
-            v-for="(dataType, i) in upperDataTypes"
-            :key="i"
-            :dataType="dataType"
-            :cardData="cardData"
-            :upperTitleBox="upperTitleBox"
-          />
-        </div>
-
-        <!-- dropdown -->
-        <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            진행상황 선택
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li v-for="(status, i) in status" :key="i">
-              <a
-                @click="
-                  getStatus(i);
-                  putStatus();
-                "
-                class="dropdown-item"
-                >{{ status }}</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <!-- 문의 상세 정보 -->
-        <div class="contentBox">
-          <LowerContentBox
-            v-for="(dataType, i) in lowerDataTypes"
-            :key="i"
-            :dataType="dataType"
-            :cardData="cardData"
-            :lowerTitleBox="lowerTitleBox"
-            :dataId="dataId"
-          />
-
-          <!-- 담당자 커맨트 -->
-          <div class="manager">
-            <div class="managerBox">
-              <textarea
-                class="managerComment"
-                v-model="managerCommentInput"
-                placeholder="필요한 메모를 작성해주세요."
-              />
-
+        <div>
+          <!-- 카드 유형 칼라 변경 -->
+          <div :class="['colorBox', cardType]">
+            <div class="Xbox">
               <svg
+                @click="$emit('closePopup')"
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="primaryColor"
-                class="bi bi-check-circle-fill"
-                viewBox="0 0 16 16"
-                @click="isSubmit(), saveComment(), putComments()"
-              >
-                <path
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-                />
-              </svg>
-            </div>
-            <div class="commentBox">
-              <div class="managerCommentBox">
-                <!-- v-for="(manager_comments, i) in this.cardData.manager_comments"
-                :key="i" -->
-
-                <div class="comment">
-                  {{ this.cardData.manager_comments }}
-                </div>
-              </div>
-              <!-- 담당자 커맨트 삭제 -->
-              <!-- <svg
-                @click="deleteComment(i)"
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="24"
+                height="24"
                 fill="currentColor"
                 class="bi bi-x-lg"
                 viewBox="0 0 16 16"
@@ -117,7 +19,91 @@
                 <path
                   d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
                 />
-              </svg> -->
+              </svg>
+            </div>
+          </div>
+          <div class="dateBox">
+            등록일자 : {{ formatUpdateDtm(cardData.update_dtm) }}
+          </div>
+
+          <!-- 문의 기본 정보 -->
+          <div class="contentBox">
+            <UpperContentBox
+              v-for="(dataType, i) in upperDataTypes"
+              :key="i"
+              :dataType="dataType"
+              :cardData="cardData"
+              :upperTitleBox="upperTitleBox"
+            />
+          </div>
+
+          <!-- dropdown -->
+          <div class="dropdown">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton1"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              진행상황 선택
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li
+                v-for="(status, i) in status"
+                :key="i"
+                :items="status"
+                @click="
+                  getStatus(i);
+                  putStatus();
+                "
+                class="dropdown-item"
+              >
+                {{ status }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- 문의 상세 정보 -->
+          <div class="contentBox">
+            <LowerContentBox
+              v-for="(dataType, i) in lowerDataTypes"
+              :key="i"
+              :dataType="dataType"
+              :cardData="cardData"
+              :lowerTitleBox="lowerTitleBox"
+            />
+
+            <!-- 담당자 커맨트 -->
+            <div class="manager">
+              <div class="managerBox">
+                <!-- <textarea
+                class="managerComment"
+                v-model="managerCommentInput"
+                placeholder="필요한 메모를 작성해주세요."
+              /> -->
+
+                <div id="content" class="managerComment" contenteditable="true">
+                  {{ this.cardData.manager_comments }}
+                </div>
+                <!-- oninput="handleComment" -->
+
+                <svg
+                  id="handleCommentBtn"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="primaryColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                  @click="isSubmit(), saveComment(), putComments()"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -142,27 +128,27 @@ export default {
   data() {
     return {
       cardData: {},
-      upperDataTypes: ["user_name", "contact", "type", "status"],
-      lowerDataTypes: ["contents", "file", "manager"],
+      upperDataTypes: ["user_name", "contact", "contact_type", "status"],
+      lowerDataTypes: ["contents", "manager"],
       upperTitleBox: {
         user_name: "이름: ",
         contact: "연락처: ",
-        type: "문의유형: ",
+        contact_type: "문의유형: ",
         status: "진행상황: ",
       },
       lowerTitleBox: {
         contents: "문의내용: ",
-        file: "파일첨부: ",
         manager: "담당자: ",
       },
-      managerComment: [],
+      managerComment: "",
       managerCommentBox: "",
       managerComments: "",
-      department: "",
       changeStatus: "",
       submit: false,
       comment: {},
       status: ["진행", "문의 완료"],
+      managerDate: "",
+      managerText: "",
     };
   },
   components: {
@@ -186,39 +172,12 @@ export default {
       api
         .get(`/api/contact/${this.dataSeq}`)
         .then((response) => {
-          console.log(response);
           this.cardData = response.data;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-
-    // putPopupContents() {
-    //   const api = axios.create({
-    //     baseURL: "http://110.165.17.239:8000",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-
-    //   const data = {
-    //     contact_seq: `${this.dataSeq}`,
-    //     status: `${this.changeStatus}`,
-    //     department: `${this.cardData.department}`,
-    //     manager_comments: `${this.managerComments}`,
-    //   };
-
-    //   api
-    //     .put("/api/contact", data)
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.cardData = response.data;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
 
     putStatus() {
       const api = axios.create({
@@ -238,7 +197,6 @@ export default {
       api
         .put("/api/contact", data)
         .then((response) => {
-          console.log(response);
           this.cardData = response.data;
           this.getCardData();
         })
@@ -265,7 +223,6 @@ export default {
       api
         .put("/api/contact", data)
         .then((response) => {
-          console.log(response);
           this.cardData = response.data;
           this.getCardData();
         })
@@ -278,45 +235,52 @@ export default {
       return (this.submit = true);
     },
 
-    // createDate(el) {
-    //   // let year = el.getFullYear();
-    //   // let hour = el.getHours();
-    //   // let minute = el.getMinutes();
-    // },
-
     getStatus(i) {
       this.changeStatus = this.status[i];
 
       return this.changeStatus;
     },
-    // console.log(this.changeStatus);
+
+    handleContent() {
+      const text = document.getElementById("content");
+
+      this.managerText = text.innerText;
+    },
+
+    handleCommentDate() {
+      let now = new Date();
+      let month = now.getMonth() + 1;
+      let date = now.getDate();
+
+      this.managerDate = "[" + month + ". " + date + "]";
+    },
 
     saveComment() {
-      if (this.managerCommentInput && this.submit) {
-        this.comment = {
-          // id: this.managerComment,
-          content: this.managerCommentInput,
-          timestamp: new Date(),
-        };
+      this.handleContent(); //managerText
+      this.handleCommentDate(); //mangerDate
 
-        let month = this.comment.timestamp.getMonth() + 1;
-        let date = this.comment.timestamp.getDate();
-
-        const managerCommentDate = "[" + month + ". " + date + "]";
-
-        this.managerComments = managerCommentDate + " " + this.comment.content;
-
-        this.managerCommentInput = "";
-      } else {
-        // this.managerComments =  this.cardData.manager_comments;
+      if (this.managerText === "") {
+        this.managerComments = "";
       }
+      if (
+        this.cardData.manager_comments.includes("[" && "]") &&
+        this.managerText !== this.cardData.manager_comments
+      ) {
+        this.managerComments = this.managerDate + this.managerText;
 
-      // console.log(this.cardData.manager_comments);
-      // console.log(this.managerComments);
+        return this.managerComments;
+      }
+      if (this.cardData.manager_comments === this.managerText) {
+        this.managerComments = this.cardData.manager_comments;
 
-      // this.managerComments = this.cardData.manager_comments.join(
-      //   this.managerComment
-      // );
+        return this.managerComments;
+      }
+      if (
+        !this.cardData.manager_comments ||
+        this.cardData.manager_comments === "None"
+      ) {
+        this.managerComments = this.managerDate + this.managerText;
+      }
 
       return this.managerComments;
     },
@@ -462,6 +426,10 @@ export default {
   flex-wrap: wrap;
 }
 
+.inquire {
+  height: 300px;
+}
+
 .btn {
   width: 120px;
   height: 34px;
@@ -500,14 +468,21 @@ export default {
 .manager {
   position: relative;
   width: 90%;
+  height: 300px;
   overflow: scroll;
 }
 
 .managerBox {
   display: flex;
   justify-content: space-between;
+  height: 100%;
 }
 
+#handleCommentBtn {
+  position: sticky;
+  top: 10px;
+  right: 16px;
+}
 .managerCommentBox {
   display: flex;
   justify-content: space-between;
@@ -526,14 +501,11 @@ export default {
   }
 }
 
-.commentBox {
-  width: 100%;
-  height: 270px;
-  overflow-y: scroll;
-}
 .comment {
-  display: flex;
+  width: 100%;
   line-height: 1.3;
+  word-wrap: break-word;
+  overflow: unset;
 }
 
 .date {
@@ -547,7 +519,8 @@ export default {
   border-radius: 3px;
   resize: none;
   width: 94%;
-  height: 55px;
+  height: 100%;
+  overflow: scroll;
   padding: 10px;
   margin-bottom: 10px;
 }

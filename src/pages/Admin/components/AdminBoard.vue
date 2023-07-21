@@ -112,7 +112,6 @@ export default {
     title: String,
     dataArray: Array,
     contactDatas: Array,
-    // fetchAll: Function,
   },
   components: { CardComponent, draggable, PopUp },
   data() {
@@ -182,7 +181,6 @@ export default {
 
     closePopup() {
       this.isOpened = false;
-      // this.$emit("fetchAll");
     },
 
     nextPage() {
