@@ -469,7 +469,7 @@ export default {
   position: relative;
   width: 90%;
   height: 300px;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .managerBox {
@@ -520,7 +520,8 @@ export default {
   resize: none;
   width: 94%;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   padding: 10px;
   margin-bottom: 10px;
 }

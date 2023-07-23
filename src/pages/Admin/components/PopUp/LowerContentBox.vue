@@ -101,7 +101,8 @@ export default {
   height: 300px;
   line-height: 34px;
   font-weight: 300;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .greyLine {
