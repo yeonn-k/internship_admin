@@ -172,7 +172,7 @@ export default {
         case "최근 7일":
           this.newDataArray = this.filteredData.filter(
             (item) =>
-              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 2
+              this.dateFormat(item.create_dtm) > this.dateFormat(this.today) - 7
           );
           return (this.dataLists = this.newDataArray.slice(
             this.pageNumber * this.size,
