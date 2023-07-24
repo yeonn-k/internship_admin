@@ -1,5 +1,5 @@
 <template>
-  <div class="blackBg" v-if="cardData" @click="$emit('closePopup')">
+  <div class="blackBg" @click="$emit('closePopup')">
     <!-- event bubbling 방지 -->
     <div class="popupWhiteBg" @click.stop>
       <div class="content">
@@ -22,8 +22,18 @@
               </svg>
             </div>
           </div>
-          <div class="dateBox">
-            등록일자 : {{ formatUpdateDtm(cardData.update_dtm) }}
+
+          <div class="basicInfo">
+            <div>
+              <span :class="['badge', cardType]">{{
+                cardData.contact_type
+              }}</span>
+              <span :class="['badge', badgeBorder]">{{ cardData.status }}</span>
+            </div>
+
+            <span class="dateBox">
+              등록일자 : {{ formatUpdateDtm(cardData.update_dtm) }}
+            </span>
           </div>
 
           <!-- 문의 기본 정보 -->
@@ -128,13 +138,11 @@ export default {
   data() {
     return {
       cardData: {},
-      upperDataTypes: ["user_name", "contact", "contact_type", "status"],
+      upperDataTypes: ["user_name", "contact", "status"],
       lowerDataTypes: ["contents", "manager"],
       upperTitleBox: {
         user_name: "이름: ",
         contact: "연락처: ",
-        contact_type: "문의유형: ",
-        status: "진행상황: ",
       },
       lowerTitleBox: {
         contents: "문의내용: ",
@@ -197,7 +205,7 @@ export default {
       api
         .put("/api/contact", data)
         .then((response) => {
-          this.cardData = response.data;
+          this.cardData = response;
           this.getCardData();
         })
         .catch((error) => {
@@ -223,7 +231,7 @@ export default {
       api
         .put("/api/contact", data)
         .then((response) => {
-          this.cardData = response.data;
+          this.cardData = response;
           this.getCardData();
         })
         .catch((error) => {
@@ -244,7 +252,7 @@ export default {
     handleContent() {
       const text = document.getElementById("content");
 
-      this.managerText = text.innerText;
+      return (this.managerText = text.innerText);
     },
 
     handleCommentDate() {
@@ -252,21 +260,22 @@ export default {
       let month = now.getMonth() + 1;
       let date = now.getDate();
 
-      this.managerDate = "[" + month + ". " + date + "]";
+      return (this.managerDate = "[" + month + ". " + date + "]");
     },
 
     saveComment() {
       this.handleContent(); //managerText
-      this.handleCommentDate(); //mangerDate
+      this.handleCommentDate(); //managerDate
 
       if (this.managerText === "") {
         this.managerComments = "";
       }
       if (
-        this.cardData.manager_comments.includes("[" && "]") &&
-        this.managerText !== this.cardData.manager_comments
+        (this.cardData.manager_comments.includes("[") ||
+          this.cardData.manager_comments.includes("]")) &&
+        this.cardData.manager_comments !== this.managerText
       ) {
-        this.managerComments = this.managerDate + this.managerText;
+        this.managerComments = this.managerDate + this.managerText.substring(7);
 
         return this.managerComments;
       }
@@ -279,18 +288,11 @@ export default {
         !this.cardData.manager_comments ||
         this.cardData.manager_comments === "None"
       ) {
-        this.managerComments = this.managerDate + this.managerText;
+        return (this.managerComments = this.managerDate + this.managerText);
       }
 
       return this.managerComments;
     },
-
-    // deleteComment(i) {
-    //   let copy = [...this.managerComments];
-    //   copy.splice(i, 1);
-
-    //   return (this.managerComments = copy);
-    // },
 
     formatUpdateDtm(el) {
       const updateDtm = new Date(el);
@@ -301,6 +303,13 @@ export default {
 
       return year + ". " + month + ". " + date;
     },
+
+    // deleteComment(i) {
+    //   let copy = [...this.managerComments];
+    //   copy.splice(i, 1);
+
+    //   return (this.managerComments = copy);
+    // },
   },
 
   computed: {
@@ -311,6 +320,14 @@ export default {
         return "border-blue";
       } else {
         return "border-red";
+      }
+    },
+
+    badgeBorder() {
+      if (this.cardData.status === "진행") {
+        return "badge-green";
+      } else {
+        return "badge-red";
       }
     },
   },
@@ -347,6 +364,18 @@ export default {
   overflow: scroll;
   background-color: #fff;
   border-radius: 5px;
+}
+
+.dateBox {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.basicInfo {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  padding: 2px 10px 2px 10px;
 }
 
 .dropdown {
@@ -410,14 +439,6 @@ export default {
 .bi-x-lg {
   height: 24px;
   width: 24px;
-}
-
-.dateBox {
-  width: 100%;
-  display: flex;
-  justify-content: end;
-  margin-top: 10px;
-  padding-right: 26px;
 }
 
 .contentBox {
@@ -537,5 +558,44 @@ export default {
   display: flex;
   justify-content: space-between;
   align-content: center;
+}
+
+.badge {
+  color: black;
+  margin-left: 10px;
+  font-size: 12px;
+
+  &.badge-green {
+    background-color: $lightGreen;
+  }
+
+  &.badge-red {
+    background-color: $red;
+  }
+
+  &.badge-yellow {
+    background-color: $yellow;
+  }
+
+  &.badge-blue {
+    background-color: $lightBlue;
+  }
+
+  &.border-green {
+    background-color: $green;
+  }
+
+  &.border-red {
+    background-color: $red;
+  }
+
+  &.border-blue {
+    background-color: $blue;
+  }
+}
+
+.border {
+  width: 20px;
+  margin-left: 10px;
 }
 </style>

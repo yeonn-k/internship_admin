@@ -221,6 +221,7 @@ export default {
 
     closePopup() {
       this.isOpened = false;
+      this.$emit("rerender");
     },
 
     nextPage() {
@@ -403,7 +404,6 @@ export default {
         align-self: flex-end;
       }
     }
-
     .form-select {
       width: 110px;
     }
