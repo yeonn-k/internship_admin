@@ -86,33 +86,63 @@
             />
 
             <!-- 담당자 커맨트 -->
-            <div class="manager">
-              <div class="managerBox">
-                <!-- <textarea
-                class="managerComment"
-                v-model="managerCommentInput"
-                placeholder="필요한 메모를 작성해주세요."
-              /> -->
 
-                <div id="content" class="managerComment" contenteditable="true">
-                  {{ this.cardData.manager_comments }}
-                </div>
-                <!-- oninput="handleComment" -->
-
-                <svg
-                  id="handleCommentBtn"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="primaryColor"
-                  class="bi bi-check-circle-fill"
-                  viewBox="0 0 16 16"
-                  @click="isSubmit(), saveComment(), putComments()"
-                >
-                  <path
-                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-                  />
-                </svg>
+            <div class="managerContainer">
+              <button class="addTimeLine">업무 추가</button>
+              <table class="managerTable">
+                <tr>
+                  <th>지원 요청</th>
+                  <th>담당자</th>
+                  <th>시작일</th>
+                  <th>마감(예정)일</th>
+                  <th>업무 항목</th>
+                  <th>진행상태</th>
+                  <th colspan="2">세부 내용</th>
+                </tr>
+                <tr>
+                  <td>
+                    <select
+                      class="form-select form-select-sm"
+                      aria-label=".form-select-sm example"
+                      v-model="selected"
+                    >
+                      <option disabled value="">지원 요청</option>
+                      <option value="영업">영업</option>
+                      <option value="기술">기술</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      class="form-select form-select-sm"
+                      aria-label=".form-select-sm example"
+                      v-model="selected"
+                    >
+                      <option value="영업">영업</option>
+                      <option value="기술">기술</option>
+                    </select>
+                  </td>
+                  <td>2023.07.12</td>
+                  <td>캘린더</td>
+                  <td><input /></td>
+                  <td>
+                    <select
+                      class="form-select form-select-sm"
+                      aria-label=".form-select-sm example"
+                      v-model="selected"
+                    >
+                      <option value="진행중">계획대로 진행중</option>
+                      <option value="지연">일정 지연</option>
+                    </select>
+                  </td>
+                  <td>
+                    1차 회..
+                    <button @click="showDetail">...</button>
+                  </td>
+                </tr>
+              </table>
+              <div v-if="isDisplayed">
+                1차 회신 내용: 제품 소개서 및 견적 관련 설명(실제 진행한 업무
+                내용에 대해 작성)
               </div>
             </div>
           </div>
@@ -146,7 +176,7 @@ export default {
       },
       lowerTitleBox: {
         contents: "문의내용: ",
-        manager: "담당자: ",
+        manager: "진행 내역: ",
       },
       managerComment: "",
       managerCommentBox: "",
@@ -157,6 +187,7 @@ export default {
       status: ["진행", "문의 완료"],
       managerDate: "",
       managerText: "",
+      isDisplayed: false,
     };
   },
   components: {
@@ -302,6 +333,10 @@ export default {
       let date = updateDtm.getDate();
 
       return year + ". " + month + ". " + date;
+    },
+
+    showDetail() {
+      this.isDisplayed = !this.isDisplayed;
     },
 
     // deleteComment(i) {
@@ -491,6 +526,32 @@ export default {
   width: 90%;
   height: 300px;
   overflow: hidden;
+}
+
+.managerContainer {
+  width: 90%;
+  margin: auto;
+
+  .addTimeLine {
+    margin-bottom: 10px;
+    border: none;
+  }
+
+  .managerTable {
+    background-color: $lightGrey;
+
+    th {
+      border-top: 5px solid white;
+      border-bottom: 5px solid white;
+      padding: 0 8px;
+    }
+
+    td {
+      border-top: 5px solid white;
+      border-bottom: 5px solid white;
+      padding: 0 8px;
+    }
+  }
 }
 
 .managerBox {
