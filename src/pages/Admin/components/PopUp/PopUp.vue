@@ -266,7 +266,7 @@ export default {
         this.cardData.manager_comments.includes("[" && "]") &&
         this.managerText !== this.cardData.manager_comments
       ) {
-        this.managerText.substring(0, 7);
+        this.managerComments.substring(0, 7);
         this.managerComments = this.managerDate + this.managerText;
 
         return this.managerComments;
