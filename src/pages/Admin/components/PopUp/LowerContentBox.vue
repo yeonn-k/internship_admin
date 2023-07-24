@@ -9,7 +9,6 @@
       {{ cardData[dataType] }}
     </div>
   </div>
-  {{ console.log(cardData) }}
 </template>
 
 <script>
@@ -17,10 +16,7 @@ export default {
   name: "LowerContentBox",
   props: {
     lowerTitleBox: Object,
-    cardData: {
-      type: Object,
-      required: true,
-    },
+    cardData: Object,
     dataType: String,
   },
 

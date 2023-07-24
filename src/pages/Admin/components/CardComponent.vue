@@ -2,9 +2,9 @@
   <div :class="['card', cardBorder]" @click="$emit('openPopup', sendId())">
     <div class="card-body">
       <header class="cardHeader">
-        <h5 class="card-title" @click="cardCheck">{{ data.contact_type }}</h5>
+        <h5 class="card-title">{{ data.contact_type }}</h5>
         <div v-if="!cardStatus()" :class="[dueDateCheck]">
-          D+<span>{{ this.passedDate }}</span>
+          D+<span @click="check">{{ this.passedDate }}</span>
         </div>
       </header>
       <div class="labelWrapper">
@@ -90,6 +90,12 @@ export default {
   },
   watch: {
     departmentData: {
+      handler() {
+        this.labelData;
+      },
+      immediate: true,
+    },
+    data: {
       handler() {
         this.labelData;
       },

@@ -1,16 +1,11 @@
 <template>
-  <div class="upperBox" r>
+  <div class="upperBox">
     <div class="upperTitle">
       {{ upperTitleBox[dataType] }}
     </div>
     <div v-if="dataType !== 'status'" class="upperContent">
       {{ cardData[dataType] }}
     </div>
-    <span
-      v-if="dataType === 'status'"
-      :class="['badge', badgeBorder, 'popUpBadge']"
-      >{{ cardData[dataType] }}</span
-    >
   </div>
 </template>
 
@@ -21,16 +16,6 @@ export default {
     upperTitleBox: Object,
     cardData: Object,
     dataType: String,
-  },
-
-  computed: {
-    badgeBorder() {
-      if (this.cardData.status === "진행") {
-        return "badge-green";
-      } else {
-        return "badge-red";
-      }
-    },
   },
 };
 </script>
@@ -60,25 +45,5 @@ export default {
 .popUpBadge {
   line-height: 1.6;
   margin-left: 10px;
-}
-
-.badge {
-  color: black;
-
-  &.badge-green {
-    background-color: $lightGreen;
-  }
-
-  &.badge-red {
-    background-color: $red;
-  }
-
-  &.badge-yellow {
-    background-color: $yellow;
-  }
-
-  &.badge-blue {
-    background-color: $lightBlue;
-  }
 }
 </style>

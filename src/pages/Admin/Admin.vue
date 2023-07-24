@@ -1,5 +1,5 @@
 <template>
-  <div class="boardContainer" @openPopup="isOpened = true">
+  <div class="boardContainer">
     <SummaryBoard class="summaryBoard" @searchedValue="receiveSearch" />
 
     <AdminBoard
@@ -7,23 +7,24 @@
       class="board"
       title="Backlog"
       :dataArray="filteredBacklogDatas"
-      :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData()"
+      @rerender="fetchContactData"
     />
+
     <AdminBoard
       class="board"
       title="Progress"
       :dataArray="filteredProgressDatas"
-      :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData()"
+      @rerender="fetchContactData"
     />
 
     <AdminBoard
       class="board"
       title="Done"
       :dataArray="filteredDoneDatas"
-      :contactDatas="contactDatas"
       @departmentUpdated="fetchContactData()"
+      @rerender="fetchContactData"
     />
   </div>
 </template>
