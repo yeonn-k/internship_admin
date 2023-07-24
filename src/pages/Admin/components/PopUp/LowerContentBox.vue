@@ -103,6 +103,13 @@ export default {
   font-weight: 300;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#lowerContent::-webkit-scrollbar {
+  display: none;
 }
 
 .greyLine {
