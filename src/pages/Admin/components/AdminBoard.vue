@@ -31,7 +31,7 @@
           aria-label=".form-select-sm example"
           @click="setFilter()"
         >
-          <option selected>검색 기간</option>
+          <option selected>최근 7일</option>
           <option v-for="item in items" :key="item" :value="item">
             {{ item }}
           </option>
@@ -76,7 +76,10 @@
         />
       </svg>
     </div>
-    <div class="cardContainer">
+    <div v-if="dataLists.length == 0" class="cardContainer">
+      <p class="alertMessage">등록된 문의가 없습니다.</p>
+    </div>
+    <div v-else class="cardContainer">
       <draggable
         v-model="dataLists"
         class="list-group"
@@ -125,7 +128,7 @@ export default {
         "업데이트 최신순",
         "업데이트 오래된순",
       ],
-      done: ["최근 7일", "최근 30일"],
+      done: ["최근 30일"],
       filteredData: [],
       isOpened: false,
       pageNumber: 0,
@@ -169,6 +172,7 @@ export default {
             this.pageNumber * this.size,
             this.pageNumber * this.size + this.size
           ));
+        //        case "검색 기간":
         case "최근 7일":
           this.newDataArray = this.filteredData.filter(
             (item) =>
@@ -205,7 +209,6 @@ export default {
             this.pageNumber * this.size + this.size
           ));
         case "전체 보기":
-        case "검색 기간":
           this.$emit("departmentUpdated");
           this.newDataArray = this.dataArray;
           return (this.dataLists = this.dataArray);
@@ -448,5 +451,11 @@ export default {
 }
 .ghost {
   display: none;
+}
+
+.alertMessage {
+  display: flex;
+  justify-content: center;
+  margin-top: 30%;
 }
 </style>
