@@ -244,7 +244,7 @@ export default {
     handleContent() {
       const text = document.getElementById("content");
 
-      this.managerText = text.innerText;
+      return (this.managerText = text.innerText);
     },
 
     handleCommentDate() {
@@ -252,22 +252,22 @@ export default {
       let month = now.getMonth() + 1;
       let date = now.getDate();
 
-      this.managerDate = "[" + month + ". " + date + "]";
+      return (this.managerDate = "[" + month + ". " + date + "]");
     },
 
     saveComment() {
       this.handleContent(); //managerText
-      this.handleCommentDate(); //mangerDate
+      this.handleCommentDate(); //managerDate
 
       if (this.managerText === "") {
         this.managerComments = "";
       }
       if (
-        this.cardData.manager_comments.includes("[" && "]") &&
-        this.managerText !== this.cardData.manager_comments
+        (this.cardData.manager_comments.includes("[") ||
+          this.cardData.manager_comments.includes("]")) &&
+        this.cardData.manager_comments !== this.managerText
       ) {
-        this.managerComments.substring(0, 7);
-        this.managerComments = this.managerDate + this.managerText;
+        this.managerComments = this.managerDate + this.managerText.substring(7);
 
         return this.managerComments;
       }
@@ -280,7 +280,7 @@ export default {
         !this.cardData.manager_comments ||
         this.cardData.manager_comments === "None"
       ) {
-        this.managerComments = this.managerDate + this.managerText;
+        return (this.managerComments = this.managerDate + this.managerText);
       }
 
       return this.managerComments;

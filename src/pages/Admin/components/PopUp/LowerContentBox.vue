@@ -22,7 +22,6 @@
       {{ cardData[dataType] }}
     </div>
   </div>
-  {{ console.log(cardData) }}
 </template>
 
 <script>
