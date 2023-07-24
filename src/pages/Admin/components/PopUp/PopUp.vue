@@ -524,6 +524,13 @@ export default {
   overflow-x: hidden;
   padding: 10px;
   margin-bottom: 10px;
+
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+.managerComment::-webkit-scrollbar {
+  display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
 
 .managerComments {
