@@ -376,6 +376,7 @@ export default {
   align-content: center;
   justify-content: space-between;
   padding: 2px 10px 2px 10px;
+  margin-bottom: 5px;
 }
 
 .dropdown {
