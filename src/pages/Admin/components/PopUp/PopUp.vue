@@ -95,8 +95,8 @@
                   <th>담당자</th>
                   <th>시작일</th>
                   <th>마감(예정)일</th>
-                  <th>업무 항목</th>
                   <th>진행상태</th>
+                  <th>업무 항목</th>
                   <th colspan="2">세부 내용</th>
                 </tr>
                 <tr>
@@ -123,7 +123,6 @@
                   </td>
                   <td>2023.07.12</td>
                   <td>캘린더</td>
-                  <td><input /></td>
                   <td>
                     <select
                       class="form-select form-select-sm"
@@ -134,15 +133,38 @@
                       <option value="지연">일정 지연</option>
                     </select>
                   </td>
+                  <td><input /></td>
                   <td>
                     1차 회..
                     <button @click="showDetail">...</button>
                   </td>
                 </tr>
               </table>
-              <div v-if="isDisplayed">
-                1차 회신 내용: 제품 소개서 및 견적 관련 설명(실제 진행한 업무
-                내용에 대해 작성)
+              <div v-if="isDisplayed" class="manager">
+                <div class="managerBox">
+                  <div
+                    id="content"
+                    class="managerComment"
+                    contenteditable="true"
+                  >
+                    {{ this.cardData.manager_comments }}
+                  </div>
+
+                  <svg
+                    id="handleCommentBtn"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="primaryColor"
+                    class="bi bi-check-circle-fill"
+                    viewBox="0 0 16 16"
+                    @click="isSubmit(), saveComment(), putComments()"
+                  >
+                    <path
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
