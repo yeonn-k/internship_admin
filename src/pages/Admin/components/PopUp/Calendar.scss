@@ -12,7 +12,7 @@
 .cv-wrapper div {
   box-sizing: border-box;
   line-height: 1em;
-  font-size: 1em;
+  font-size: 0.97em;
 }
 .cv-header-days {
   display: flex;
@@ -78,6 +78,8 @@
 }
 .cv-day {
   display: flex;
+  justify-content: end;
+  padding: 3px;
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 0;
@@ -86,6 +88,7 @@
   top: 0;
   border-width: 1px 1px 0 0;
   direction: initial;
+  font-weight: 800;
 }
 .cv-day-number {
   height: auto;
@@ -120,14 +123,26 @@
   white-space: normal;
   z-index: 1;
 }
+.cv-header-days {
+  height: 30px;
+  background-color: #b4b4b4;
+  color: #fff;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.cv-weeks {
+  background-color: #efefef;
+  height: 460px;
+}
+
 .cv-header-days,
-.cv-header-day,
-.cv-weeks,
+// .cv-header-day,
+
 .cv-week,
 .cv-day,
 .cv-item {
   border-style: solid;
-  border-color: #ddd;
+  border-color: #c7c7c7;
 }
 .cv-item .endTime:before {
   content: "-";
@@ -189,36 +204,61 @@
 }
 .cv-header {
   display: flex;
+  justify-content: center;
   flex: 0 1 auto;
   flex-flow: row nowrap;
   align-items: center;
   min-height: 2.5em;
   border-width: 1px 1px 0 1px;
+  background-color: #7a7a7a;
+  color: #fff;
+  margin: 16px 0px;
+  border-radius: 5px;
+  font-weight: 700;
 }
 .cv-header .periodLabel {
-  display: flex;
-  flex: 1 1 auto;
-  flex-flow: row nowrap;
-  min-height: 1.5em;
-  line-height: 1;
-  font-size: 1.5em;
+  // display: flex;
+  // // flex: 1 1 auto;
+  // flex-flow: row nowrap;
+  // min-height: 1.5em;
+  // line-height: 1;
+  // font-size: 1.3em;
+  // font-weight: 700;
+  display: none;
 }
 .cv-header,
 .cv-header button {
-  border-style: solid;
+  // border-style: solid;
   border-color: #ddd;
+  font-weight: 900;
 }
-.cv-header-nav,
-.cv-header .periodLabel {
-  margin: 0.1em 0.6em;
-}
+// .cv-header-nav,
+// .cv-header .periodLabel {
+//   margin: 0.1em 0.6em;
+// }
 .cv-header-nav button,
 .cv-header .periodLabel {
   padding: 0.4em 0.6em;
+  background-color: transparent;
+  color: #fff;
+  border: none;
 }
 .cv-header button {
   box-sizing: border-box;
   line-height: 1em;
   font-size: 1em;
   border-width: 1px;
+}
+
+.today {
+  color: #599cff;
+}
+
+.dow6 {
+  border-right: none;
+}
+
+.outsideOfMonth {
+  color: #999999;
+  font-weight: 100;
 }
