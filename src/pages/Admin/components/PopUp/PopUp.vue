@@ -89,26 +89,23 @@
 
             <div class="managerContainer">
               <button class="addTimeLine" @click="addTable">업무 추가</button>
-              <table class="managerTable">
-                <thead>
-                  <tr>
-                    <th class="additional">지원 요청</th>
-                    <th class="popupDepartment">담당자</th>
-                    <th class="startDate">시작일</th>
-                    <th class="endDate">마감(예정)일</th>
-                    <th class="status">진행 상태</th>
-                    <th class="summary">요약</th>
-                    <th class="detail">세부 내용</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <TableRow
-                    v-for="(row, index) in rows"
-                    :key="index"
-                    :cardData="cardData"
-                  />
-                </tbody>
-              </table>
+              <div class="managerTable">
+                <div class="managerTableHeader">
+                  <div class="additional">지원 요청</div>
+                  <div class="popupDepartment">담당자</div>
+                  <div class="startDate">시작일</div>
+                  <div class="endDate">마감(예정)일</div>
+                  <div class="status">진행 상태</div>
+                  <div class="summary">요약</div>
+                  <div class="popupDetail">세부 내용</div>
+                </div>
+
+                <TableRow
+                  v-for="(row, index) in rows"
+                  :key="index"
+                  :cardData="cardData"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -513,14 +510,9 @@ export default {
     table-layout: fixed;
     background-color: $lightGrey;
 
-    thead {
+    .managerTableHeader {
+      display: flex;
       text-align: center;
-      border-top: 5px solid white;
-      border-bottom: 5px solid white;
-      padding: 0 8px;
-    }
-
-    tbody {
       border-top: 5px solid white;
       border-bottom: 5px solid white;
       padding: 0 8px;
@@ -550,7 +542,7 @@ export default {
       width: 20%;
     }
 
-    .detail {
+    .popupDetail {
       width: 20%;
     }
   }

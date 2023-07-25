@@ -1,6 +1,6 @@
 <template>
-  <tr>
-    <td class="additional">
+  <div class="tableRow">
+    <div class="additional">
       <select
         class="form-select form-select-sm"
         aria-label=".form-select-sm example"
@@ -10,8 +10,8 @@
         <option value="영업">영업</option>
         <option value="기술">기술</option>
       </select>
-    </td>
-    <td class="department">
+    </div>
+    <div class="popupDepartment">
       <select
         class="form-select form-select-sm"
         aria-label=".form-select-sm example"
@@ -20,10 +20,10 @@
         <option value="영업">영업</option>
         <option value="기술">기술</option>
       </select>
-    </td>
-    <td class="startDate">2023.07.12</td>
-    <td class="endDate">캘린더</td>
-    <td class="status">
+    </div>
+    <div class="startDate">2023.07.12</div>
+    <div class="endDate">캘린더</div>
+    <div class="status">
       <select
         class="form-select form-select-sm"
         aria-label=".form-select-sm example"
@@ -33,9 +33,9 @@
         <option value="지연">일정 지연</option>
         <option value="완료">완료</option>
       </select>
-    </td>
-    <td class="summary"><input /></td>
-    <td class="detail">
+    </div>
+    <div class="summary"><input /></div>
+    <div class="detailTd">
       <div class="overFlow">
         {{ this.cardData.manager_comments }}
       </div>
@@ -53,10 +53,10 @@
           />
         </svg>
       </button>
-    </td>
-  </tr>
-  <tr v-if="isDisplayed" class="manager">
-    <td id="content" class="managerComment" contenteditable="true" colspan="7">
+    </div>
+  </div>
+  <div v-if="isDisplayed" class="manager">
+    <div id="content" class="managerComment" contenteditable="true" colspan="7">
       {{ this.cardData.manager_comments }}
       <svg
         id="handleCommentBtn"
@@ -72,8 +72,8 @@
           d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
         />
       </svg>
-    </td>
-  </tr>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -99,40 +99,54 @@ export default {
 
 <style lang="scss">
 @import "../../../../assets/scss/variables.scss";
-.additional {
-  width: 10%;
-}
-.popupDepartment {
-  width: 10%;
-}
 
-.startDate {
-  width: 10%;
-}
-.endDate {
-  width: 10%;
-}
-.status {
-  width: 20%;
-}
-.summary {
-  width: 20%;
-}
-
-.detail {
-  width: 20%;
+.tableRow {
   display: flex;
+  text-align: center;
+  padding: 0 8px;
 
-  .overFlow {
-    width: 50px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .additional {
+    width: 10%;
+  }
+  .popupDepartment {
+    width: 10%;
   }
 
-  .detailBtn {
-    width: 15%;
-    border: none;
+  .startDate {
+    width: 10%;
+  }
+  .endDate {
+    width: 10%;
+  }
+
+  .status {
+    width: 20%;
+  }
+
+  .summary {
+    width: 20%;
+
+    input {
+      width: 90%;
+    }
+  }
+
+  .detailTd {
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+
+    .overFlow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      align-items: center;
+    }
+
+    .detailBtn {
+      border: none;
+    }
   }
 }
 </style>
