@@ -5,19 +5,6 @@
       {{ lowerTitleBox[dataType] }}
     </div>
 
-    <div
-      class="departmentBox"
-      v-if="dataType === 'manager' && this.cardData.department"
-    >
-      <span
-        v-for="(department, i) in splitDepartments()"
-        :key="i"
-        :class="['departmentPopup', labelBorder(department)]"
-      >
-        {{ department }}
-      </span>
-    </div>
-
     <div v-if="dataType !== 'manager'" class="lowerContent">
       {{ cardData[dataType] }}
     </div>
