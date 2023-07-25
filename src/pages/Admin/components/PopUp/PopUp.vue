@@ -168,6 +168,20 @@
               </div>
             </div>
           </div>
+          <div class="calendar">
+            <calendarView
+              locale="en"
+              :show-date="showDate"
+              class="theme-default holiday-us-traditional holiday-us-official"
+            >
+              <template #header="{ headerProps }">
+                <calendarViewHeader
+                  :header-props="headerProps"
+                  @input="setShowDate"
+                />
+              </template>
+            </calendarView>
+          </div>
         </div>
       </div>
       <button type="button" class="btn" @click="$emit('closePopup')">
@@ -181,6 +195,7 @@
 import axios from "axios";
 import LowerContentBox from "./LowerContentBox.vue";
 import UpperContentBox from "./UpperContentBox.vue";
+import { CalendarView, CalendarViewHeader } from "vue-simple-calendar";
 
 export default {
   name: "PopUp",
@@ -210,11 +225,14 @@ export default {
       managerDate: "",
       managerText: "",
       isDisplayed: false,
+      showDate: new Date(),
     };
   },
   components: {
-    LowerContentBox: LowerContentBox,
-    UpperContentBox: UpperContentBox,
+    LowerContentBox,
+    UpperContentBox,
+    CalendarView,
+    CalendarViewHeader,
   },
 
   created() {
@@ -367,6 +385,10 @@ export default {
 
     //   return (this.managerComments = copy);
     // },
+
+    setShowDate(d) {
+      this.showDate = d;
+    },
   },
 
   computed: {
@@ -393,6 +415,8 @@ export default {
 
 <style lang="scss">
 @import "../../../../assets/scss/variables.scss";
+@import "./Calendar.scss";
+/* @import "../../../../node_modules/vue-simple-calendar/dist/style.css"; */
 
 .blackBg {
   z-index: 10;
@@ -681,5 +705,10 @@ export default {
 .border {
   width: 20px;
   margin-left: 10px;
+}
+
+.calendar {
+  width: 90%;
+  margin: 0 auto;
 }
 </style>
