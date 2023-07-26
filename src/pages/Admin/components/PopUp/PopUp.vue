@@ -166,7 +166,7 @@ export default {
       status: ["진행", "문의 완료"],
       managerDate: "",
       managerText: "",
-
+      ref: 0,
       rows: [{ id: 0 }],
       showDate: new Date(),
     };
@@ -228,85 +228,10 @@ export default {
         });
     },
 
-    putComments() {
-      const api = axios.create({
-        baseURL: "http://110.165.17.239:8000",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = {
-        contact_seq: `${this.dataSeq}`,
-        status: `${this.cardData.status}`,
-        department: `${this.cardData.department}`,
-        manager_comments: `${this.managerComments}`,
-      };
-
-      api
-        .put("/api/contact", data)
-        .then((response) => {
-          this.cardData = response;
-          this.getCardData();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-
-    isSubmit() {
-      return (this.submit = true);
-    },
-
     getStatus(i) {
       this.changeStatus = this.status[i];
 
       return this.changeStatus;
-    },
-
-    handleContent() {
-      const text = document.getElementById("content");
-
-      return (this.managerText = text.innerText);
-    },
-
-    handleCommentDate() {
-      let now = new Date();
-      let month = now.getMonth() + 1;
-      let date = now.getDate();
-
-      return (this.managerDate = "[" + month + ". " + date + "]");
-    },
-
-    saveComment() {
-      this.handleContent(); //managerText
-      this.handleCommentDate(); //managerDate
-
-      if (this.managerText === "") {
-        this.managerComments = "";
-      }
-      if (
-        (this.cardData.manager_comments.includes("[") ||
-          this.cardData.manager_comments.includes("]")) &&
-        this.cardData.manager_comments !== this.managerText
-      ) {
-        this.managerComments = this.managerDate + this.managerText.substring(7);
-
-        return this.managerComments;
-      }
-      if (this.cardData.manager_comments === this.managerText) {
-        this.managerComments = this.cardData.manager_comments;
-
-        return this.managerComments;
-      }
-      if (
-        !this.cardData.manager_comments ||
-        this.cardData.manager_comments === "None"
-      ) {
-        return (this.managerComments = this.managerDate + this.managerText);
-      }
-
-      return this.managerComments;
     },
 
     formatUpdateDtm(el) {
@@ -327,7 +252,9 @@ export default {
     // },
 
     addTable() {
-      this.rows.push({ id: "" });
+      this.ref += 1;
+      this.rows.push({ id: this.ref });
+      console.log(this.rows);
     },
 
     setShowDate(d) {
@@ -524,7 +451,7 @@ export default {
   margin: auto;
 
   .addTimeLine {
-    background-color: #75a8e5;
+    background-color: $blue;
     color: white;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -536,19 +463,21 @@ export default {
     background-color: $lightGrey;
 
     .managerTableHeader {
+      width: 100%;
       display: flex;
+      justify-content: space-around;
       text-align: center;
-      border-top: 5px solid white;
-      border-bottom: 5px solid white;
+      border-top: 2.5px solid white;
+      border-bottom: 2.5px solid white;
       padding: 0 8px;
     }
 
     .additional {
-      width: 10%;
+      width: 15%;
     }
 
     .popupDepartment {
-      width: 10%;
+      width: 15%;
     }
 
     .startDate {
@@ -560,7 +489,7 @@ export default {
     }
 
     .status {
-      width: 20%;
+      width: 15%;
     }
 
     .summary {
@@ -568,7 +497,7 @@ export default {
     }
 
     .popupDetail {
-      width: 20%;
+      width: 10%;
     }
   }
 }
