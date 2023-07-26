@@ -184,7 +184,7 @@ export default {
         {
           id: "e1",
           startDate: "2023-07-28",
-          endDate: "2023-08-01",
+          endDate: "2023-07-29",
           title: "1차 회신",
         },
         {
@@ -200,6 +200,7 @@ export default {
           title: "고객 미팅",
         },
       ],
+      eventId: 0,
     };
   },
   components: {
@@ -295,6 +296,15 @@ export default {
 
     finishSelection(dateRange) {
       this.setSelection(dateRange);
+    },
+
+    addCalendarEvent() {
+      this.events.push({
+        id: this.eventId++,
+        startDate: "emit으로 전달 받은 data - startDate (datepicker)",
+        endDate: "emit으로 전달 받은 data - v-model: picked",
+        title: "emit으로 전달 받은 data - v-model: summary",
+      });
     },
   },
 

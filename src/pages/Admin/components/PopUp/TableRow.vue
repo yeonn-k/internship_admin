@@ -100,7 +100,6 @@
 <script>
 import axios from "axios";
 import Datepicker from "vue3-datepicker";
-// import { ko } from "date-fns/locale";
 
 export default {
   name: "TableRow",
@@ -142,8 +141,8 @@ export default {
       this.submit = !this.submit;
     },
     saveComment() {
-      this.handleContent(); //managerText
-      this.handleCommentDate(); //managerDate
+      this.handleContent();
+      this.handleCommentDate();
 
       if (this.managerText === "") {
         this.managerComments = "";
