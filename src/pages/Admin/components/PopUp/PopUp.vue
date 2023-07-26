@@ -488,7 +488,7 @@ export default {
       width: 10%;
     }
     .endDate {
-      width: 10%;
+      width: 12%;
     }
 
     .status {
