@@ -88,83 +88,23 @@
             <!-- 담당자 커맨트 -->
 
             <div class="managerContainer">
-              <button class="addTimeLine">업무 추가</button>
-              <table class="managerTable">
-                <tr>
-                  <th>지원 요청</th>
-                  <th>담당자</th>
-                  <th>시작일</th>
-                  <th>마감(예정)일</th>
-                  <th>진행상태</th>
-                  <th>업무 항목</th>
-                  <th colspan="2">세부 내용</th>
-                </tr>
-                <tr>
-                  <td>
-                    <select
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm example"
-                      v-model="selected"
-                    >
-                      <option disabled value="">지원 요청</option>
-                      <option value="영업">영업</option>
-                      <option value="기술">기술</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm example"
-                      v-model="selected"
-                    >
-                      <option value="영업">영업</option>
-                      <option value="기술">기술</option>
-                    </select>
-                  </td>
-                  <td>2023.07.12</td>
-                  <td>캘린더</td>
-                  <td>
-                    <select
-                      class="form-select form-select-sm"
-                      aria-label=".form-select-sm example"
-                      v-model="selected"
-                    >
-                      <option value="진행중">계획대로 진행중</option>
-                      <option value="지연">일정 지연</option>
-                    </select>
-                  </td>
-                  <td><input /></td>
-                  <td>
-                    1차 회..
-                    <button @click="showDetail">...</button>
-                  </td>
-                </tr>
-              </table>
-              <div v-if="isDisplayed" class="manager">
-                <div class="managerBox">
-                  <div
-                    id="content"
-                    class="managerComment"
-                    contenteditable="true"
-                  >
-                    {{ this.cardData.manager_comments }}
-                  </div>
-
-                  <svg
-                    id="handleCommentBtn"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="primaryColor"
-                    class="bi bi-check-circle-fill"
-                    viewBox="0 0 16 16"
-                    @click="isSubmit(), saveComment(), putComments()"
-                  >
-                    <path
-                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-                    />
-                  </svg>
+              <button class="addTimeLine" @click="addTable">업무 추가</button>
+              <div class="managerTable">
+                <div class="managerTableHeader">
+                  <div class="additional">지원 요청</div>
+                  <div class="popupDepartment">담당자</div>
+                  <div class="startDate">시작일</div>
+                  <div class="endDate">마감(예정)일</div>
+                  <div class="status">진행 상태</div>
+                  <div class="summary">요약</div>
+                  <div class="popupDetail">세부 내용</div>
                 </div>
+
+                <TableRow
+                  v-for="(row, index) in rows"
+                  :key="index"
+                  :cardData="cardData"
+                />
               </div>
             </div>
           </div>
@@ -184,6 +124,7 @@
           </div>
         </div>
       </div>
+
       <button type="button" class="btn" @click="$emit('closePopup')">
         확인
       </button>
@@ -196,6 +137,7 @@ import axios from "axios";
 import LowerContentBox from "./LowerContentBox.vue";
 import UpperContentBox from "./UpperContentBox.vue";
 import { CalendarView, CalendarViewHeader } from "vue-simple-calendar";
+import TableRow from "./TableRow.vue";
 
 export default {
   name: "PopUp",
@@ -224,7 +166,8 @@ export default {
       status: ["진행", "문의 완료"],
       managerDate: "",
       managerText: "",
-      isDisplayed: false,
+
+      rows: [{ id: 0 }],
       showDate: new Date(),
     };
   },
@@ -233,6 +176,7 @@ export default {
     UpperContentBox,
     CalendarView,
     CalendarViewHeader,
+    TableRow,
   },
 
   created() {
@@ -375,16 +319,16 @@ export default {
       return year + ". " + month + ". " + date;
     },
 
-    showDetail() {
-      this.isDisplayed = !this.isDisplayed;
-    },
-
     // deleteComment(i) {
     //   let copy = [...this.managerComments];
     //   copy.splice(i, 1);
 
     //   return (this.managerComments = copy);
     // },
+
+    addTable() {
+      this.rows.push({ id: "" });
+    },
 
     setShowDate(d) {
       this.showDate = d;
@@ -580,23 +524,51 @@ export default {
   margin: auto;
 
   .addTimeLine {
+    background-color: #75a8e5;
+    color: white;
     margin-bottom: 10px;
+    border-radius: 5px;
     border: none;
   }
 
   .managerTable {
+    table-layout: fixed;
     background-color: $lightGrey;
 
-    th {
+    .managerTableHeader {
+      display: flex;
+      text-align: center;
       border-top: 5px solid white;
       border-bottom: 5px solid white;
       padding: 0 8px;
     }
 
-    td {
-      border-top: 5px solid white;
-      border-bottom: 5px solid white;
-      padding: 0 8px;
+    .additional {
+      width: 10%;
+    }
+
+    .popupDepartment {
+      width: 10%;
+    }
+
+    .startDate {
+      width: 10%;
+    }
+
+    .endDate {
+      width: 10%;
+    }
+
+    .status {
+      width: 20%;
+    }
+
+    .summary {
+      width: 20%;
+    }
+
+    .popupDetail {
+      width: 20%;
     }
   }
 }
