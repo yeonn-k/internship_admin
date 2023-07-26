@@ -104,6 +104,7 @@
                   v-for="(row, index) in rows"
                   :key="index"
                   :cardData="cardData"
+                  :dataSeq="dataSeq"
                 />
               </div>
             </div>
@@ -334,7 +335,7 @@ export default {
 .dropdown {
   position: absolute;
   right: 30px;
-  top: 170px;
+  top: 70px;
 }
 
 #dropdownMenuButton1 {
@@ -441,9 +442,10 @@ export default {
 
 .manager {
   position: relative;
-  width: 90%;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  margin-bottom: 7px;
 }
 
 .managerContainer {
@@ -460,30 +462,31 @@ export default {
 
   .managerTable {
     table-layout: fixed;
-    background-color: $lightGrey;
 
     .managerTableHeader {
       width: 100%;
+      height: 40px;
       display: flex;
       justify-content: space-around;
+      align-items: center;
       text-align: center;
-      border-top: 2.5px solid white;
-      border-bottom: 2.5px solid white;
+      background-color: $lightGrey;
       padding: 0 8px;
+      margin-bottom: 7px;
+      border-radius: 5px;
     }
 
     .additional {
-      width: 15%;
+      width: 8%;
     }
 
     .popupDepartment {
-      width: 15%;
+      width: 8%;
     }
 
     .startDate {
       width: 10%;
     }
-
     .endDate {
       width: 10%;
     }
@@ -493,7 +496,7 @@ export default {
     }
 
     .summary {
-      width: 20%;
+      width: 29%;
     }
 
     .popupDetail {
@@ -509,9 +512,9 @@ export default {
 }
 
 #handleCommentBtn {
-  position: sticky;
+  position: absolute;
   top: 10px;
-  right: 16px;
+  right: 10px;
 }
 .managerCommentBox {
   display: flex;
@@ -548,7 +551,6 @@ export default {
   border: none;
   border-radius: 3px;
   resize: none;
-  width: 94%;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
