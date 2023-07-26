@@ -15,7 +15,6 @@
       <select
         class="form-select form-select-sm"
         aria-label=".form-select-sm example"
-        v-model="selected"
       >
         <option value="영업">영업</option>
         <option value="기술">기술</option>
@@ -27,14 +26,28 @@
       <select
         class="form-select form-select-sm"
         aria-label=".form-select-sm example"
-        v-model="selected"
       >
         <option value="진행중">일정 진행중</option>
         <option value="지연">일정 지연</option>
         <option value="완료">완료</option>
       </select>
     </div>
-    <div class="summary"><input /></div>
+    <div class="summary">
+      <input
+        type="text"
+        v-if="!isEntered"
+        name="summary"
+        @keyup.enter="submitSummary()"
+        v-model="summary"
+        placeholder="작성 후 Enter키로 저장"
+      />
+      <div v-else>
+        <div>
+          {{ summary
+          }}<button class="editBtn" @click="editSummary()">수정</button>
+        </div>
+      </div>
+    </div>
     <div class="detailTd">
       <div class="overFlow">
         {{ this.cardData.manager_comments }}
@@ -77,11 +90,19 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "TableRow",
 
   data() {
-    return { isDisplayed: false };
+    return {
+      isDisplayed: false,
+      summary: "",
+      isEntered: false,
+      data: {},
+      submit: false,
+    };
   },
   props: {
     cardData: Object,
@@ -90,6 +111,87 @@ export default {
   methods: {
     showDetail() {
       this.isDisplayed = !this.isDisplayed;
+    },
+    submitSummary() {
+      const text = event.target.value;
+      this.summary == text;
+      this.isEntered = !this.isEntered;
+    },
+
+    editSummary() {
+      this.isEntered = !this.isEntered;
+    },
+    isSubmit() {
+      return (this.submit = true);
+    },
+    saveComment() {
+      this.handleContent(); //managerText
+      this.handleCommentDate(); //managerDate
+
+      if (this.managerText === "") {
+        this.managerComments = "";
+      }
+      if (
+        (this.cardData.manager_comments.includes("[") ||
+          this.cardData.manager_comments.includes("]")) &&
+        this.cardData.manager_comments !== this.managerText
+      ) {
+        this.managerComments = this.managerDate + this.managerText.substring(7);
+
+        return this.managerComments;
+      }
+      if (this.cardData.manager_comments === this.managerText) {
+        this.managerComments = this.cardData.manager_comments;
+
+        return this.managerComments;
+      }
+      if (
+        !this.cardData.manager_comments ||
+        this.cardData.manager_comments === "None"
+      ) {
+        return (this.managerComments = this.managerDate + this.managerText);
+      }
+
+      return this.managerComments;
+    },
+
+    putComments() {
+      const api = axios.create({
+        baseURL: "http://110.165.17.239:8000",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = {
+        contact_seq: `${this.dataSeq}`,
+        status: `${this.cardData.status}`,
+        department: `${this.cardData.department}`,
+        manager_comments: `${this.managerComments}`,
+      };
+
+      api
+        .put("/api/contact", data)
+        .then((response) => {
+          this.data = response;
+          this.getCardData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleContent() {
+      const text = document.getElementById("content");
+
+      return (this.managerText = text.innerText);
+    },
+
+    handleCommentDate() {
+      let now = new Date();
+      let month = now.getMonth() + 1;
+      let date = now.getDate();
+
+      return (this.managerDate = "[" + month + ". " + date + "]");
     },
   },
 
@@ -101,15 +203,21 @@ export default {
 @import "../../../../assets/scss/variables.scss";
 
 .tableRow {
+  width: 100%;
   display: flex;
+  justify-content: space-around;
+  align-items: center;
   text-align: center;
+  border-top: 2.5px solid white;
+  border-bottom: 2.5px solid white;
   padding: 0 8px;
 
   .additional {
-    width: 10%;
+    width: 15%;
   }
+
   .popupDepartment {
-    width: 10%;
+    width: 15%;
   }
 
   .startDate {
@@ -120,7 +228,7 @@ export default {
   }
 
   .status {
-    width: 20%;
+    width: 15%;
   }
 
   .summary {
@@ -128,11 +236,21 @@ export default {
 
     input {
       width: 90%;
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+    }
+
+    .editBtn {
+      border: none;
+      background-color: $blue;
+      color: white;
+      margin-left: 10px;
+      border-radius: 5px;
     }
   }
 
   .detailTd {
-    width: 20%;
+    width: 10%;
     display: flex;
     justify-content: space-around;
     align-content: center;
