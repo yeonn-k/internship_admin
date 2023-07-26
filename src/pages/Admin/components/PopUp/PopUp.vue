@@ -519,7 +519,7 @@ export default {
     }
 
     .startDate {
-      width: 10%;
+      width: 12%;
     }
     .endDate {
       width: 12%;
