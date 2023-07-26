@@ -20,9 +20,19 @@
         <option value="기술">기술</option>
       </select>
     </div>
-    <div class="startDate">2023.07.12</div>
+    <div class="startDate">
+      <Datepicker
+        v-model="pickedStart"
+        :clearable="true"
+        placeholder="날짜 선택"
+      />
+    </div>
     <div class="endDate">
-      <Datepicker v-model="picked" :clearable="true" placeholder="날짜 선택" />
+      <Datepicker
+        v-model="pickedEnd"
+        :clearable="true"
+        placeholder="날짜 선택"
+      />
     </div>
     <div class="status">
       <select
@@ -108,11 +118,12 @@ export default {
   data() {
     return {
       isDisplayed: false,
-      summary: "",
       isEntered: false,
       data: {},
       submit: false,
-      picked: "",
+      pickedStart: "",
+      pickedEnd: "",
+      summary: "",
     };
   },
 
@@ -129,10 +140,23 @@ export default {
     showDetail() {
       this.isDisplayed = !this.isDisplayed;
     },
+
+    getEventData() {
+      const eventData = {
+        startDate: this.pickedStart,
+        endDate: this.pickedEnd,
+        summary: this.summary,
+      };
+
+      this.$emit("eventData", eventData);
+    },
+
     submitSummary() {
       const text = event.target.value;
       this.summary == text;
       this.isEntered = !this.isEntered;
+
+      this.getEventData();
     },
 
     editSummary() {
@@ -239,7 +263,31 @@ export default {
   }
 
   .startDate {
-    width: 10%;
+    width: 12%;
+
+    .v3dp__datepicker {
+      .v3dp__input_wrapper {
+        display: flex;
+
+        input {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 106px;
+          height: 31px;
+          border-radius: 4px;
+          border: 1px solid #dee2e6;
+          background-color: #fff;
+          line-height: 31px;
+          padding: 7px;
+
+          &::placeholder {
+            font-size: 14px;
+            text-align: center;
+          }
+        }
+      }
+    }
   }
   .endDate {
     width: 12%;
