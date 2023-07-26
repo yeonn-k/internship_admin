@@ -105,6 +105,7 @@
                   :key="index"
                   :cardData="cardData"
                   :dataSeq="dataSeq"
+                  @eventData="handleEventData"
                 />
               </div>
             </div>
@@ -296,6 +297,10 @@ export default {
 
     finishSelection(dateRange) {
       this.setSelection(dateRange);
+    },
+
+    handleEventData(eventData) {
+      console.log(eventData);
     },
 
     addCalendarEvent() {
@@ -529,7 +534,7 @@ export default {
     }
 
     .startDate {
-      width: 10%;
+      width: 12%;
     }
     .endDate {
       width: 12%;
