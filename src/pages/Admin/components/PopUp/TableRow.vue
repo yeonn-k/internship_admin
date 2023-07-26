@@ -42,7 +42,7 @@
         placeholder="작성 후 Enter키로 저장"
       />
       <div v-else>
-        <div>
+        <div class="summaryBox">
           {{ summary
           }}<button class="editBtn" @click="editSummary()">수정</button>
         </div>
@@ -69,7 +69,13 @@
     </div>
   </div>
   <div v-if="isDisplayed" class="manager">
-    <div id="content" class="managerComment" contenteditable="true" colspan="7">
+    <div
+      id="content"
+      class="managerComment"
+      contenteditable="true"
+      colspan="7"
+      :on-paste="saveComment"
+    >
       {{ this.cardData.manager_comments }}
       <svg
         id="handleCommentBtn"
@@ -105,6 +111,7 @@ export default {
     };
   },
   props: {
+    dataSeq: String,
     cardData: Object,
   },
 
@@ -122,7 +129,7 @@ export default {
       this.isEntered = !this.isEntered;
     },
     isSubmit() {
-      return (this.submit = true);
+      this.submit = !this.submit;
     },
     saveComment() {
       this.handleContent(); //managerText
@@ -174,7 +181,6 @@ export default {
         .put("/api/contact", data)
         .then((response) => {
           this.data = response;
-          this.getCardData();
         })
         .catch((error) => {
           console.log(error);
@@ -204,20 +210,22 @@ export default {
 
 .tableRow {
   width: 100%;
+  height: 40px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   text-align: center;
-  border-top: 2.5px solid white;
-  border-bottom: 2.5px solid white;
+  background-color: $lightGrey;
+  margin-bottom: 7px;
   padding: 0 8px;
+  border-radius: 5px;
 
   .additional {
-    width: 15%;
+    width: 8%;
   }
 
   .popupDepartment {
-    width: 15%;
+    width: 8%;
   }
 
   .startDate {
@@ -232,7 +240,8 @@ export default {
   }
 
   .summary {
-    width: 20%;
+    width: 29%;
+    padding: 5px;
 
     input {
       width: 90%;
@@ -247,10 +256,19 @@ export default {
       margin-left: 10px;
       border-radius: 5px;
     }
+
+    .summaryBox {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .manager {
+    margin-bottom: 7px;
   }
 
   .detailTd {
-    width: 10%;
+    width: 11%;
     display: flex;
     justify-content: space-around;
     align-content: center;
