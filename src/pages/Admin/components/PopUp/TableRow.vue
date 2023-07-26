@@ -21,7 +21,9 @@
       </select>
     </div>
     <div class="startDate">2023.07.12</div>
-    <div class="endDate">캘린더</div>
+    <div class="endDate">
+      <Datepicker v-model="picked" :clearable="true" placeholder="날짜 선택" />
+    </div>
     <div class="status">
       <select
         class="form-select form-select-sm"
@@ -97,6 +99,8 @@
 
 <script>
 import axios from "axios";
+import Datepicker from "vue3-datepicker";
+// import { ko } from "date-fns/locale";
 
 export default {
   name: "TableRow",
@@ -108,11 +112,17 @@ export default {
       isEntered: false,
       data: {},
       submit: false,
+      picked: "",
     };
   },
+
   props: {
     dataSeq: String,
     cardData: Object,
+  },
+
+  components: {
+    Datepicker,
   },
 
   methods: {
@@ -232,7 +242,31 @@ export default {
     width: 10%;
   }
   .endDate {
-    width: 10%;
+    width: 12%;
+
+    .v3dp__datepicker {
+      .v3dp__input_wrapper {
+        display: flex;
+
+        input {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 106px;
+          height: 31px;
+          border-radius: 4px;
+          border: 1px solid #dee2e6;
+          background-color: #fff;
+          line-height: 31px;
+          padding: 7px;
+
+          &::placeholder {
+            font-size: 14px;
+            text-align: center;
+          }
+        }
+      }
+    }
   }
 
   .status {
