@@ -112,8 +112,16 @@
           <div class="calendar">
             <calendarView
               locale="en"
+              :items="events"
               :show-date="showDate"
               class="theme-default holiday-us-traditional holiday-us-official"
+              :enable-date-selection="true"
+              @date-selection-start="setSelection"
+              @date-selection="setSelection"
+              @date-selection-finish="finishSelection"
+              @click-date="onClickDay"
+              :selection-start="selectionStart"
+              :selection-end="selectionEnd"
             >
               <template #header="{ headerProps }">
                 <calendarViewHeader
@@ -170,6 +178,28 @@ export default {
       ref: 0,
       rows: [{ id: 0 }],
       showDate: new Date(),
+      selectionStart: undefined,
+      selectionEnd: undefined,
+      events: [
+        {
+          id: "e1",
+          startDate: "2023-07-28",
+          endDate: "2023-07-29",
+          title: "1차 회신",
+        },
+        {
+          id: "e2",
+          startDate: "2023-07-30",
+          endDate: "2023-07-31",
+          title: "2차 회신",
+        },
+        {
+          id: "e3",
+          startDate: "2023-08-04",
+          endDate: "2023-08-04",
+          title: "고객 미팅",
+        },
+      ],
     };
   },
   components: {
@@ -245,13 +275,6 @@ export default {
       return year + ". " + month + ". " + date;
     },
 
-    // deleteComment(i) {
-    //   let copy = [...this.managerComments];
-    //   copy.splice(i, 1);
-
-    //   return (this.managerComments = copy);
-    // },
-
     addTable() {
       this.ref += 1;
       this.rows.push({ id: this.ref });
@@ -260,6 +283,20 @@ export default {
 
     setShowDate(d) {
       this.showDate = d;
+    },
+
+    onClickDay(d) {
+      this.showDate = d;
+    },
+
+    setSelection(dateRange) {
+      console.log(dateRange);
+      this.selectionEnd = dateRange[1];
+      this.selectionStart = dateRange[0];
+    },
+
+    finishSelection(dateRange) {
+      this.setSelection(dateRange);
     },
   },
 
@@ -288,7 +325,6 @@ export default {
 <style lang="scss">
 @import "../../../../assets/scss/variables.scss";
 @import "./Calendar.scss";
-/* @import "../../../../node_modules/vue-simple-calendar/dist/style.css"; */
 
 .blackBg {
   z-index: 10;
