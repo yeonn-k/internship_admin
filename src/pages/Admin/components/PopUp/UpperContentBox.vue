@@ -24,13 +24,13 @@ export default {
 @import "../../../../assets/scss/variables.scss";
 
 .upperBox {
-  width: 90%;
+  width: 47%;
   font-size: 18px;
   display: flex;
 }
 
 .upperTitle {
-  width: 80px;
+  width: 65px;
   line-height: 34px;
   text-align: end;
 }

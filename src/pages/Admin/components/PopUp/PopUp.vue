@@ -108,6 +108,20 @@
               </div>
             </div>
           </div>
+          <div class="calendar">
+            <calendarView
+              locale="en"
+              :show-date="showDate"
+              class="theme-default holiday-us-traditional holiday-us-official"
+            >
+              <template #header="{ headerProps }">
+                <calendarViewHeader
+                  :header-props="headerProps"
+                  @input="setShowDate"
+                />
+              </template>
+            </calendarView>
+          </div>
         </div>
       </div>
 
@@ -122,6 +136,7 @@
 import axios from "axios";
 import LowerContentBox from "./LowerContentBox.vue";
 import UpperContentBox from "./UpperContentBox.vue";
+import { CalendarView, CalendarViewHeader } from "vue-simple-calendar";
 import TableRow from "./TableRow.vue";
 
 export default {
@@ -153,11 +168,14 @@ export default {
       managerText: "",
 
       rows: [{ id: 0 }],
+      showDate: new Date(),
     };
   },
   components: {
-    LowerContentBox: LowerContentBox,
-    UpperContentBox: UpperContentBox,
+    LowerContentBox,
+    UpperContentBox,
+    CalendarView,
+    CalendarViewHeader,
     TableRow,
   },
 
@@ -311,6 +329,10 @@ export default {
     addTable() {
       this.rows.push({ id: "" });
     },
+
+    setShowDate(d) {
+      this.showDate = d;
+    },
   },
 
   computed: {
@@ -337,6 +359,8 @@ export default {
 
 <style lang="scss">
 @import "../../../../assets/scss/variables.scss";
+@import "./Calendar.scss";
+/* @import "../../../../node_modules/vue-simple-calendar/dist/style.css"; */
 
 .blackBg {
   z-index: 10;
@@ -377,6 +401,7 @@ export default {
   align-content: center;
   justify-content: space-between;
   padding: 2px 10px 2px 10px;
+  margin-bottom: 5px;
 }
 
 .dropdown {
@@ -652,5 +677,10 @@ export default {
 .border {
   width: 20px;
   margin-left: 10px;
+}
+
+.calendar {
+  width: 90%;
+  margin: 0 auto;
 }
 </style>
