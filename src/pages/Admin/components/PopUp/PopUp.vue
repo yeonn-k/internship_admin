@@ -184,7 +184,7 @@ export default {
         {
           id: "e1",
           startDate: "2023-07-28",
-          endDate: "2023-07-29",
+          endDate: "2023-08-01",
           title: "1차 회신",
         },
         {
@@ -278,7 +278,6 @@ export default {
     addTable() {
       this.ref += 1;
       this.rows.push({ id: this.ref });
-      console.log(this.rows);
     },
 
     setShowDate(d) {
@@ -290,7 +289,6 @@ export default {
     },
 
     setSelection(dateRange) {
-      console.log(dateRange);
       this.selectionEnd = dateRange[1];
       this.selectionStart = dateRange[0];
     },
