@@ -184,23 +184,12 @@ export default {
       events: [
         {
           id: "e1",
-          startDate: "2023-07-28",
-          endDate: "2023-08-01",
+          startDate: "2023-10-28",
+          endDate: "2023-10-29",
           title: "1차 회신",
         },
-        {
-          id: "e2",
-          startDate: "2023-07-30",
-          endDate: "2023-07-31",
-          title: "2차 회신",
-        },
-        {
-          id: "e3",
-          startDate: "2023-08-04",
-          endDate: "2023-08-04",
-          title: "고객 미팅",
-        },
       ],
+      eventId: 0,
     };
   },
   components: {
@@ -299,7 +288,7 @@ export default {
     },
 
     handleEventData(eventData) {
-      console.log(eventData);
+      this.events.push(eventData);
     },
   },
 
