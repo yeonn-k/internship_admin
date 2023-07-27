@@ -144,7 +144,7 @@ export default {
       const eventData = {
         startDate: this.pickedStart,
         endDate: this.pickedEnd,
-        summary: this.summary,
+        title: this.summary,
       };
 
       this.$emit("eventData", eventData);
