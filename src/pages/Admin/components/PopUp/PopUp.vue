@@ -103,6 +103,7 @@
                 <TableRow
                   v-for="(row, index) in rows"
                   :key="index"
+                  :id="index"
                   :cardData="cardData"
                   :dataSeq="dataSeq"
                   @eventData="handleEventData"
@@ -288,10 +289,15 @@ export default {
     },
 
     handleEventData(eventData) {
-      this.events.push(eventData);
+      if (!eventData.isEditing) {
+        this.events.push(eventData);
+      } else {
+        const newArray = this.events.filter((item) => item.id !== eventData.id);
+        newArray.push(eventData);
+        this.events = newArray;
+      }
     },
   },
-
   computed: {
     cardType() {
       if (this.cardData.contact_type === "MR 문의") {
