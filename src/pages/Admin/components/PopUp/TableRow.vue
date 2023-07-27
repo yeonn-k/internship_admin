@@ -123,12 +123,14 @@ export default {
       pickedStart: "",
       pickedEnd: "",
       summary: "",
+      isEditing: false,
     };
   },
 
   props: {
     dataSeq: String,
     cardData: Object,
+    id: Number,
   },
 
   components: {
@@ -142,12 +144,15 @@ export default {
 
     getEventData() {
       const eventData = {
+        id: this.id,
         startDate: this.pickedStart,
         endDate: this.pickedEnd,
         title: this.summary,
+        isEditing: this.isEditing,
       };
 
       this.$emit("eventData", eventData);
+      this.isEditing = false;
     },
 
     submitSummary() {
@@ -159,8 +164,10 @@ export default {
     },
 
     editSummary() {
+      this.isEditing = !this.isEditing;
       this.isEntered = !this.isEntered;
     },
+
     isSubmit() {
       this.submit = !this.submit;
     },
