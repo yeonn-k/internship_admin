@@ -117,12 +117,14 @@
   position: absolute;
   white-space: nowrap;
   overflow: hidden;
-  background-color: #ffc2a5;
+  background-color: #ffe0d2;
   border-width: 1px;
   direction: initial;
   border-style: solid;
   border-color: #ffc2a5;
   color: black;
+  border-radius: 4px;
+  margin-left: 0.5px;
 }
 
 .cv-wrapper.wrap-item-title-on-hover .cv-item:hover {
