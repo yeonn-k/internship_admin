@@ -280,8 +280,8 @@ export default {
     },
 
     setSelection(dateRange) {
-      this.selectionEnd = dateRange[1];
       this.selectionStart = dateRange[0];
+      this.selectionEnd = dateRange[1];
     },
 
     finishSelection(dateRange) {
